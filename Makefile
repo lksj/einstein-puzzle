@@ -3,6 +3,8 @@
 # Einstein Puzzle
 # Copyright (C) 2003-2005  Flowix Games
 
+# Modified 2009-02-09 by Tupone Alfredo <tupone@gentoo.org>
+
 # Einstein Puzzle is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -68,7 +70,7 @@ all: $(TARGET)
 
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(LNFLAGS) $(OBJECTS) -o $(TARGET)
+	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(TARGET) $(LNFLAGS)
 
 clean:
 	rm -f $(OBJECTS) core* *core $(TARGET) *~
