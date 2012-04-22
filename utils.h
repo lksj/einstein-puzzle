@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -34,7 +36,6 @@
 SDL_Surface* loadImage(const std::wstring &name, bool transparent=false);
 SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent=false);
 int gettimeofday(struct timeval* tp);
-void drawWallpaper(const std::wstring &name);
 void showWindow(Area *area, const std::wstring &fileName);
 bool isInRect(int evX, int evY, int x, int y, int w, int h);
 std::wstring numToStr(int no);

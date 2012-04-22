@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -45,7 +47,7 @@ class GameBackground: public Widget
 void GameBackground::draw()
 {
     // draw background
-    drawWallpaper(L"rain.bmp");
+    screen.drawWallpaper(L"rain.bmp");
 
     // draw title
     SDL_Surface *tile = loadImage(L"title.bmp");
@@ -491,7 +493,7 @@ void Game::deleteRules()
 
 void Game::pleaseWait()
 {
-    drawWallpaper(L"rain.bmp");
+    screen.drawWallpaper(L"rain.bmp");
     Window window(230, 260, 340, 80, L"greenpattern.bmp", 6);
     window.draw();
     Font font(L"laudcn2.ttf", 16);

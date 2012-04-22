@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -21,6 +23,7 @@
 #include "screen.h"
 #include "exceptions.h"
 #include "unicode.h"
+#include "utils.h"
 
 
 Screen::Screen()
@@ -326,3 +329,16 @@ SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
     return s;
 }
 
+void Screen::drawWallpaper(const std::wstring &name)
+{
+    SDL_Surface *tile = loadImage(name);
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, tile->w, tile->h };
+    for (int y = 0; y < screen->h; y += tile->h)
+        for (int x = 0; x < screen->w; x += tile->w) {
+            dst.x = x;
+            dst.y = y;
+            SDL_BlitSurface(tile, &src, screen, &dst);
+        }
+    SDL_FreeSurface(tile);
+}
