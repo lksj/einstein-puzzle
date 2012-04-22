@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -102,7 +104,10 @@ void Font::draw(SDL_Surface *s, int x, int y, int r, int g, int b,
 void Font::draw(int x, int y, int r, int g, int b, bool shadow, 
         const std::wstring &text)
 {
-    draw(screen.getSurface(), x, y, r,g,b, shadow, text);
+    SDL_Surface *s = screen.getRegion(0, 0, screen.getWidth(), screen.getHeight());
+    draw(s, x, y, r,g,b, shadow, text);
+    screen.draw(0, 0, s);
+    SDL_FreeSurface(s);
 }
 
 int Font::getWidth(const std::wstring &text)

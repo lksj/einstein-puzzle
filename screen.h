@@ -87,7 +87,6 @@ class Screen
         void flush();
         void addRegionToUpdate(int x, int y, int w, int h);
         void setPixel(int x, int y, int r, int g, int b);
-        SDL_Surface* getSurface() { return screen; };
         void draw(int x, int y, SDL_Surface *surface);
         void setCursor(bool nice);
         void initCursors();
