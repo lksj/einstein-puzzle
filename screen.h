@@ -58,6 +58,8 @@ class Screen
 {
     private:
         SDL_Surface *screen;
+        SDL_Surface *unscaled;
+        float scale;
         bool fullScreen;
         SDL_Surface *mouseImage;
         SDL_Surface *mouseSave;
@@ -94,6 +96,8 @@ class Screen
         void doneCursors();
         SDL_Surface* createSubimage(int x, int y, int width, int height);
         void drawWallpaper(const std::wstring &name);
+        int doScale(int i);
+        int reverseScale(int i);
         SDL_PixelFormat* getFormat();
         void setClipRect(SDL_Rect* rect);
         SDL_Surface* getRegion(int x, int y, int width, int height);

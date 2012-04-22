@@ -267,7 +267,8 @@ void showWindow(Area *parentArea, const std::wstring &fileName)
 
 bool isInRect(int evX, int evY, int x, int y, int w, int h)
 {
-    return ((evX >= x) && (evX < x + w) && (evY >= y) && (evY < y + h));
+    return ((evX >= screen.doScale(x)) && (evX < screen.doScale(x + w)) 
+                    && (evY >= screen.doScale(y)) && (evY < screen.doScale(y + h)));
 }
 
 std::wstring secToStr(int time)

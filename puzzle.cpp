@@ -173,8 +173,8 @@ bool Puzzle::getCellNo(int x, int y, int &col, int &row, int &subNo)
                 (FIELD_TILE_HEIGHT + FIELD_GAP_Y) * PUZZLE_SIZE))
         return false;
 
-    x = x - FIELD_OFFSET_X;
-    y = y - FIELD_OFFSET_Y;
+    x = screen.reverseScale(x) - FIELD_OFFSET_X;
+    y = screen.reverseScale(y) - FIELD_OFFSET_Y;
 
     col = x / (FIELD_TILE_WIDTH + FIELD_GAP_X);
     if (col * (FIELD_TILE_WIDTH + FIELD_GAP_X) + FIELD_TILE_WIDTH < x)
