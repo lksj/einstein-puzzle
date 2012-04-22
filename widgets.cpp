@@ -966,7 +966,7 @@ bool Slider::onMouseButtonDown(int button, int x, int y)
         bool hl = isInRect(x, y, left + sliderX, top, height, height);
         if (hl) {
             dragging = true;
-            dragOffsetX = x - left - sliderX;
+            dragOffsetX = screen.reverseScale(x) - left - sliderX;
         }
     }
     return in;
@@ -1006,7 +1006,7 @@ float Slider::xToValue(int pos)
 bool Slider::onMouseMove(int x, int y)
 {
     if (dragging) {
-        float val = xToValue(x - left - dragOffsetX);
+        float val = xToValue(screen.reverseScale(x) - left - dragOffsetX);
         if (val != value) {
             value = val;
             draw();
