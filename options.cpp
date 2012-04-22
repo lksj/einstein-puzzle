@@ -31,18 +31,20 @@ class OptionsChangedCommand: public Command
     private:
         bool &fullscreen;
         bool &niceCursor;
+        bool &scaleUp;
         float &volume;
         Area *area;
     
     public:
-        OptionsChangedCommand(Area *a, bool &fs, bool &ns, float &v): 
-            fullscreen(fs), niceCursor(ns), volume(v) {
+        OptionsChangedCommand(Area *a, bool &fs, bool &ns, bool &su, float &v): 
+            fullscreen(fs), niceCursor(ns), scaleUp(su), volume(v) {
             area = a;
         };
 
         virtual void doAction() {
             bool oldFullscreen = (getStorage()->get(L"fullscreen", 1) != 0);
             bool oldCursor = (getStorage()->get(L"niceCursor", 1) != 0);
+            bool oldScale = (getStorage()->get(L"scaleUp", 1) != 0);
             float oldVolume = (float)getStorage()->get(L"volume", 20) / 100.0f;
             if (fullscreen != oldFullscreen) {
                 getStorage()->set(L"fullscreen", fullscreen);
@@ -54,6 +56,10 @@ class OptionsChangedCommand: public Command
                 screen.setCursor(niceCursor);
             }
 #endif
+            if (scaleUp != oldScale) {
+                getStorage()->set(L"scaleUp", scaleUp);
+                screen.setScale(scaleUp);
+            }
             if (volume != oldVolume) {
                 getStorage()->set(L"volume", (int)(volume * 100.0f));
                 sound->setVolume(volume);
@@ -79,6 +85,7 @@ void showOptionsWindow(Area *parentArea)
 
     bool fullscreen = (getStorage()->get(L"fullscreen", 1) != 0);
     bool niceCursor = (getStorage()->get(L"niceCursor", 1) != 0);
+    bool scaleUp = (getStorage()->get(L"scaleUp", 1) != 0);
     float volume = ((float)getStorage()->get(L"volume", 20)) / 100.0f;
     
     Area area;
@@ -91,13 +98,14 @@ void showOptionsWindow(Area *parentArea)
 #ifndef __APPLE__
     OPTION(280, L"niceCursor", niceCursor);
 #endif
-    
+    OPTION(300, L"scaleUp", scaleUp);
+  
     area.add(new Label(&font, 265, 330, 300, 20, Label::ALIGN_LEFT,
                 Label::ALIGN_MIDDLE, 255,255,255, msg(L"volume")));
     area.add(new Slider(360, 332, 160, 16, volume));
     
     ExitCommand exitCmd(area);
-    OptionsChangedCommand okCmd(&area, fullscreen, niceCursor, volume);
+    OptionsChangedCommand okCmd(&area, fullscreen, niceCursor, scaleUp, volume);
     area.add(new Button(315, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 
                 msg(L"ok"), &okCmd));
     area.add(new Button(405, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 

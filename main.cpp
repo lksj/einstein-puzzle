@@ -45,6 +45,7 @@ static void initScreen()
     if (TTF_Init())
         throw Exception(L"Error initializing font engine");
     screen.setMode(getStorage()->get(L"fullscreen", 1) != 0);
+    screen.setScale(getStorage()->get(L"scaleUp", 1) != 0);
     screen.initCursors();
     
     SDL_Surface *mouse = loadImage(L"cursor.bmp");

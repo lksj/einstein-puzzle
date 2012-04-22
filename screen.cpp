@@ -30,8 +30,8 @@
 
 int modes[][2]={{800,600},{1024,768},{1152,864},{1400,1050}};
 
-int SCREEN_WIDTH = modes[0][0];
-int SCREEN_HEIGHT = modes[0][1];
+int DESKTOP_WIDTH = 0;
+int DESKTOP_HEIGHT = 0;
 
 Screen::Screen()
 {
@@ -71,12 +71,35 @@ void Screen::setMode(bool isFullScreen)
 
 void Screen::applyMode()
 {
-    VideoMode mode = VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 24, fullScreen);
+    int flags = SDL_SWSURFACE /*| SDL_OPENGL*/;
+    if (!screen)
+    {
+        screen = SDL_SetVideoMode(0, 0, 24, flags);
+        DESKTOP_WIDTH = screen->w;
+        DESKTOP_HEIGHT = screen->h;
+    }
+    
+    int i = 0;
+    if (fullScreen)
+    {
+        flags = flags | SDL_FULLSCREEN;
+    }
+    else
+    {
+      if (scaleUp)
+      {
+          while (i < ((int)(sizeof(modes)/sizeof(modes[0]))-1) && 
+                      modes[i][0] <= DESKTOP_WIDTH && modes[i][1] <= DESKTOP_HEIGHT)
+          {
+              i++;
+          }
+      }
+    }
+    
+    VideoMode mode = VideoMode(modes[i][0], modes[i][1], 24, fullScreen);
     scale = mode.getWidth()/(float)UNSCALED_WIDTH;
     
-    int flags = SDL_SWSURFACE /*| SDL_OPENGL*/;
-    if (fullScreen)
-        flags = flags | SDL_FULLSCREEN;
+    SDL_FreeSurface(screen);
     screen = SDL_SetVideoMode(mode.getWidth(), mode.getHeight(), mode.getBpp(), flags);
     if (! screen)
         throw Exception(L"Couldn't set video mode: " + 
@@ -405,4 +428,16 @@ SDL_Surface* Screen::getRegion(int x, int y, int w, int h)
     SDL_BlitSurface(unscaled, &src, s, &dst);
     
     return s;
+}
+
+void Screen::setScale(bool isScaleUp)
+{
+    if (scaleUp != isScaleUp)
+    {
+      scaleUp = isScaleUp;
+      if (!fullScreen)
+      {
+          applyMode();
+      }
+    }
 }

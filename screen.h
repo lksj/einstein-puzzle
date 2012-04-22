@@ -61,6 +61,7 @@ class Screen
         SDL_Surface *unscaled;
         float scale;
         bool fullScreen;
+        bool scaleUp;
         SDL_Surface *mouseImage;
         SDL_Surface *mouseSave;
         std::list<SDL_Rect> regions;
@@ -101,6 +102,7 @@ class Screen
         SDL_PixelFormat* getFormat();
         void setClipRect(SDL_Rect* rect);
         SDL_Surface* getRegion(int x, int y, int width, int height);
+        void setScale(bool scaleUp);
 };
 
 
