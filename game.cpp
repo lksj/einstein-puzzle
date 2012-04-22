@@ -160,9 +160,15 @@ void Watch::draw()
     int y = 24;
     int w, h;
     font->getSize(s, w, h);
-    SDL_Rect rect = { x-2, y-2, w+4, h+4 };
-    SDL_FillRect(screen.getSurface(), &rect, 
+    SDL_Rect rect = { 0, 0, w+4, h+4 };
+    SDL_PixelFormat *fmt = screen.getFormat();
+    SDL_Surface *box = SDL_CreateRGBSurface(SDL_SWSURFACE, rect.w, rect.h, 
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
+    SDL_FillRect(box, &rect, 
             SDL_MapRGB(screen.getFormat(), 0, 0, 255));
+    screen.draw(x-2, y-2, box);
+    SDL_FreeSurface(box);
     font->draw(x, y, 255,255,255, true, s);
     screen.addRegionToUpdate(x-2, y-2, w+4, h+4);
     
