@@ -162,7 +162,7 @@ void Watch::draw()
     font->getSize(s, w, h);
     SDL_Rect rect = { x-2, y-2, w+4, h+4 };
     SDL_FillRect(screen.getSurface(), &rect, 
-            SDL_MapRGB(screen.getSurface()->format, 0, 0, 255));
+            SDL_MapRGB(screen.getFormat(), 0, 0, 255));
     font->draw(x, y, 255,255,255, true, s);
     screen.addRegionToUpdate(x-2, y-2, w+4, h+4);
     
