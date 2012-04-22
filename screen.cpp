@@ -352,3 +352,14 @@ void Screen::setClipRect(SDL_Rect* rect)
 {
   SDL_SetClipRect(screen, rect);
 }
+
+SDL_Surface* Screen::getRegion(int x, int y, int w, int h)
+{
+    SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h,
+            24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0/*0xFF000000*/);
+    SDL_Rect src = { x, y, w, h };
+    SDL_Rect dst = { 0, 0, w, h };
+    SDL_BlitSurface(screen, &src, s, &dst);
+    
+    return s;
+}

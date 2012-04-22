@@ -96,6 +96,7 @@ class Screen
         void drawWallpaper(const std::wstring &name);
         SDL_PixelFormat* getFormat();
         void setClipRect(SDL_Rect* rect);
+        SDL_Surface* getRegion(int x, int y, int width, int height);
 };
 
 

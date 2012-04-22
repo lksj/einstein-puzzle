@@ -57,17 +57,15 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h,
-            24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0/*0xFF000000*/);
-    SDL_Rect src = { x, y, width, height };
-    SDL_Rect dst = { 0, 0, width, height };
-    SDL_BlitSurface(screen.getSurface(), &src, s, &dst);
+    SDL_Surface *s = screen.getRegion(left, top, width, height);
     
     int tW, tH;
     font->getSize(text, tW, tH);
     font->draw(s, (width - tW) / 2, (height - tH) / 2, fR, fG, fB, true, text);
     image = SDL_DisplayFormat(s);
-    SDL_BlitSurface(screen.getSurface(), &src, s, &dst);
+    SDL_FreeSurface(s);
+    
+    s = screen.getRegion(left, top, width, height);
     font->draw(s, (width - tW) / 2, (height - tH) / 2, hR, hG, hB, true, text);
     highlighted = SDL_DisplayFormat(s);
     SDL_FreeSurface(s);
