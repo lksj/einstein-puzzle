@@ -342,3 +342,8 @@ void Screen::drawWallpaper(const std::wstring &name)
         }
     SDL_FreeSurface(tile);
 }
+
+SDL_PixelFormat* Screen::getFormat()
+{
+    return screen->format;
+}

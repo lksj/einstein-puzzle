@@ -94,6 +94,7 @@ class Screen
         void doneCursors();
         SDL_Surface* createSubimage(int x, int y, int width, int height);
         void drawWallpaper(const std::wstring &name);
+        SDL_PixelFormat* getFormat();
 };
 
 

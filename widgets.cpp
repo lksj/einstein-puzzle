@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -84,10 +86,10 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    SDL_Surface *s = screen.getSurface();
+    SDL_PixelFormat *fmt = screen.getFormat();
     image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
 
     SDL_Surface *tile = loadImage(bg, true);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -130,10 +132,10 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    SDL_Surface *s = screen.getSurface();
+    SDL_PixelFormat *fmt = screen.getFormat();
     image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
 
     SDL_Surface *tile = loadImage(bg);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -449,10 +451,10 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
     width = w;
     height = h;
     
-    SDL_Surface *s = screen.getSurface();
+    SDL_PixelFormat *fmt = screen.getFormat();
     SDL_Surface *win = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
 
     SDL_Surface *tile = loadImage(bg);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -734,10 +736,10 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *font,
     height = h;
     checked = chk;
 
-    SDL_Surface *s = screen.getSurface();
+    SDL_PixelFormat *fmt = screen.getFormat();
     image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
 
     SDL_Surface *tile = loadImage(bg);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -930,10 +932,10 @@ void Slider::createBackground()
 
 void Slider::createSlider(int size)
 {
-    SDL_Surface *s = screen.getSurface();
+    SDL_PixelFormat *fmt = screen.getFormat();
     SDL_Surface *image = SDL_CreateRGBSurface(SDL_SWSURFACE, size, size, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
 
     SDL_Surface *tile = loadImage(L"blue.bmp");
     SDL_Rect src = { 0, 0, tile->w, tile->h };
