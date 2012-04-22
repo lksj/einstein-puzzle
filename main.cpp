@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -42,8 +44,7 @@ static void initScreen()
     atexit(SDL_Quit);
     if (TTF_Init())
         throw Exception(L"Error initializing font engine");
-    screen.setMode(VideoMode(800, 600, 24, 
-                getStorage()->get(L"fullscreen", 1) != 0));
+    screen.setMode(getStorage()->get(L"fullscreen", 1) != 0);
     screen.initCursors();
     
     SDL_Surface *mouse = loadImage(L"cursor.bmp");

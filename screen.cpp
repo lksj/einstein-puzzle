@@ -25,6 +25,11 @@
 #include "unicode.h"
 #include "utils.h"
 
+#define UNSCALED_WIDTH      800
+#define UNSCALED_HEIGHT     600
+
+int SCREEN_WIDTH = UNSCALED_WIDTH;
+int SCREEN_HEIGHT = UNSCALED_HEIGHT;
 
 Screen::Screen()
 {
@@ -51,10 +56,19 @@ const VideoMode Screen::getVideoMode() const
 }
 
 
-void Screen::setMode(const VideoMode& mode)
+void Screen::setMode(bool isFullScreen)
 {
-    fullScreen = mode.isFullScreen();
+    if (!screen || fullScreen != isFullScreen)
+    {
+        fullScreen = isFullScreen;
+        applyMode();
+    }
+}
 
+void Screen::applyMode()
+{
+    VideoMode mode = VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 24, fullScreen);
+    
     int flags = SDL_SWSURFACE /*| SDL_OPENGL*/;
     if (fullScreen)
         flags = flags | SDL_FULLSCREEN;
@@ -75,7 +89,7 @@ std::vector<VideoMode> Screen::getFullScreenModes() const
 int Screen::getWidth() const
 {
     if (screen) 
-        return screen->w;
+        return UNSCALED_WIDTH;
     else 
         throw Exception(L"No video mode selected"); 
 }
@@ -84,7 +98,7 @@ int Screen::getWidth() const
 int Screen::getHeight() const
 {
     if (screen) 
-        return screen->h;
+        return UNSCALED_HEIGHT;
     else 
         throw Exception(L"No video mode selected");
 }

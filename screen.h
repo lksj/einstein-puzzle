@@ -68,6 +68,7 @@ class Screen
         int saveX, saveY;
         bool niceCursor;
         SDL_Cursor *cursor, *emptyCursor;
+        void applyMode();
     
     public:
         Screen();
@@ -77,7 +78,7 @@ class Screen
         const VideoMode getVideoMode() const;
         int getWidth() const;
         int getHeight() const;
-        void setMode(const VideoMode& mode);
+        void setMode(bool fullScreen);
         std::vector<VideoMode> getFullScreenModes() const;
         void centerMouse();
         void setMouseImage(SDL_Surface *image);
