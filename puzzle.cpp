@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -72,19 +74,26 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
             screen.draw(posX, posY, iconSet.getLargeIcon(row, element, 
                         (hCol == col) && (hRow == row)));
     } else {
-        screen.draw(posX, posY, iconSet.getEmptyFieldIcon());
-        int x = posX;
-        int y = posY + (FIELD_TILE_HEIGHT / 6);
+        SDL_Surface* emptyFieldIcon = iconSet.getEmptyFieldIcon();
+        SDL_Surface* newTile = SDL_ConvertSurface(emptyFieldIcon, emptyFieldIcon->format, emptyFieldIcon->flags);
+        int x = 0;
+        int y = (FIELD_TILE_HEIGHT / 6);
         for (int i = 0; i < 6; i++) {
             if (possib->isPossible(col, row, i + 1))
-                screen.draw(x, y, iconSet.getSmallIcon(row, i + 1, 
-                            (hCol == col) && (hRow == row) && (i + 1 == subHNo)));
+            {
+                SDL_Surface* smallIcon = iconSet.getSmallIcon(row, i + 1, (hCol == col) && (hRow == row) && (i + 1 == subHNo));
+                SDL_Rect src = { 0, 0, smallIcon->w, smallIcon->h };
+                SDL_Rect dst = { x, y, smallIcon->w, smallIcon->h };
+                SDL_BlitSurface(smallIcon, &src, newTile, &dst);
+            }
             if (i == 2) {
-                x = posX;
+                x = 0;
                 y += (FIELD_TILE_HEIGHT / 3);
             } else
                 x += (FIELD_TILE_WIDTH / 3);
         }
+        screen.draw(posX, posY, newTile);
+        SDL_FreeSurface(newTile);
     }
     if (addToUpdate)
         screen.addRegionToUpdate(posX, posY, FIELD_TILE_WIDTH, 
