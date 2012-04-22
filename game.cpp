@@ -167,9 +167,9 @@ void Watch::draw()
             fmt->Bmask, fmt->Amask);
     SDL_FillRect(box, &rect, 
             SDL_MapRGB(screen.getFormat(), 0, 0, 255));
+    font->draw(box, 2, 2, 255,255,255, true, s);
     screen.draw(x-2, y-2, box);
     SDL_FreeSurface(box);
-    font->draw(x, y, 255,255,255, true, s);
     screen.addRegionToUpdate(x-2, y-2, w+4, h+4);
     
     lastUpdate = time;
