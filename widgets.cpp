@@ -604,7 +604,7 @@ void InputField::draw()
     Window::draw();
 
     SDL_Rect rect = { left+1, top+1, width-2, height-2 };
-    SDL_SetClipRect(screen.getSurface(), &rect);
+    screen.setClipRect(&rect);
     
     font->draw(left+1, top+1, red,green,blue, true, text);
 
@@ -618,7 +618,7 @@ void InputField::draw()
         }
     }
     
-    SDL_SetClipRect(screen.getSurface(), NULL);
+    screen.setClipRect(NULL);
 }
 
 void InputField::setParent(Area *a)

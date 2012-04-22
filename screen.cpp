@@ -347,3 +347,8 @@ SDL_PixelFormat* Screen::getFormat()
 {
     return screen->format;
 }
+
+void Screen::setClipRect(SDL_Rect* rect)
+{
+  SDL_SetClipRect(screen, rect);
+}

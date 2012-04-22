@@ -95,6 +95,7 @@ class Screen
         SDL_Surface* createSubimage(int x, int y, int width, int height);
         void drawWallpaper(const std::wstring &name);
         SDL_PixelFormat* getFormat();
+        void setClipRect(SDL_Rect* rect);
 };
 
 
