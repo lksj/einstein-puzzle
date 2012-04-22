@@ -381,7 +381,7 @@ SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
         throw Exception(L"Error creating buffer surface");
     SDL_Rect src = { x, y, width, height };
     SDL_Rect dst = { 0, 0, width, height };
-    SDL_BlitSurface(screen, &src, s, &dst);
+    SDL_BlitSurface(unscaled, &src, s, &dst);
     return s;
 }
 
