@@ -55,7 +55,7 @@ void GameBackground::draw()
     SDL_FreeSurface(tile);
     
     Font titleFont(L"nova.ttf", 28);
-    titleFont.draw(screen.getSurface(), 20, 20, 255,255,0, true, 
+    titleFont.draw(20, 20, 255,255,0, true, 
             msg(L"einsteinPuzzle"));
     
     screen.addRegionToUpdate(0, 0, screen.getWidth(), screen.getHeight());
