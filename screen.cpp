@@ -101,6 +101,7 @@ void Screen::applyMode()
     
     SDL_FreeSurface(screen);
     screen = SDL_SetVideoMode(mode.getWidth(), mode.getHeight(), mode.getBpp(), flags);
+    regions.clear();
     if (! screen)
         throw Exception(L"Couldn't set video mode: " + 
                 fromMbcs((SDL_GetError())));
@@ -190,7 +191,7 @@ void Screen::hideMouse()
         SDL_Rect dst = { saveX, saveY, mouseSave->w, mouseSave->h };
         if (src.w > 0) {
             SDL_BlitSurface(mouseSave, &src, screen, &dst);
-            addRegionToUpdate(dst.x, dst.y, dst.w, dst.h);
+            addRegionToUpdate(reverseScale(dst.x), reverseScale(dst.y), dst.w, dst.h);
         }
     }
     mouseVisible = false;
@@ -216,7 +217,7 @@ void Screen::showMouse()
         if (src.w > 0) {
             SDL_BlitSurface(screen, &dst, mouseSave, &src);
             SDL_BlitSurface(mouseImage, &src, screen, &dst);
-            addRegionToUpdate(dst.x, dst.y, dst.w, dst.h);
+            addRegionToUpdate(reverseScale(dst.x), reverseScale(dst.y), dst.w, dst.h);
         }
     }
     mouseVisible = true;
