@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -106,10 +106,12 @@ void HorHints::drawCell(int col, int row, bool addToUpdate)
     Rule *r = NULL;
     int no = row * HINTS_COLS + col;
     if (no < (int)rules.size())
+    {
         if (showExcluded)
             r = excludedRules[no];
         else
             r = rules[no];
+    }
     if (r)
         r->draw(x, y, iconSet, no == highlighted);
     else
