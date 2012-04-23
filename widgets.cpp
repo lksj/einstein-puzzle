@@ -1030,3 +1030,111 @@ bool Slider::onMouseMove(int x, int y)
     return in;
 }
 
+//////////////////////////////////////////////////////////////////
+//
+// CycleButton
+//
+//////////////////////////////////////////////////////////////////
+
+CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::wstring* o): value(v)
+{
+    left = x;
+    top = y;
+    width = w;
+    height = h;
+    font = f;
+    options = o;
+    
+    SDL_PixelFormat *fmt = screen.getFormat();
+    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
+            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+            fmt->Bmask, fmt->Amask);
+
+    drawTiles();
+  
+    mouseInside = false;
+}
+
+
+CycleButton::~CycleButton()
+{
+    SDL_FreeSurface(image);
+    SDL_FreeSurface(highlighted);
+}
+
+
+void CycleButton::draw()
+{
+    if (mouseInside)
+        screen.draw(left, top, highlighted);
+    else
+        screen.draw(left, top, image);
+    screen.addRegionToUpdate(left, top, width, height);
+}
+
+void CycleButton::drawTiles()
+{
+    std::wstring text = options[value];
+    int r = 255;
+    int g = 255;
+    int b = 0;
+    
+    SDL_Surface *tile = loadImage(L"blue.bmp");
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, tile->w, tile->h };
+    for (int j = 0; j < height; j += tile->h)
+    {
+        for (int i = 0; i < width; i += tile->w)
+        {
+            dst.x = i;
+            dst.y = j;
+            SDL_BlitSurface(tile, &src, image, &dst);
+        }
+    }
+    SDL_FreeSurface(tile);
+    
+    SDL_LockSurface(image);
+    drawBevel(image, 0, 0, width, height, false, 1);
+    drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
+    SDL_UnlockSurface(image);
+    
+    int tW, tH;
+    font->getSize(text, tW, tH);
+    font->draw(image, (width - tW) / 2, (height - tH) / 2, r, g, b, true, text);
+    
+    //NOTE: is this a memory leak?  SDL_FreeSurface() causes a segfault
+    highlighted = adjustBrightness(image, 1.5, false);
+    
+    draw();
+}
+
+void CycleButton::getBounds(int &l, int &t, int &w, int &h)
+{
+    l = left;
+    t = top;
+    w = width;
+    h = height;
+}
+
+
+bool CycleButton::onMouseButtonDown(int button, int x, int y)
+{
+    if (isInRect(x, y, left, top, width, height)) {
+        sound->play(L"click.wav");
+        value = (value + 1) % 4;
+        drawTiles();
+        return true;
+    } else
+        return false;
+}
+
+
+bool CycleButton::onMouseMove(int x, int y)
+{
+    bool in = isInRect(x, y, left, top, width, height);
+    if (in != mouseInside) {
+        mouseInside = in;
+        draw();
+    }
+    return false;
+}

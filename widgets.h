@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -336,6 +338,33 @@ class Slider: public Widget
         float xToValue(int pos);
 };
 
+
+class CycleButton: public Widget
+{
+    protected:
+        int left, top, width, height;
+        SDL_Surface *image, *highlighted;
+        bool mouseInside;
+        Font *font;
+        int &value;
+        std::wstring* options;
+        void drawTiles();
+        
+    public:
+        CycleButton(int x, int y, int width, int height, Font *font, int &value, std::wstring* options);
+        virtual ~CycleButton();
+
+    public:
+        virtual void draw();
+        void getBounds(int &left, int &top, int &width, int &height);
+        int getLeft() const { return left; };
+        int getTop() const { return top; };
+        int getWidth() const { return width; };
+        int getHeight() const { return height; };
+        virtual bool onMouseButtonDown(int buttons, int x, int y);
+        virtual bool onMouseMove(int x, int y);
+        void moveTo(int x, int y) { left = x; top = y; };
+};
 
 #endif
 

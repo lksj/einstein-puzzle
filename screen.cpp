@@ -86,14 +86,7 @@ void Screen::applyMode()
     }
     else
     {
-      if (scaleUp)
-      {
-          while (i < ((int)(sizeof(modes)/sizeof(modes[0]))-1) && 
-                      modes[i][0] <= DESKTOP_WIDTH && modes[i][1] <= DESKTOP_HEIGHT)
-          {
-              i++;
-          }
-      }
+      i = screenSize;
     }
     
     VideoMode mode = VideoMode(modes[i][0], modes[i][1], 24, fullScreen);
@@ -436,11 +429,11 @@ SDL_Surface* Screen::getRegion(int x, int y, int w, int h)
     return s;
 }
 
-void Screen::setScale(bool isScaleUp)
+void Screen::setSize(int size)
 {
-    if (scaleUp != isScaleUp)
+    if (screenSize != size)
     {
-      scaleUp = isScaleUp;
+      screenSize = size;
       if (!fullScreen)
       {
           applyMode();
