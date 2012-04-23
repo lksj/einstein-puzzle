@@ -131,6 +131,7 @@ class Area: public Widget
         virtual ~Area();
 
     public:
+        bool contains(Widget * widget);
         void add(Widget *widget, bool manage=true);
         void remove(Widget *widget);
         void handleEvent(const SDL_Event &event);

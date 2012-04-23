@@ -261,15 +261,34 @@ Area::~Area()
 
 void Area::add(Widget *widget, bool managed)
 {
-    widgets.push_back(widget);
+    if (!contains(widget))
+    {
+        widgets.push_back(widget);
+    }
     if (! managed)
         notManagedWidgets.insert(widget);
     widget->setParent(this);
 }
 
+bool Area::contains(Widget * widget)
+{
+    for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
+    {
+        if (widget == *i)
+        {
+            return true;
+        }
+      }
+    return false;
+}
+
 void Area::remove(Widget *widget)
 {
-    widgets.remove(widget);
+    
+    if (contains(widget))
+    {
+        widgets.remove(widget);
+    }
     notManagedWidgets.insert(widget);
 }
 

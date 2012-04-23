@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -79,6 +81,7 @@ class TextParser
 
     public:
         TextPage* getPage(unsigned int no);
+        int getPageCount();
 
     private:
         void addLine(TextPage *page, std::wstring &line, int &curPosY, 
@@ -102,7 +105,9 @@ class Description
 
         CursorCommand *prevCmd;		// Sobytie na nazhatie knopki <PREV>
         CursorCommand *nextCmd;		// Sobytie na nazhatie knopki <PREV>
-
+        Button *btnPrev;
+        Button *btnNext;
+        
         Area area;			// Mesto gde risovat'
         //std::vector<RulesPage *> pages;	// Spisok stranits teksta
         unsigned int currentPage;	// Tekuschaja stranitsa dlja prosmotra
@@ -167,6 +172,8 @@ Description::Description(Area *parentArea)
                 CLIENT_WIDTH, CLIENT_HEIGHT);
     prevCmd = new CursorCommand(-1, *this, &currentPage);
     nextCmd = new CursorCommand(1, *this, &currentPage);
+    btnPrev = new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"), prevCmd);
+    btnNext = new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), nextCmd);
 }
 
 Description::~Description()
@@ -192,6 +199,24 @@ void Description::updateInfo()
 {
     deleteWidgets();
     printPage();
+    if (0 == currentPage)
+    {
+        area.remove(btnPrev);
+    }
+    else
+    {
+        area.add(btnPrev);  
+    }
+    
+    if ((text->getPageCount() - 1) == currentPage)
+    {
+        area.remove(btnNext);
+    }
+    else
+    {
+        area.add(btnNext);  
+    }
+    
     area.draw();
 }
 
@@ -199,8 +224,7 @@ void Description::run()
 {
     area.add(new Window(100, 50, WIDTH, HEIGHT, L"blue.bmp"));
     area.add(new Label(titleFont, 250, 60, 300, 40, Label::ALIGN_CENTER, Label::ALIGN_MIDDLE, 255, 255, 0, msg(L"rules")));
-    area.add(new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"), prevCmd));
-    area.add(new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), nextCmd));
+    area.add(btnNext);
     ExitCommand exitCmd(area);
     area.add(new Button(610, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"close"), &exitCmd));
     area.add(new KeyAccel(SDLK_ESCAPE, &exitCmd));
@@ -260,6 +284,9 @@ TextParser::TextParser(const std::wstring &text, Font &font,
     offsetY = y;
     pageWidth = width;
     pageHeight = height;
+  
+    while (! tokenizer.isFinished())
+        parseNextPage();
 }
 
 
@@ -380,11 +407,13 @@ void TextParser::parseNextPage()
 
 TextPage* TextParser::getPage(unsigned int no)
 {
-    while ((! tokenizer.isFinished()) && (pages.size() <= no))
-        parseNextPage();
     if (pages.size() <= no)
         return NULL;
     else
         return pages[no];
 }
 
+int TextParser::getPageCount()
+{
+    return pages.size();
+}
