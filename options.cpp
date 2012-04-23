@@ -100,8 +100,7 @@ void showOptionsWindow(Area *parentArea)
 #endif
     area.add(new Label(&font, 265, 305, 300, 18, Label::ALIGN_LEFT,
                 Label::ALIGN_MIDDLE, 255,255,255, msg(L"screenSize")));
-    std::wstring opts[] = { L"800x600", L"1024x768", L"1152x864", L"1400x1050" };
-    area.add(new CycleButton(360, 305, 160, 18, &font, screenSize, opts));
+    area.add(new CycleButton(360, 305, 160, 18, &font, screenSize, screen.getModeList()));
    
     area.add(new Label(&font, 265, 330, 300, 20, Label::ALIGN_LEFT,
                 Label::ALIGN_MIDDLE, 255,255,255, msg(L"volume")));

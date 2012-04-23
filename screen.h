@@ -103,6 +103,7 @@ class Screen
         void setClipRect(SDL_Rect* rect);
         SDL_Surface* getRegion(int x, int y, int width, int height);
         void setSize(int screenSize);
+        std::vector<std::wstring> getModeList();
 };
 
 

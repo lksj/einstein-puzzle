@@ -27,6 +27,7 @@
 #include <set>
 #include <SDL/SDL.h>
 #include "font.h"
+#include <vector>
 
 
 class Command
@@ -347,11 +348,11 @@ class CycleButton: public Widget
         bool mouseInside;
         Font *font;
         int &value;
-        std::wstring* options;
+        std::vector<std::wstring> options;
         void drawTiles();
         
     public:
-        CycleButton(int x, int y, int width, int height, Font *font, int &value, std::wstring* options);
+        CycleButton(int x, int y, int width, int height, Font *font, int &value, std::vector<std::wstring> options);
         virtual ~CycleButton();
 
     public:

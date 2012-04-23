@@ -24,6 +24,8 @@
 #include "utils.h"
 #include "sound.h"
 
+#include <iostream>
+using namespace std;
 
 //////////////////////////////////////////////////////////////////
 //
@@ -1036,7 +1038,7 @@ bool Slider::onMouseMove(int x, int y)
 //
 //////////////////////////////////////////////////////////////////
 
-CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::wstring* o): value(v)
+CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::vector<std::wstring> o): value(v)
 {
     left = x;
     top = y;
@@ -1121,7 +1123,8 @@ bool CycleButton::onMouseButtonDown(int button, int x, int y)
 {
     if (isInRect(x, y, left, top, width, height)) {
         sound->play(L"click.wav");
-        value = (value + 1) % 4;
+        value = (value + 1) % (options.size());
+      
         drawTiles();
         return true;
     } else
