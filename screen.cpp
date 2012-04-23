@@ -333,9 +333,9 @@ void Screen::draw(int x, int y, SDL_Surface *tile)
 {
     SDL_Rect src = { 0, 0, tile->w, tile->h };
     SDL_Rect u_dst = { x, y, tile->w, tile->h };
-    SDL_Rect dst = { this->doScale(x), this->doScale(y), this->doScale(tile->w), this->doScale(tile->h) };
-    
     SDL_BlitSurface(tile, &src, unscaled, &u_dst);
+    
+    SDL_Rect dst = { this->doScale(x), this->doScale(y), this->doScale(tile->w), this->doScale(tile->h) };
     SDL_SoftStretch(unscaled, &u_dst, screen, &dst);
     
     //~ //this fixes the twitching when you click on menus but it causes new game to be really slow
