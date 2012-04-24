@@ -612,20 +612,29 @@ InputField::~InputField()
 void InputField::draw()
 {
     Window::draw();
+    int pad = (height/4);
 
     SDL_Rect rect = { left+1, top+1, width-2, height-2 };
     screen.setClipRect(&rect);
     
-    font->draw(left+(height/4), top+(height/4), red,green,blue, true, text);
+    font->draw(left+pad, top+pad, red,green,blue, true, text);
 
     if (cursorVisible) {
         int pos = 0;
         if (cursorPos > 0)
+        {
+            font->setScaled(true);
             pos += font->getWidth(text.substr(0, cursorPos));
-        for (int i = 2; i < height-2; i++) {
-            screen.setPixel(left + pos, top + i, red, green, blue);
-            screen.setPixel(left + pos + 1, top + i, red, green, blue);
+            font->setScaled(false);
         }
+        SDL_Surface *s = makeSWSurface(2, height-4);
+        
+        for (int i = 0; i < s->h; i++) {
+            setPixel(s, 0, i, red, green, blue);
+            setPixel(s, 1, i, red, green, blue);
+        }
+        screen.draw(left + pad + screen.reverseScale(pos), top + 2, s);
+        SDL_FreeSurface(s);
     }
     
     screen.setClipRect(NULL);

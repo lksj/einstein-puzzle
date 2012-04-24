@@ -110,9 +110,10 @@ void Font::draw(SDL_Surface *s, int x, int y, int r, int g, int b,
 void Font::draw(int x, int y, int r, int g, int b, bool shadow, 
         const std::wstring &text)
 {
+    TTF_Font *oldFont = font;
     font = scaled;
     draw(screen.getScaled(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
-    font = unscaled;
+    font = oldFont;
 }
 
 int Font::getWidth(const std::wstring &text)
@@ -144,3 +145,7 @@ void Font::getSize(const std::wstring &text, int &width, int &height)
     TTF_SizeUNICODE(font, str, &width, &height);
 }
 
+void Font::setScaled(bool isScaled)
+{
+    font = isScaled ? scaled : unscaled;
+}

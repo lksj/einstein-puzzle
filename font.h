@@ -48,6 +48,7 @@ class Font
         int getWidth(wchar_t ch);
         int getHeight(const std::wstring &text);
         void getSize(const std::wstring &text, int &width, int &height);
+        void setScaled(bool isScaled);
 };
 
 
