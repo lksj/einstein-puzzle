@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -67,12 +67,18 @@ Font::Font(const std::wstring &name, int ptsize)
 
     if (! font)
         throw Exception(L"Error loading font " + name);
+    
+    //HACK: keep a scaled version of the font for drawing directly to scaled screen
+    SDL_RWops *op2 = SDL_RWFromMem(data, size);
+    scaled = TTF_OpenFontRW(op2, 1, screen.doScale(ptsize));
+    unscaled = font;
 }
 
 
 Font::~Font()
 {
-    TTF_CloseFont(font);
+    TTF_CloseFont(unscaled);
+    TTF_CloseFont(scaled);
     resources->delRef(data);
 }
 
@@ -104,10 +110,9 @@ void Font::draw(SDL_Surface *s, int x, int y, int r, int g, int b,
 void Font::draw(int x, int y, int r, int g, int b, bool shadow, 
         const std::wstring &text)
 {
-    SDL_Surface *s = screen.getRegion(0, 0, screen.getWidth(), screen.getHeight());
-    draw(s, x, y, r,g,b, shadow, text);
-    screen.draw(0, 0, s);
-    SDL_FreeSurface(s);
+    font = scaled;
+    draw(screen.getScaled(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
+    font = unscaled;
 }
 
 int Font::getWidth(const std::wstring &text)

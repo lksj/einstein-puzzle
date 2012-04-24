@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -28,6 +30,8 @@
 class Font
 {
     private:
+        TTF_Font *unscaled;
+        TTF_Font *scaled;
         TTF_Font *font;
         void *data;
     
