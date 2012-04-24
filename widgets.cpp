@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -86,10 +86,7 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    SDL_PixelFormat *fmt = screen.getFormat();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    image = makeSWSurface(width, height);
 
     SDL_Surface *tile = loadImage(bg, true);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -132,10 +129,7 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    SDL_PixelFormat *fmt = screen.getFormat();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    image = makeSWSurface(width, height);
 
     SDL_Surface *tile = loadImage(bg);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -470,10 +464,7 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
     width = w;
     height = h;
     
-    SDL_PixelFormat *fmt = screen.getFormat();
-    SDL_Surface *win = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    SDL_Surface *win = makeSWSurface(width, height);
 
     SDL_Surface *tile = loadImage(bg);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -755,10 +746,7 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *font,
     height = h;
     checked = chk;
 
-    SDL_PixelFormat *fmt = screen.getFormat();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    image = makeSWSurface(width, height);
 
     SDL_Surface *tile = loadImage(bg);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -951,10 +939,7 @@ void Slider::createBackground()
 
 void Slider::createSlider(int size)
 {
-    SDL_PixelFormat *fmt = screen.getFormat();
-    SDL_Surface *image = SDL_CreateRGBSurface(SDL_SWSURFACE, size, size, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    SDL_Surface *image = makeSWSurface(size, size);
 
     SDL_Surface *tile = loadImage(L"blue.bmp");
     SDL_Rect src = { 0, 0, tile->w, tile->h };
@@ -1066,10 +1051,7 @@ CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::vecto
     font = f;
     options = o;
     
-    SDL_PixelFormat *fmt = screen.getFormat();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    image = makeSWSurface(width, height);
 
     drawTiles();
   

@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -161,10 +161,8 @@ void Watch::draw()
     int w, h;
     font->getSize(s, w, h);
     SDL_Rect rect = { 0, 0, w+4, h+4 };
-    SDL_PixelFormat *fmt = screen.getFormat();
-    SDL_Surface *box = SDL_CreateRGBSurface(SDL_SWSURFACE, rect.w, rect.h, 
-            fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
-            fmt->Bmask, fmt->Amask);
+    
+    SDL_Surface *box = makeSWSurface(rect.w, rect.h);
     SDL_FillRect(box, &rect, 
             SDL_MapRGB(screen.getFormat(), 0, 0, 255));
     font->draw(box, 2, 2, 255,255,255, true, s);
