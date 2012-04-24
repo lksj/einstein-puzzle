@@ -187,7 +187,7 @@ static int gammaTable[256];
 static double lastGamma = -1.0;
 
 
-void adjustBrightness(SDL_Surface *image, int x, int y, double k)
+void setGamma(double k)
 {
     if (lastGamma != k) {
         for (int i = 0; i <= 255; i++) {
@@ -197,6 +197,11 @@ void adjustBrightness(SDL_Surface *image, int x, int y, double k)
         }
         lastGamma = k;
     }
+}
+
+void adjustBrightness(SDL_Surface *image, int x, int y, double k)
+{
+    setGamma(k);
     
     Uint8 r, g, b;
     getPixel(image, x, y, &r, &g, &b);
@@ -206,14 +211,7 @@ void adjustBrightness(SDL_Surface *image, int x, int y, double k)
 
 SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent)
 {
-    if (lastGamma != k) {
-        for (int i = 0; i <= 255; i++) {
-            gammaTable[i] = (int)(255.0 * pow((double)i / 255.0, 1.0 / k) + 0.5);
-            if (gammaTable[i] > 255)
-                gammaTable[i] = 255;
-        }
-        lastGamma = k;
-    }
+    setGamma(k);
     
     SDL_Surface *s = SDL_DisplayFormat(image);
     if (! s)
