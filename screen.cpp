@@ -435,7 +435,16 @@ SDL_PixelFormat* Screen::getFormat()
 
 void Screen::setClipRect(SDL_Rect* rect)
 {
-  SDL_SetClipRect(screen, rect);
+    if (rect)
+    {
+      SDL_Rect sRect = { doScale(rect->x), doScale(rect->y),
+                                      doScale(rect->w), doScale(rect->h) };
+      SDL_SetClipRect(screen, &sRect);
+    }
+    else
+    {
+        SDL_SetClipRect(screen, rect);
+    }
 }
 
 int Screen::doScale(int i)
