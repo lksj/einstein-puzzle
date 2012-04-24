@@ -616,7 +616,7 @@ void InputField::draw()
     SDL_Rect rect = { left+1, top+1, width-2, height-2 };
     screen.setClipRect(&rect);
     
-    font->draw(left+1, top+1, red,green,blue, true, text);
+    font->draw(left+(height/4), top+(height/4), red,green,blue, true, text);
 
     if (cursorVisible) {
         int pos = 0;
