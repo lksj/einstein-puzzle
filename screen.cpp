@@ -421,6 +421,11 @@ void Screen::drawWallpaper(const std::wstring &name)
             SDL_BlitSurface(tile, &src, unscaled, &dst);
         }
     SDL_FreeSurface(tile);
+    
+    //HACK: using draw causes seams so do the scale here
+    SDL_Rect src_full = { 0, 0, unscaled->w, unscaled->h };
+    SDL_Rect dst_full = { 0, 0, screen->w, screen->h };
+    SDL_SoftStretch(unscaled, &src_full, screen, &dst_full);
 }
 
 SDL_PixelFormat* Screen::getFormat()
@@ -464,4 +469,9 @@ void Screen::setSize(int size)
           applyMode();
       }
     }
+}
+
+SDL_Surface* Screen::getScaled()
+{
+    return screen;
 }
