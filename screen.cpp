@@ -301,43 +301,6 @@ void Screen::addRegionToUpdate(int chkX, int chkY, int chkW, int chkH)
 }
 
 
-void Screen::setPixel(int x, int y, int r, int g, int b)
-{
-    SDL_LockSurface(unscaled);
-    int bpp = unscaled->format->BytesPerPixel;
-    Uint32 pixel = SDL_MapRGB(unscaled->format, r, g, b);
-    /* Here p is the address to the pixel we want to set */
-    Uint8 *p = (Uint8*)unscaled->pixels + y * unscaled->pitch + x * bpp;
-
-    switch(bpp) {
-        case 1:
-            *p = pixel;
-            break;
-
-        case 2:
-            *(Uint16 *)p = pixel;
-            break;
-
-        case 3:
-            if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-                p[0] = (pixel >> 16) & 0xff;
-                p[1] = (pixel >> 8) & 0xff;
-                p[2] = pixel & 0xff;
-            } else {
-                p[0] = pixel & 0xff;
-                p[1] = (pixel >> 8) & 0xff;
-                p[2] = (pixel >> 16) & 0xff;
-            }
-            break;
-
-        case 4:
-            *(Uint32 *)p = pixel;
-            break;
-    }
-    SDL_UnlockSurface(unscaled);
-}
-
-
 void Screen::draw(int x, int y, SDL_Surface *tile)
 {
     SDL_Rect src = { 0, 0, tile->w, tile->h };
