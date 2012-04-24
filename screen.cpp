@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -344,8 +344,17 @@ void Screen::draw(int x, int y, SDL_Surface *tile)
     SDL_Rect u_dst = { x, y, tile->w, tile->h };
     SDL_BlitSurface(tile, &src, unscaled, &u_dst);
     
-    SDL_Rect dst = { this->doScale(x), this->doScale(y), this->doScale(tile->w), this->doScale(tile->h) };
-    SDL_SoftStretch(unscaled, &u_dst, screen, &dst);
+    SDL_PixelFormat* fmt = screen->format;
+    SDL_Surface *s = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
+                                                                    doScale(tile->w), doScale(tile->h), fmt->BitsPerPixel,
+                                                                    fmt->Rmask, fmt->Gmask,
+                                                                    fmt->Bmask, fmt->Amask);
+    SDL_Rect s_dst = { 0, 0, s->w, s->h };
+    SDL_SoftStretch(unscaled, &u_dst, s, &s_dst);
+    
+    SDL_Rect dst = { this->doScale(x), this->doScale(y), s->w, s->h };
+    SDL_BlitSurface(s, &s_dst, screen, &dst);
+    SDL_FreeSurface(s);
     
     //~ //this fixes the twitching when you click on menus but it causes new game to be really slow
     //~ SDL_Rect src_full = { 0, 0, unscaled->w, unscaled->h };
