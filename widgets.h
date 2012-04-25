@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -262,9 +262,10 @@ class Checkbox: public Widget
     protected:
         int left, top, width, height;
         SDL_Surface *image, *highlighted;
-        SDL_Surface *checkedImage, *checkedHighlighted;
         bool &checked;
         bool mouseInside;
+        Font* font;
+        int red, green, blue;
         
     public:
         Checkbox(int x, int y, int width, int height, Font *font, 

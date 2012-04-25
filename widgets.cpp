@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -745,7 +745,7 @@ void InputField::moveCursor(int pos)
 
 
 
-Checkbox::Checkbox(int x, int y, int w, int h, Font *font, 
+Checkbox::Checkbox(int x, int y, int w, int h, Font *f, 
         int r, int g, int b, const std::wstring &bg, 
         bool &chk): checked(chk)
 {
@@ -754,6 +754,10 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
     checked = chk;
+    font = f;
+    red = r;
+    green = g;
+    blue = b;
 
     image = makeSWSurface(width, height);
 
@@ -775,15 +779,6 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *font,
     
     highlighted = adjustBrightness(image, 1.5, false);
     
-    checkedImage = SDL_DisplayFormat(image);
-    int tW, tH;
-    font->getSize(L"X", tW, tH);
-    tH += 2;
-    tW += 2;
-    font->draw(checkedImage, (width - tW) / 2, (height - tH) / 2, r, g, b, 
-            true, L"X");
-    checkedHighlighted = adjustBrightness(checkedImage, 1.5, false);
-    
     mouseInside = false;
 }
 
@@ -792,23 +787,28 @@ Checkbox::~Checkbox()
 {
     SDL_FreeSurface(image);
     SDL_FreeSurface(highlighted);
-    SDL_FreeSurface(checkedImage);
-    SDL_FreeSurface(checkedHighlighted);
 }
 
 
 void Checkbox::draw()
 {
-    if (checked) {
+    screen.draw(left, top, (mouseInside ? highlighted : image));
+    
+    if (checked)
+    {
+        int r = red;
+        int g = green;
+        int b = blue;
+        
+        int tW, tH;
+        font->getSize(L"X", tW, tH);
+        
         if (mouseInside)
-            screen.draw(left, top, checkedHighlighted);
-        else
-            screen.draw(left, top, checkedImage);
-    } else {
-        if (mouseInside)
-            screen.draw(left, top, highlighted);
-        else
-            screen.draw(left, top, image);
+        {
+            adjustBrightness(&r, &g, &b, 1.5);
+            
+        }
+        font->draw(left + ((width - tW) / 2), top + ((height - tH) / 2), r, g, b, true, L"X");
     }
     screen.addRegionToUpdate(left, top, width, height);
 }
