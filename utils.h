@@ -33,6 +33,7 @@
 
 
 
+void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst);
 SDL_Surface* makeSWSurface(int width, int height);
 SDL_Surface* loadImage(const std::wstring &name, bool transparent=false);
 SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent=false);
