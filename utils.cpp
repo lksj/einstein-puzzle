@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -187,15 +187,40 @@ static int gammaTable[256];
 static double lastGamma = -1.0;
 
 
+int adjustBrightness(int i, double k)
+{
+    int r = (int)(255.0 * pow((double)i / 255.0, 1.0 / k) + 0.5);
+    if (r > 255)
+    {
+        r = 255;
+    }
+    
+    return r;
+}
+
 void setGamma(double k)
 {
     if (lastGamma != k) {
         for (int i = 0; i <= 255; i++) {
-            gammaTable[i] = (int)(255.0 * pow((double)i / 255.0, 1.0 / k) + 0.5);
-            if (gammaTable[i] > 255)
-                gammaTable[i] = 255;
+            gammaTable[i] = adjustBrightness(i, k);
         }
         lastGamma = k;
+    }
+}
+
+void adjustBrightness(int *r, int *g, int *b, double k)
+{
+    if (k == lastGamma)
+    {
+        *r = gammaTable[*r];
+        *g = gammaTable[*g];
+        *b = gammaTable[*b];
+    }
+    else
+    {
+        *r = adjustBrightness(*r, k);
+        *g = adjustBrightness(*g, k);
+        *b = adjustBrightness(*b, k);
     }
 }
 
