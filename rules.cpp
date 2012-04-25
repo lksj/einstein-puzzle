@@ -507,23 +507,14 @@ std::wstring BetweenRule::getAsText()
 void BetweenRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
     SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    SDL_Rect src = { 0, 0, icon->w, icon->h };
-    SDL_Rect dst = { 0, 0, icon->w, icon->h };
-    
     SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
     
-    SDL_BlitSurface(icon, &src, s, &dst);
-    
-    dst.x += icon->w;
-    SDL_BlitSurface(iconSet.getLargeIcon(centerRow, centerThing, h), &src, s, &dst);
-    
-    dst.x += icon->w;
-    SDL_BlitSurface(iconSet.getLargeIcon(row2, thing2, h), &src, s, &dst);
+    blitDraw(0, 0, icon, s);
+    blitDraw(icon->w, 0, iconSet.getLargeIcon(centerRow, centerThing, h), s);
+    blitDraw(2*icon->w, 0, iconSet.getLargeIcon(row2, thing2, h), s);
     
     SDL_Surface *arrow = iconSet.getBetweenArrow(h);
-    SDL_Rect a_src = { 0, 0, arrow->w, arrow->h };
-    SDL_Rect a_dst = { icon->w - (arrow->w - icon->w) / 2, 0, arrow->w, arrow->h };
-    SDL_BlitSurface(arrow, &a_src, s, &a_dst);
+    blitDraw(icon->w - (arrow->w - icon->w) / 2, 0, arrow, s);
     
     screen.draw(x, y, s);
     SDL_FreeSurface(s);
