@@ -87,18 +87,9 @@ Button::Button(int x, int y, int w, int h, Font *font,
     height = h;
 
     image = makeSWSurface(width, height);
-
-    SDL_Surface *tile = loadImage(bg, true);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
-
+    
+    drawTiled(bg, image);
+    
     if (bevel) {
         SDL_LockSurface(image);
         drawBevel(image, 0, 0, width, height, false, 1);
@@ -131,16 +122,7 @@ Button::Button(int x, int y, int w, int h, Font *font,
 
     image = makeSWSurface(width, height);
 
-    SDL_Surface *tile = loadImage(bg);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
+    drawTiled(bg, image);
 
     SDL_LockSurface(image);
     drawBevel(image, 0, 0, width, height, false, 1);
@@ -465,17 +447,8 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
     height = h;
     
     SDL_Surface *win = makeSWSurface(width, height);
-
-    SDL_Surface *tile = loadImage(bg);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, win, &dst);
-        }
-    SDL_FreeSurface(tile);
+    
+    drawTiled(bg, win);
 
     SDL_LockSurface(win);
     double k = 2.6;
@@ -760,18 +733,9 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *f,
     blue = b;
 
     image = makeSWSurface(width, height);
-
-    SDL_Surface *tile = loadImage(bg);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
-
+    
+    drawTiled(bg, image);
+    
     SDL_LockSurface(image);
     drawBevel(image, 0, 0, width, height, false, 1);
     drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
@@ -950,16 +914,7 @@ void Slider::createSlider(int size)
 {
     SDL_Surface *image = makeSWSurface(size, size);
 
-    SDL_Surface *tile = loadImage(L"blue.bmp");
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < size; j += tile->h)
-        for (int i = 0; i < size; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
+    drawTiled(L"blue.bmp", image);
 
     SDL_LockSurface(image);
     drawBevel(image, 0, 0, size, size, false, 1);
@@ -1091,19 +1046,7 @@ void CycleButton::drawTiles()
     int g = 255;
     int b = 0;
     
-    SDL_Surface *tile = loadImage(L"blue.bmp");
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-    {
-        for (int i = 0; i < width; i += tile->w)
-        {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    }
-    SDL_FreeSurface(tile);
+    drawTiled(L"blue.bmp", image);
     
     SDL_LockSurface(image);
     drawBevel(image, 0, 0, width, height, false, 1);

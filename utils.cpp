@@ -47,6 +47,22 @@ void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst)
     SDL_BlitSurface(src, &s, dst, &d);
 }
 
+void drawTiled(const std::wstring &name, SDL_Surface *s)
+{
+    SDL_Surface *tile = loadImage(name);
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, tile->w, tile->h };
+    for (int y = 0; y < s->h; y += tile->h)
+    {
+        for (int x = 0; x < s->w; x += tile->w) {
+            dst.x = x;
+            dst.y = y;
+            SDL_BlitSurface(tile, &src,s, &dst);
+        }
+    }
+    SDL_FreeSurface(tile);
+}
+
 SDL_Surface* makeSWSurface(int width, int height)
 {
     SDL_PixelFormat *fmt = screen.getFormat();
