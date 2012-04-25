@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -505,11 +507,26 @@ std::wstring BetweenRule::getAsText()
 void BetweenRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
     SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    screen.draw(x, y, icon);
-    screen.draw(x + icon->w, y, iconSet.getLargeIcon(centerRow, centerThing, h));
-    screen.draw(x + icon->w*2, y, iconSet.getLargeIcon(row2, thing2, h));
+    SDL_Rect src = { 0, 0, icon->w, icon->h };
+    SDL_Rect dst = { 0, 0, icon->w, icon->h };
+    
+    SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
+    
+    SDL_BlitSurface(icon, &src, s, &dst);
+    
+    dst.x += icon->w;
+    SDL_BlitSurface(iconSet.getLargeIcon(centerRow, centerThing, h), &src, s, &dst);
+    
+    dst.x += icon->w;
+    SDL_BlitSurface(iconSet.getLargeIcon(row2, thing2, h), &src, s, &dst);
+    
     SDL_Surface *arrow = iconSet.getBetweenArrow(h);
-    screen.draw(x + icon->w - (arrow->w - icon->w) / 2, y + 0, arrow);
+    SDL_Rect a_src = { 0, 0, arrow->w, arrow->h };
+    SDL_Rect a_dst = { icon->w - (arrow->w - icon->w) / 2, 0, arrow->w, arrow->h };
+    SDL_BlitSurface(arrow, &a_src, s, &a_dst);
+    
+    screen.draw(x, y, s);
+    SDL_FreeSurface(s);
 }
 
 void BetweenRule::save(std::ostream &stream)
