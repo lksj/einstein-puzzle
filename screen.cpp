@@ -381,16 +381,7 @@ SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
 
 void Screen::drawWallpaper(const std::wstring &name)
 {
-    SDL_Surface *tile = loadImage(name);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int y = 0; y < unscaled->h; y += tile->h)
-        for (int x = 0; x < unscaled->w; x += tile->w) {
-            dst.x = x;
-            dst.y = y;
-            SDL_BlitSurface(tile, &src, unscaled, &dst);
-        }
-    SDL_FreeSurface(tile);
+    drawTiled(name, unscaled);
     
     //HACK: using draw causes seams so do the scale here
     SDL_Rect src_full = { 0, 0, unscaled->w, unscaled->h };
