@@ -27,6 +27,22 @@
 #include <iostream>
 using namespace std;
 
+
+
+void HighlightableWidget::draw()
+{
+    if (mouseInside)
+    {
+        screen.drawDirect(left, top, highlighted);
+    }
+    else
+    {
+        screen.drawDirect(left, top, image);
+    }
+    screen.addRegionToUpdate(left, top, width, height);
+}
+
+
 //////////////////////////////////////////////////////////////////
 //
 // Button
@@ -739,7 +755,7 @@ Checkbox::~Checkbox()
 
 void Checkbox::draw()
 {
-    screen.drawDirect(left, top, (mouseInside ? highlighted : image));
+    HighlightableWidget::draw();
     
     if (checked)
     {
@@ -991,15 +1007,6 @@ CycleButton::~CycleButton()
     SDL_FreeSurface(highlighted);
 }
 
-
-void CycleButton::draw()
-{
-    if (mouseInside)
-        screen.drawDirect(left, top, highlighted);
-    else
-        screen.drawDirect(left, top, image);
-    screen.addRegionToUpdate(left, top, width, height);
-}
 
 void CycleButton::drawTiles()
 {

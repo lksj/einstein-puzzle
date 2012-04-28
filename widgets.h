@@ -78,6 +78,17 @@ class BoundedWidget: public Widget
         }
 };
 
+
+class HighlightableWidget: public BoundedWidget
+{
+    protected:
+        SDL_Surface *image, *highlighted;
+        bool mouseInside;
+    public:
+        virtual void draw();
+};
+
+
 class Button: public BoundedWidget
 {
     protected:
@@ -269,12 +280,10 @@ class InputField: public Window, public TimerHandler
 };
 
 
-class Checkbox: public BoundedWidget
+class Checkbox: public HighlightableWidget
 {
     protected:
-        SDL_Surface *image, *highlighted;
         bool &checked;
-        bool mouseInside;
         Font* font;
         int red, green, blue;
         
@@ -337,11 +346,9 @@ class Slider: public Widget
 };
 
 
-class CycleButton: public BoundedWidget
+class CycleButton: public HighlightableWidget
 {
     protected:
-        SDL_Surface *image, *highlighted;
-        bool mouseInside;
         Font *font;
         int &value;
         std::vector<std::wstring> options;
@@ -352,7 +359,6 @@ class CycleButton: public BoundedWidget
         virtual ~CycleButton();
 
     public:
-        virtual void draw();
         virtual bool onMouseButtonDown(int buttons, int x, int y);
         virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
