@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-27 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -39,6 +39,28 @@
 #include "sound.h"
 
 
+
+SDL_Surface* scaleUp(SDL_Surface* tile)
+{
+    SDL_Surface *s = makeSWSurface(screen.doScale(tile->w),
+                                    screen.doScale(tile->h));
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, s->w, s->h };
+    SDL_SoftStretch(tile, &src, s, &dst);
+    
+    return s;
+}
+
+SDL_Surface* scaleDown(SDL_Surface* tile)
+{
+    SDL_Surface *s = makeSWSurface(screen.reverseScale(tile->w),
+                                    screen.reverseScale(tile->h));
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, s->w, s->h };
+    SDL_SoftStretch(tile, &src, s, &dst);
+    
+    return s;
+}
 
 void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst)
 {
