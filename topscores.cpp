@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -23,7 +25,7 @@
 #include "font.h"
 #include "convert.h"
 #include "messages.h"
-
+#include "main.h"
 
 TopScores::TopScores()
 {
@@ -126,9 +128,13 @@ ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight):
     Font entryFont(L"laudcn2.ttf", 14);
     Font timeFont(L"luximb.ttf", 14);
     
+    titleFont.setScaled(true);
+    entryFont.setScaled(true);
+    timeFont.setScaled(true);
+    
     std::wstring txt = msg(L"topScores");
     int w = titleFont.getWidth(txt);
-    titleFont.draw(background, (320 - w) / 2, 15, 255,255,0, true, txt);
+    titleFont.draw(background, (screen.doScale(320) - w) / 2, screen.doScale(15), 255,255,0, true, txt);
 
     TopScores::ScoresList &list = scores->getScores();
     int no = 1;
@@ -140,14 +146,14 @@ ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight):
         std::wstring s(toString(no) + L".");
         int w = entryFont.getWidth(s);
         int c = ((no - 1) == highlight) ? 0 : 255;
-        entryFont.draw(background, 30 - w, pos, 255,255,c, true, s);
-        SDL_Rect rect = { 40, pos-20, 180, 40 };
+        entryFont.draw(background, screen.doScale(30) - w, screen.doScale(pos), 255,255,c, true, s);
+        SDL_Rect rect = { screen.doScale(40), screen.doScale(pos-20), screen.doScale(180), screen.doScale(40) };
         SDL_SetClipRect(background, &rect);
-        entryFont.draw(background, 40, pos, 255,255,c, true, e.name);
+        entryFont.draw(background, screen.doScale(40), screen.doScale(pos), 255,255,c, true, e.name);
         SDL_SetClipRect(background, NULL);
         s = secToStr(e.score);
         w = timeFont.getWidth(s);
-        timeFont.draw(background, 305-w, pos, 255,255,c, true, s);
+        timeFont.draw(background, screen.doScale(305)-w, screen.doScale(pos), 255,255,c, true, s);
         pos += 20;
         no++;
     }

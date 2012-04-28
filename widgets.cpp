@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-27 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -473,8 +473,11 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
     }
     SDL_UnlockSurface(win);
     
-    background = SDL_DisplayFormat(win);
+    SDL_Surface *s = scaleUp(win);
+    
+    background = SDL_DisplayFormat(s);
     SDL_FreeSurface(win);
+    SDL_FreeSurface(s);
 }
 
 
@@ -486,7 +489,7 @@ Window::~Window()
 
 void Window::draw()
 {
-    screen.draw(left, top, background);
+    screen.drawDirect(left, top, background);
     screen.addRegionToUpdate(left, top, width, height);
 }
 
