@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-27 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -323,6 +323,13 @@ void Screen::draw(int x, int y, SDL_Surface *tile)
     //~ SDL_Rect src_full = { 0, 0, unscaled->w, unscaled->h };
     //~ SDL_Rect dst_full = { 0, 0, screen->w, screen->h };
     //~ SDL_SoftStretch(unscaled, &src_full, screen, &dst_full);
+}
+
+void Screen::drawDirect(int x, int y, SDL_Surface *tile)
+{
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect s_dst = { doScale(x), doScale(y), tile->w, tile->h };
+    SDL_BlitSurface(tile, &src, screen, &s_dst);
 }
 
 void Screen::setCursor(bool nice)
