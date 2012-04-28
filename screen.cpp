@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-27 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -318,11 +318,6 @@ void Screen::draw(int x, int y, SDL_Surface *tile)
     SDL_Rect dst = { this->doScale(x), this->doScale(y), s->w, s->h };
     SDL_BlitSurface(s, &s_dst, screen, &dst);
     SDL_FreeSurface(s);
-    
-    //~ //this fixes the twitching when you click on menus but it causes new game to be really slow
-    //~ SDL_Rect src_full = { 0, 0, unscaled->w, unscaled->h };
-    //~ SDL_Rect dst_full = { 0, 0, screen->w, screen->h };
-    //~ SDL_SoftStretch(unscaled, &src_full, screen, &dst_full);
 }
 
 void Screen::drawDirect(int x, int y, SDL_Surface *tile)
