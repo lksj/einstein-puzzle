@@ -50,22 +50,6 @@ void HighlightableWidget::draw()
 //////////////////////////////////////////////////////////////////
 
 
-Button::Button(int x, int y, const std::wstring &name, Command *cmd, 
-        bool transparent)
-{
-    image = loadImage(name, transparent);
-    highlighted = adjustBrightness(image, 1.5, transparent);
-
-    left = x;
-    top = y;
-    width = image->w;
-    height = image->h;
-
-    mouseInside = false;
-    command = cmd;
-}
-
-
 Button::Button(int x, int y, int w, int h, Font *font, 
         int fR, int fG, int fB, int hR, int hG, int hB,
         const std::wstring &text, Command *cmd)

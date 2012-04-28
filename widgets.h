@@ -97,8 +97,6 @@ class Button: public BoundedWidget
         Command *command;
         
     public:
-        Button(int x, int y, const std::wstring &name, Command *cmd=NULL, 
-                bool transparent=true);
         Button(int x, int y, int width, int height, Font *font, 
                 int fR, int fG, int fB, int hR, int hG, int hB, 
                 const std::wstring &text, Command *cmd=NULL);
