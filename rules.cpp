@@ -34,6 +34,16 @@ static std::wstring getThingName(int row, int thing)
     return s;
 }
 
+static SDL_Surface* makeRuleSurface(SDL_Surface *l, SDL_Surface *m, SDL_Surface *r)
+{
+    SDL_Surface *s = makeSWSurface(l->w * 3, l->h);
+    
+    blitDraw(0, 0, l, s);
+    blitDraw(l->w, 0, m, s);
+    blitDraw(l->w * 2, 0, r, s);
+    
+    return s;
+}
 
 
 class NearRule: public Rule
@@ -136,12 +146,9 @@ std::wstring NearRule::getAsText()
 
 void NearRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
-    SDL_Surface *icon = iconSet.getLargeIcon(thing1[0], thing1[1], h);
-    SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
-    
-    blitDraw(0, 0, icon, s);
-    blitDraw(icon->w, 0, iconSet.getNearHintIcon(h), s);
-    blitDraw(icon->w * 2, 0, iconSet.getLargeIcon(thing2[0], thing2[1], h), s);
+    SDL_Surface *s = makeRuleSurface(iconSet.getLargeIcon(thing1[0], thing1[1], h),
+                                        iconSet.getNearHintIcon(h),
+                                        iconSet.getLargeIcon(thing2[0], thing2[1], h));
     
     screen.draw(x, y, s);
     SDL_FreeSurface(s);
@@ -227,12 +234,9 @@ std::wstring DirectionRule::getAsText()
 
 void DirectionRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
-    SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
-    
-    blitDraw(0, 0, icon, s);
-    blitDraw(icon->w, 0, iconSet.getSideHintIcon(h), s);
-    blitDraw(icon->w * 2, 0, iconSet.getLargeIcon(row2, thing2, h), s);
+    SDL_Surface *s = makeRuleSurface(iconSet.getLargeIcon(row1, thing1, h),
+                                        iconSet.getSideHintIcon(h),
+                                        iconSet.getLargeIcon(row2, thing2, h));
     
     screen.draw(x, y, s);
     SDL_FreeSurface(s);
@@ -517,11 +521,9 @@ std::wstring BetweenRule::getAsText()
 void BetweenRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
     SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
-    
-    blitDraw(0, 0, icon, s);
-    blitDraw(icon->w, 0, iconSet.getLargeIcon(centerRow, centerThing, h), s);
-    blitDraw(2*icon->w, 0, iconSet.getLargeIcon(row2, thing2, h), s);
+    SDL_Surface *s = makeRuleSurface(icon,
+                                        iconSet.getLargeIcon(centerRow, centerThing, h),
+                                        iconSet.getLargeIcon(row2, thing2, h));
     
     SDL_Surface *arrow = iconSet.getBetweenArrow(h);
     blitDraw(icon->w - (arrow->w - icon->w) / 2, 0, arrow, s);
