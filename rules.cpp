@@ -228,9 +228,14 @@ std::wstring DirectionRule::getAsText()
 void DirectionRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
     SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    screen.draw(x, y, icon);
-    screen.draw(x + icon->h, y, iconSet.getSideHintIcon(h));
-    screen.draw(x + icon->h*2, y, iconSet.getLargeIcon(row2, thing2, h));
+    SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
+    
+    blitDraw(0, 0, icon, s);
+    blitDraw(icon->w, 0, iconSet.getSideHintIcon(h), s);
+    blitDraw(icon->w * 2, 0, iconSet.getLargeIcon(row2, thing2, h), s);
+    
+    screen.draw(x, y, s);
+    SDL_FreeSurface(s);
 }
 
 void DirectionRule::save(std::ostream &stream)
