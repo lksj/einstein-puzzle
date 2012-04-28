@@ -368,14 +368,14 @@ void Screen::doneCursors()
 SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
 {
     SDL_Surface *s = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
-            width, height, screen->format->BitsPerPixel,
+            doScale(width), doScale(height), screen->format->BitsPerPixel,
             screen->format->Rmask, screen->format->Gmask,
             screen->format->Bmask, screen->format->Amask);
     if (! s)
         throw Exception(L"Error creating buffer surface");
-    SDL_Rect src = { x, y, width, height };
-    SDL_Rect dst = { 0, 0, width, height };
-    SDL_BlitSurface(unscaled, &src, s, &dst);
+    SDL_Rect src = { doScale(x), doScale(y), doScale(width), doScale(height) };
+    SDL_Rect dst = { 0, 0, src.w, src.h };
+    SDL_BlitSurface(screen, &src, s, &dst);
     return s;
 }
 

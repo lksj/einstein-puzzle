@@ -898,19 +898,19 @@ void Slider::draw()
 {
     if (! background)
         createBackground();
-    screen.draw(left, top, background);
+    screen.drawDirect(left, top, background);
     screen.addRegionToUpdate(left, top, width, height);
     int posX = valueToX(value);
     SDL_Surface *s = highlight ? activeSlider : slider;
-    screen.draw(left + posX, top, s);
+    screen.drawDirect(left + posX, top, s);
 }
 
 void Slider::createBackground()
 {
     background = screen.createSubimage(left, top, width, height);
-    int y = height / 2;
+    int y = background->h / 2;
     SDL_LockSurface(background);
-    drawBevel(background, 0, y - 2, width, 4, false, 1);
+    drawBevel(background, 0, y - screen.doScale(2), background->w, screen.doScale(4), false, 1);
     SDL_UnlockSurface(background);
 }
 
@@ -924,6 +924,10 @@ void Slider::createSlider(int size)
     drawBevel(image, 0, 0, size, size, false, 1);
     drawBevel(image, 1, 1, size - 2, size - 2, true, 1);
     SDL_UnlockSurface(image);
+    
+    SDL_Surface *s = scaleUp(image);
+    SDL_FreeSurface(image);
+    image = s;
     
     activeSlider = adjustBrightness(image, 1.5, false);
     slider = SDL_DisplayFormat(image);
