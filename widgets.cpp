@@ -825,33 +825,32 @@ bool Checkbox::onMouseMove(int x, int y)
 
 Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
 {
-    image = loadImage(name, transparent);
+    SDL_Surface *s = loadImage(name, transparent);
+    width = s->w;
+    height = s->h;
+    image = scaleUp(s);
+    SDL_FreeSurface(s);
     left = x;
     top = y;
-    width = image->w;
-    height = image->h;
-    managed = true;
 }
 
 Picture::Picture(int x, int y, SDL_Surface *img)
 {
-    image = img;
+    image = scaleUp(img);
     left = x;
     top = y;
-    width = image->w;
-    height = image->h;
-    managed = false;
+    width = img->w;
+    height = img->h;
 }
 
 Picture::~Picture() 
 { 
-    if (managed)
-        SDL_FreeSurface(image); 
+    SDL_FreeSurface(image); 
 }
 
 void Picture::draw()
 {
-    screen.draw(left, top, image);
+    screen.drawDirect(left, top, image);
     screen.addRegionToUpdate(left, top, width, height);
 }
 

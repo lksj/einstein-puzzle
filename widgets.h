@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -293,7 +293,6 @@ class Picture: public Widget
         int width;
         int height;
         SDL_Surface *image;
-        bool managed;
         
     public:
         Picture(int x, int y, const std::wstring &name, bool transparent=true);
