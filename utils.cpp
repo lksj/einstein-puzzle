@@ -376,6 +376,20 @@ void drawBevel(SDL_Surface *s, int left, int top, int width, int height,
     }
 }
 
+SDL_Surface* makeBox(int width, int height, const std::wstring &bg)
+{
+    SDL_Surface *s = makeSWSurface(width, height);
+
+    drawTiled(bg, s);
+
+    SDL_LockSurface(s);
+    drawBevel(s, 0, 0, width, height, false, 1);
+    drawBevel(s, 1, 1, width - 2, height - 2, true, 1);
+    SDL_UnlockSurface(s);
+    
+    return s;
+}
+
 //#ifndef WIN32
 
 void ensureDirExists(const std::wstring &fileName)

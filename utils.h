@@ -56,6 +56,7 @@ void getPixel(SDL_Surface *surface, int x, int y,
 void setPixel(SDL_Surface *s, int x, int y, int r, int g, int b);
 void drawBevel(SDL_Surface *s, int left, int top, int width, int height,
         bool raised, int size);
+SDL_Surface* makeBox(int width, int height, const std::wstring &bg);
 void ensureDirExists(const std::wstring &fileName);
 int readInt(std::istream &stream);
 std::wstring readString(std::istream &stream);

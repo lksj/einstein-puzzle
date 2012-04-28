@@ -86,15 +86,14 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    image = makeSWSurface(width, height);
-    
-    drawTiled(bg, image);
-    
-    if (bevel) {
-        SDL_LockSurface(image);
-        drawBevel(image, 0, 0, width, height, false, 1);
-        drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-        SDL_UnlockSurface(image);
+    if (bevel)
+    {
+        image = makeBox(width, height, bg);
+    }
+    else
+    {
+        image = makeSWSurface(width, height);
+        drawTiled(bg, image);
     }
     
     int tW, tH;
@@ -120,14 +119,7 @@ Button::Button(int x, int y, int w, int h, Font *font,
     width = w;
     height = h;
 
-    image = makeSWSurface(width, height);
-
-    drawTiled(bg, image);
-
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, width, height, false, 1);
-    drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-    SDL_UnlockSurface(image);
+    image = makeBox(width, height, bg);
     
     int tW, tH;
     font->getSize(text, tW, tH);
@@ -735,15 +727,8 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *f,
     green = g;
     blue = b;
 
-    image = makeSWSurface(width, height);
-    
-    drawTiled(bg, image);
-    
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, width, height, false, 1);
-    drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-    SDL_UnlockSurface(image);
-    
+    image = makeBox(width, height, bg);
+        
     SDL_Surface *s = scaleUp(image);
     SDL_FreeSurface(image);
     image = s;
@@ -918,15 +903,8 @@ void Slider::createBackground()
 
 void Slider::createSlider(int size)
 {
-    SDL_Surface *image = makeSWSurface(size, size);
+    SDL_Surface *image = makeBox(size, size, L"blue.bmp");
 
-    drawTiled(L"blue.bmp", image);
-
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, size, size, false, 1);
-    drawBevel(image, 1, 1, size - 2, size - 2, true, 1);
-    SDL_UnlockSurface(image);
-    
     SDL_Surface *s = scaleUp(image);
     SDL_FreeSurface(image);
     image = s;
@@ -1056,19 +1034,12 @@ void CycleButton::drawTiles()
         SDL_FreeSurface(image);
         SDL_FreeSurface(highlighted);
     }
-    image = makeSWSurface(width, height);
+    image = makeBox(width, height, L"blue.bmp");
 
     std::wstring text = options[value];
     int r = 255;
     int g = 255;
     int b = 0;
-    
-    drawTiled(L"blue.bmp", image);
-    
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, width, height, false, 1);
-    drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-    SDL_UnlockSurface(image);
     
     SDL_Surface *s = scaleUp(image);
     SDL_FreeSurface(image);
