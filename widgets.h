@@ -272,7 +272,6 @@ class InputField: public Window, public TimerHandler
 class Checkbox: public BoundedWidget
 {
     protected:
-        int left, top, width, height;
         SDL_Surface *image, *highlighted;
         bool &checked;
         bool mouseInside;
@@ -295,10 +294,6 @@ class Checkbox: public BoundedWidget
 class Picture: public BoundedWidget
 {
     protected:
-        int left;
-        int top;
-        int width;
-        int height;
         SDL_Surface *image;
         
     public:
@@ -345,7 +340,6 @@ class Slider: public Widget
 class CycleButton: public BoundedWidget
 {
     protected:
-        int left, top, width, height;
         SDL_Surface *image, *highlighted;
         bool mouseInside;
         Font *font;
