@@ -50,8 +50,11 @@ void GameBackground::draw()
     screen.drawWallpaper(L"rain.bmp");
 
     // draw title
-    SDL_Surface *tile = loadImage(L"title.bmp");
-    screen.draw(8, 10, tile);
+    SDL_Surface *s = loadImage(L"title.bmp");
+    SDL_Surface *tile = scaleUp(s);
+    SDL_FreeSurface(s);
+    
+    screen.drawDirect(8, 10, tile);
     SDL_FreeSurface(tile);
     
     Font titleFont(L"nova.ttf", 28);
