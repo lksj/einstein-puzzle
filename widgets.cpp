@@ -149,15 +149,6 @@ void Button::draw()
 }
 
 
-void Button::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
-}
-
-
 bool Button::onMouseButtonDown(int button, int x, int y)
 {
     if (isInRect(x, y, left, top, width, height)) {
@@ -770,15 +761,6 @@ void Checkbox::draw()
 }
 
 
-void Checkbox::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
-}
-
-
 bool Checkbox::onMouseButtonDown(int button, int x, int y)
 {
     if (isInRect(x, y, left, top, width, height)) {
@@ -842,14 +824,6 @@ void Picture::draw()
 void Picture::moveX(const int newX) 
 { 
     left = newX; 
-}
-
-void Picture::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
 }
 
 
@@ -1054,14 +1028,6 @@ void CycleButton::drawTiles()
     highlighted = adjustBrightness(image, 1.5, false);
     
     draw();
-}
-
-void CycleButton::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
 }
 
 

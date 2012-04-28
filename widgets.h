@@ -59,11 +59,28 @@ class Widget
         virtual bool destroyByArea() { return true; };
 };
 
-
-class Button: public Widget
+class BoundedWidget: public Widget
 {
     protected:
         int left, top, width, height;
+    
+    public:
+        int getLeft() const { return left; };
+        int getTop() const { return top; };
+        int getWidth() const { return width; };
+        int getHeight() const { return height; };
+        void getBounds(int &l, int &t, int &w, int &h)
+        {
+            l = left;
+            t = top;
+            w = width;
+            h = height;
+        }
+};
+
+class Button: public BoundedWidget
+{
+    protected:
         SDL_Surface *image, *highlighted;
         bool mouseInside;
         Command *command;
@@ -84,11 +101,6 @@ class Button: public Widget
 
     public:
         virtual void draw();
-        void getBounds(int &left, int &top, int &width, int &height);
-        int getLeft() const { return left; };
-        int getTop() const { return top; };
-        int getWidth() const { return width; };
-        int getHeight() const { return height; };
         virtual bool onMouseButtonDown(int button, int x, int y);
         virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
@@ -257,7 +269,7 @@ class InputField: public Window, public TimerHandler
 };
 
 
-class Checkbox: public Widget
+class Checkbox: public BoundedWidget
 {
     protected:
         int left, top, width, height;
@@ -275,17 +287,12 @@ class Checkbox: public Widget
 
     public:
         virtual void draw();
-        void getBounds(int &left, int &top, int &width, int &height);
-        int getLeft() const { return left; };
-        int getTop() const { return top; };
-        int getWidth() const { return width; };
-        int getHeight() const { return height; };
         virtual bool onMouseButtonDown(int button, int x, int y);
         virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
 };
 
-class Picture: public Widget
+class Picture: public BoundedWidget
 {
     protected:
         int left;
@@ -302,12 +309,6 @@ class Picture: public Widget
     public:
         virtual void draw();
         void moveX(const int newX);
-        void getBounds(int &l, int &t, int &w, int &h);
-        int getLeft() const { return left; };
-        int getTop() const { return top; };
-        int getWidth() const { return width; };
-        int getHeight() const { return height; };
-        
 };
 
 
@@ -341,7 +342,7 @@ class Slider: public Widget
 };
 
 
-class CycleButton: public Widget
+class CycleButton: public BoundedWidget
 {
     protected:
         int left, top, width, height;
@@ -358,11 +359,6 @@ class CycleButton: public Widget
 
     public:
         virtual void draw();
-        void getBounds(int &left, int &top, int &width, int &height);
-        int getLeft() const { return left; };
-        int getTop() const { return top; };
-        int getWidth() const { return width; };
-        int getHeight() const { return height; };
         virtual bool onMouseButtonDown(int buttons, int x, int y);
         virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
