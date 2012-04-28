@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-27 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -303,43 +303,6 @@ SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent)
 
     return s;
 }
-
-
-class CenteredBitmap: public Widget
-{
-    private:
-        SDL_Surface *tile;
-        int x, y;
-        
-    public:
-        CenteredBitmap(const std::wstring &fileName) {
-            tile = loadImage(fileName);
-            x = (screen.getWidth() - tile->w) / 2;
-            y = (screen.getHeight() - tile->h) / 2;
-        };
-
-        virtual ~CenteredBitmap() {
-            SDL_FreeSurface(tile);
-        };
-
-        virtual void draw() {
-            screen.draw(x, y, tile);
-            screen.addRegionToUpdate(x, y, tile->w, tile->h);
-        };
-};
-
-
-void showWindow(Area *parentArea, const std::wstring &fileName)
-{
-    Area area;
-
-    area.add(parentArea);
-    area.add(new CenteredBitmap(fileName));
-    area.add(new AnyKeyAccel());
-    area.run();
-    sound->play(L"click.wav");
-}
-
 
 bool isInRect(int evX, int evY, int x, int y, int w, int h)
 {
