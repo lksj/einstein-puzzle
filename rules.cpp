@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -137,9 +137,14 @@ std::wstring NearRule::getAsText()
 void NearRule::draw(int x, int y, IconSet &iconSet, bool h)
 {
     SDL_Surface *icon = iconSet.getLargeIcon(thing1[0], thing1[1], h);
-    screen.draw(x, y, icon);
-    screen.draw(x + icon->h, y, iconSet.getNearHintIcon(h));
-    screen.draw(x + icon->h*2, y, iconSet.getLargeIcon(thing2[0], thing2[1], h));
+    SDL_Surface *s = makeSWSurface(icon->w * 3, icon->h);
+    
+    blitDraw(0, 0, icon, s);
+    blitDraw(icon->w, 0, iconSet.getNearHintIcon(h), s);
+    blitDraw(icon->w * 2, 0, iconSet.getLargeIcon(thing2[0], thing2[1], h), s);
+    
+    screen.draw(x, y, s);
+    SDL_FreeSurface(s);
 }
 
 void NearRule::save(std::ostream &stream)
