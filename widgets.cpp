@@ -1019,8 +1019,6 @@ CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::vecto
     font = f;
     options = o;
     
-    image = makeSWSurface(width, height);
-
     drawTiles();
   
     mouseInside = false;
@@ -1037,14 +1035,16 @@ CycleButton::~CycleButton()
 void CycleButton::draw()
 {
     if (mouseInside)
-        screen.draw(left, top, highlighted);
+        screen.drawDirect(left, top, highlighted);
     else
-        screen.draw(left, top, image);
+        screen.drawDirect(left, top, image);
     screen.addRegionToUpdate(left, top, width, height);
 }
 
 void CycleButton::drawTiles()
 {
+    image = makeSWSurface(width, height);
+
     std::wstring text = options[value];
     int r = 255;
     int g = 255;
@@ -1057,9 +1057,15 @@ void CycleButton::drawTiles()
     drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
     SDL_UnlockSurface(image);
     
+    SDL_Surface *s = scaleUp(image);
+    SDL_FreeSurface(image);
+    image = s;
+    
     int tW, tH;
+    font->setScaled(true);
     font->getSize(text, tW, tH);
-    font->draw(image, (width - tW) / 2, (height - tH) / 2, r, g, b, true, text);
+    font->draw(image, (image->w - tW) / 2, (image->h - tH) / 2, r, g, b, true, text);
+    font->setScaled(false);
     
     //NOTE: is this a memory leak?  SDL_FreeSurface() causes a segfault
     highlighted = adjustBrightness(image, 1.5, false);
