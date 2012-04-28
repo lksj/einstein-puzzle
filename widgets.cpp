@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-24 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-27 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -741,6 +741,10 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *f,
     drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
     SDL_UnlockSurface(image);
     
+    SDL_Surface *s = scaleUp(image);
+    SDL_FreeSurface(image);
+    image = s;
+    
     highlighted = adjustBrightness(image, 1.5, false);
     
     mouseInside = false;
@@ -756,7 +760,7 @@ Checkbox::~Checkbox()
 
 void Checkbox::draw()
 {
-    screen.draw(left, top, (mouseInside ? highlighted : image));
+    screen.drawDirect(left, top, (mouseInside ? highlighted : image));
     
     if (checked)
     {
