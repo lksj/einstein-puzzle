@@ -35,18 +35,36 @@ static std::wstring getThingName(int row, int thing)
 }
 
 
-class HorizontalRule: public Rule
+class DrawableRule: public Rule
 {
     protected:
         int row1, thing1;
         int row2, thing2;
 
     protected:
+        virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted) = 0;
+        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
+};
+
+
+void DrawableRule::draw(int x, int y, IconSet &iconSet, bool highlighted)
+{
+    SDL_Surface *s = getImage(iconSet, highlighted);
+    SDL_Surface *t = scaleUp(s);
+    SDL_FreeSurface(s);
+    s = t;
+    screen.drawDirect(x, y, s);
+    SDL_FreeSurface(s);
+}
+
+
+class HorizontalRule: public DrawableRule
+{
+    protected:
         virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) = 0;
         virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted);
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
 };
 
 
@@ -72,17 +90,6 @@ SDL_Surface* HorizontalRule::getImage(IconSet &iconSet, bool h)
     blitDraw(l->w * 2, 0, getRightIcon(iconSet, h), s);
     
     return s;
-}
-
-
-void HorizontalRule::draw(int x, int y, IconSet &iconSet, bool highlighted)
-{
-    SDL_Surface *s = getImage(iconSet, highlighted);
-    SDL_Surface *t = scaleUp(s);
-    SDL_FreeSurface(s);
-    s = t;
-    screen.drawDirect(x, y, s);
-    SDL_FreeSurface(s);
 }
 
 
@@ -336,17 +343,16 @@ void OpenRule::save(std::ostream &stream)
 }
 
 
-class UnderRule: public Rule
+class UnderRule: public DrawableRule
 {
-    private:
-        int row1, thing1, row2, thing2;
-        
+    protected:
+        virtual SDL_Surface* getImage(IconSet &iconSet, bool h);
+    
     public:
         UnderRule(SolvedPuzzle puzzle);
         UnderRule(std::istream &stream);
         virtual bool apply(Possibilities &pos);
         virtual std::wstring getAsText();
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
         virtual ShowOptions getShowOpts() { return SHOW_VERT; };
         virtual void save(std::ostream &stream);
 };
@@ -400,11 +406,16 @@ std::wstring UnderRule::getAsText()
         getThingName(row2, thing2);
 }
 
-void UnderRule::draw(int x, int y, IconSet &iconSet, bool h)
+
+SDL_Surface* UnderRule::getImage(IconSet &iconSet, bool h)
 {
-    SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    screen.draw(x, y, icon);
-    screen.draw(x, y + icon->h, iconSet.getLargeIcon(row2, thing2, h));
+    SDL_Surface *t = iconSet.getLargeIcon(row1, thing1, h);
+    SDL_Surface *s = makeSWSurface(t->w, t->h * 2);
+
+    blitDraw(0, 0, t, s);
+    blitDraw(0, t->h, iconSet.getLargeIcon(row2, thing2, h), s);
+    
+    return s;
 }
 
 void UnderRule::save(std::ostream &stream)
