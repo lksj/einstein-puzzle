@@ -93,6 +93,25 @@ class HighlightableWidget: public BoundedWidget
 };
 
 
+class TextHighlightWidget: public HighlightableWidget
+{
+    protected:
+        int red, green, blue;
+        int hRed, hGreen, hBlue;
+        Font* font;
+        
+    protected:
+        TextHighlightWidget(int x, int y, int w, int h, Font *f, 
+                int fR, int fG, int fB, int hR, int hG, int hB);
+        TextHighlightWidget(int x, int y, int w, int h, Font *f, 
+                int r, int g, int b);
+        virtual std::wstring getText() = 0;
+    
+    public:
+        virtual void draw();
+};
+
+
 class Button: public BoundedWidget
 {
     protected:
@@ -348,18 +367,19 @@ class Slider: public Widget
 };
 
 
-class CycleButton: public HighlightableWidget
+class CycleButton: public TextHighlightWidget
 {
     protected:
-        Font *font;
         int &value;
         std::vector<std::wstring> options;
-        void drawTiles();
         
     public:
         CycleButton(int x, int y, int width, int height, Font *font, int &value, std::vector<std::wstring> options);
         virtual ~CycleButton();
-
+    
+    protected:
+        virtual std::wstring getText();
+    
     public:
         virtual bool onMouseButtonDown(int buttons, int x, int y);
         virtual bool onMouseMove(int x, int y);

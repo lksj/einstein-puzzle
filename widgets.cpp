@@ -48,6 +48,67 @@ void HighlightableWidget::draw()
 }
 
 
+TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
+        int fR, int fG, int fB, int hR, int hG, int hB)
+{
+    left = x;
+    top = y;
+    width = w;
+    height = h;
+    font = f;
+    
+    red = fR;
+    green = fG;
+    blue = fB;
+    hRed = hR;
+    hGreen = hG;
+    hBlue = hB;
+}
+
+
+TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
+        int r, int g, int b)
+{
+    left = x;
+    top = y;
+    width = w;
+    height = h;
+    font = f;
+    
+    red = r;
+    green = g;
+    blue = b;
+    hRed = r;
+    hGreen = g;
+    hBlue = b;
+    
+    adjustBrightness(&hRed, &hGreen, &hBlue, 1.5);
+}
+
+
+void TextHighlightWidget::draw()
+{
+    HighlightableWidget::draw();
+    
+    int r = red;
+    int g = green;
+    int b = blue;
+
+    if (mouseInside)
+    {
+        r = hRed;
+        g = hGreen;
+        b = hBlue;
+    }
+    
+    int tW, tH;
+    font->getSize(getText(), tW, tH);
+    font->draw(left + ((width - tW) / 2), top + ((height - tH) / 2), r, g, b, true, getText());
+    
+    screen.addRegionToUpdate(left, top, width, height);
+}
+
+
 //////////////////////////////////////////////////////////////////
 //
 // Button
@@ -971,18 +1032,18 @@ bool Slider::onMouseMove(int x, int y)
 //
 //////////////////////////////////////////////////////////////////
 
-CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::vector<std::wstring> o): value(v)
+CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v,
+        std::vector<std::wstring> o):
+    TextHighlightWidget(x, y, w, h, f, 255, 255, 0),
+    value(v)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-    font = f;
     options = o;
     
-    image = NULL;
-    highlighted = NULL;
-    drawTiles();
+    image = makeBox(width, height, L"blue.bmp");
+    SDL_Surface *s = scaleUp(image);
+    SDL_FreeSurface(image);
+    image = s;
+    highlighted = adjustBrightness(image, 1.5, false);
 }
 
 
@@ -993,43 +1054,18 @@ CycleButton::~CycleButton()
 }
 
 
-void CycleButton::drawTiles()
+std::wstring CycleButton::getText()
 {
-    if (image)
-    {
-        SDL_FreeSurface(image);
-        SDL_FreeSurface(highlighted);
-    }
-    image = makeBox(width, height, L"blue.bmp");
-
-    std::wstring text = options[value];
-    int r = 255;
-    int g = 255;
-    int b = 0;
-    
-    SDL_Surface *s = scaleUp(image);
-    SDL_FreeSurface(image);
-    image = s;
-    
-    int tW, tH;
-    font->setScaled(true);
-    font->getSize(text, tW, tH);
-    font->draw(image, (image->w - tW) / 2, (image->h - tH) / 2, r, g, b, true, text);
-    font->setScaled(false);
-    
-    highlighted = adjustBrightness(image, 1.5, false);
-    
-    draw();
+    return options[value];
 }
-
 
 bool CycleButton::onMouseButtonDown(int button, int x, int y)
 {
     if (isInRect(x, y, left, top, width, height)) {
         sound->play(L"click.wav");
         value = (value + 1) % (options.size());
-      
-        drawTiles();
+        draw();
+        
         return true;
     } else
         return false;
