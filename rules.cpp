@@ -38,12 +38,28 @@ static std::wstring getThingName(int row, int thing)
 class HorizontalRule: public Rule
 {
     protected:
-        virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted) = 0;
+        int row1, thing1;
+        int row2, thing2;
+
+    protected:
+        virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) = 0;
-        virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted) = 0;
+        virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted);
         virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
 };
+
+
+SDL_Surface* HorizontalRule::getLeftIcon(IconSet &iconSet, bool h)
+{
+    return iconSet.getLargeIcon(row1, thing1, h);
+}
+
+
+SDL_Surface* HorizontalRule::getRightIcon(IconSet &iconSet, bool h)
+{
+    return iconSet.getLargeIcon(row2, thing2, h);
+}
 
 
 SDL_Surface* HorizontalRule::getImage(IconSet &iconSet, bool h)
@@ -72,10 +88,6 @@ void HorizontalRule::draw(int x, int y, IconSet &iconSet, bool highlighted)
 
 class NearRule: public HorizontalRule
 {
-    private:
-        int thing1[2];
-        int thing2[2];
-        
     public:
         NearRule(SolvedPuzzle puzzle);
         NearRule(std::istream &stream);
@@ -83,9 +95,7 @@ class NearRule: public HorizontalRule
         virtual std::wstring getAsText();
     
     protected:
-        virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted);
-        virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
     
     private:
         bool applyToCol(Possibilities &pos, int col, int nearRow, int nearNum,
@@ -98,8 +108,8 @@ class NearRule: public HorizontalRule
 NearRule::NearRule(SolvedPuzzle puzzle)
 {
     int col1 = rndGen.genInt(PUZZLE_SIZE);
-    thing1[0] = rndGen.genInt(PUZZLE_SIZE);
-    thing1[1] = puzzle[thing1[0]][col1];
+    row1 = rndGen.genInt(PUZZLE_SIZE);
+    thing1 = puzzle[row1][col1];
 
     int col2;
     if (col1 == 0)
@@ -113,17 +123,17 @@ NearRule::NearRule(SolvedPuzzle puzzle)
             else
                 col2 = col1 - 1;
     
-    thing2[0] = rndGen.genInt(PUZZLE_SIZE);
-    thing2[1] = puzzle[thing2[0]][col2];
+    row2 = rndGen.genInt(PUZZLE_SIZE);
+    thing2 = puzzle[row2][col2];
 }
 
 
 NearRule::NearRule(std::istream &stream)
 {
-    thing1[0] = readInt(stream);
-    thing1[1] = readInt(stream);
-    thing2[0] = readInt(stream);
-    thing2[1] = readInt(stream);
+    row1 = readInt(stream);
+    thing1 = readInt(stream);
+    row2 = readInt(stream);
+    thing2 = readInt(stream);
 }
 
 
@@ -154,9 +164,9 @@ bool NearRule::apply(Possibilities &pos)
     bool changed = false;
     
     for (int i = 0; i < PUZZLE_SIZE; i++) {
-        if (applyToCol(pos, i, thing1[0], thing1[1], thing2[0], thing2[1]))
+        if (applyToCol(pos, i, row1, thing1, row2, thing2))
             changed = true;
-        if (applyToCol(pos, i, thing2[0], thing2[1], thing1[0], thing1[1]))
+        if (applyToCol(pos, i, row2, thing2, row1, thing1))
             changed = true;
     }
 
@@ -168,14 +178,8 @@ bool NearRule::apply(Possibilities &pos)
 
 std::wstring NearRule::getAsText()
 {
-    return getThingName(thing1[0], thing1[1]) + 
-        L" is near to " + getThingName(thing2[0], thing2[1]);
-}
-
-
-SDL_Surface* NearRule::getLeftIcon(IconSet &iconSet, bool h)
-{
-    return iconSet.getLargeIcon(thing1[0], thing1[1], h);
+    return getThingName(row1, thing1) + 
+        L" is near to " + getThingName(row2, thing2);
 }
 
 
@@ -185,28 +189,18 @@ SDL_Surface* NearRule::getMiddleIcon(IconSet &iconSet, bool h)
 }
 
 
-SDL_Surface* NearRule::getRightIcon(IconSet &iconSet, bool h)
-{
-    return iconSet.getLargeIcon(thing2[0], thing2[1], h);
-}
-
-
 void NearRule::save(std::ostream &stream)
 {
     writeString(stream, L"near");
-    writeInt(stream, thing1[0]);
-    writeInt(stream, thing1[1]);
-    writeInt(stream, thing2[0]);
-    writeInt(stream, thing2[1]);
+    writeInt(stream, row1);
+    writeInt(stream, thing1);
+    writeInt(stream, row2);
+    writeInt(stream, thing2);
 }
 
 
 class DirectionRule: public HorizontalRule
 {
-    private:
-        int row1, thing1;
-        int row2, thing2;
-        
     public:
         DirectionRule(SolvedPuzzle puzzle);
         DirectionRule(std::istream &stream);
@@ -214,9 +208,7 @@ class DirectionRule: public HorizontalRule
         virtual std::wstring getAsText();
     
     protected:
-        virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted);
-        virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
     
     private:
         virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
@@ -274,22 +266,11 @@ std::wstring DirectionRule::getAsText()
 }
 
 
-SDL_Surface* DirectionRule::getLeftIcon(IconSet &iconSet, bool h)
-{
-    return iconSet.getLargeIcon(row1, thing1, h);
-}
-
-
 SDL_Surface* DirectionRule::getMiddleIcon(IconSet &iconSet, bool h)
 {
     return iconSet.getSideHintIcon(h);
 }
 
-
-SDL_Surface* DirectionRule::getRightIcon(IconSet &iconSet, bool h)
-{
-    return iconSet.getLargeIcon(row2, thing2, h);
-}
 
 void DirectionRule::save(std::ostream &stream)
 {
@@ -440,8 +421,6 @@ void UnderRule::save(std::ostream &stream)
 class BetweenRule: public HorizontalRule
 {
     private:
-        int row1, thing1;
-        int row2, thing2;
         int centerRow, centerThing;
         
     public:
@@ -451,9 +430,7 @@ class BetweenRule: public HorizontalRule
         virtual std::wstring getAsText();
     
     protected:
-        virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted);
-        virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getImage(IconSet &iconSet, bool higlighted);
 
     private:
@@ -573,21 +550,9 @@ std::wstring BetweenRule::getAsText()
 }
 
 
-SDL_Surface* BetweenRule::getLeftIcon(IconSet &iconSet, bool h)
-{
-    return iconSet.getLargeIcon(row1, thing1, h);
-}
-
-
 SDL_Surface* BetweenRule::getMiddleIcon(IconSet &iconSet, bool h)
 {
     return iconSet.getLargeIcon(centerRow, centerThing, h);
-}
-
-
-SDL_Surface* BetweenRule::getRightIcon(IconSet &iconSet, bool h)
-{
-    return iconSet.getLargeIcon(row2, thing2, h);
 }
 
 
