@@ -87,6 +87,7 @@ class HighlightableWidget: public BoundedWidget
     
     protected:
         HighlightableWidget();
+        virtual ~HighlightableWidget();
     
     public:
         virtual void draw();
@@ -310,7 +311,6 @@ class Checkbox: public TextHighlightWidget
         Checkbox(int x, int y, int width, int height, Font *font, 
                 int r, int g, int b, const std::wstring &background,
                 bool &checked);
-        virtual ~Checkbox();
 
     protected:
         virtual std::wstring getText();
@@ -375,7 +375,6 @@ class CycleButton: public TextHighlightWidget
         
     public:
         CycleButton(int x, int y, int width, int height, Font *font, int &value, std::vector<std::wstring> options);
-        virtual ~CycleButton();
     
     protected:
         virtual std::wstring getText();

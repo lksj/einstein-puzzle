@@ -34,6 +34,14 @@ HighlightableWidget::HighlightableWidget()
     mouseInside = false;
 }
 
+
+HighlightableWidget::~HighlightableWidget()
+{
+    SDL_FreeSurface(image);
+    SDL_FreeSurface(highlighted);
+}
+
+
 void HighlightableWidget::draw()
 {
     if (mouseInside)
@@ -785,13 +793,6 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *f,
 }
 
 
-Checkbox::~Checkbox()
-{
-    SDL_FreeSurface(image);
-    SDL_FreeSurface(highlighted);
-}
-
-
 std::wstring Checkbox::getText()
 {
     return (checked ? L"X" : L"");
@@ -1017,13 +1018,6 @@ CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v,
     SDL_FreeSurface(image);
     image = s;
     highlighted = adjustBrightness(image, 1.5, false);
-}
-
-
-CycleButton::~CycleButton()
-{
-    SDL_FreeSurface(image);
-    SDL_FreeSurface(highlighted);
 }
 
 
