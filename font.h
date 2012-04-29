@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,7 +33,15 @@ class Font
         TTF_Font *unscaled;
         TTF_Font *scaled;
         TTF_Font *font;
+        float scale;
         void *data;
+        std::wstring name;
+        int uSize;
+        int resSize;
+    
+    protected:
+        void rescale();
+        TTF_Font* loadFont(int ptsize);
     
     public:
         Font(const std::wstring &name, int ptsize);

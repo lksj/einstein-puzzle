@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-23 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -55,23 +55,18 @@ static Uint16 *strToUint16(const std::wstring &text)
 
 
 
-Font::Font(const std::wstring &name, int ptsize)
+Font::Font(const std::wstring &name, int ptsize):
+    name(name), uSize(ptsize)
 {
-    int size;
-
-    data = resources->getRef(name, size);
+    data = resources->getRef(name, resSize);
     if (! data)
         throw Exception(name + L" not found");
-    SDL_RWops *op = SDL_RWFromMem(data, size);
-    font = TTF_OpenFontRW(op, 1, ptsize);
-
-    if (! font)
-        throw Exception(L"Error loading font " + name);
     
-    //HACK: keep a scaled version of the font for drawing directly to scaled screen
-    SDL_RWops *op2 = SDL_RWFromMem(data, size);
-    scaled = TTF_OpenFontRW(op2, 1, screen.doScale(ptsize));
-    unscaled = font;
+    unscaled = loadFont(ptsize);
+    scale = 1.0;
+    scaled = loadFont(ptsize);
+    font = unscaled;
+    rescale();
 }
 
 
@@ -111,9 +106,31 @@ void Font::draw(int x, int y, int r, int g, int b, bool shadow,
         const std::wstring &text)
 {
     TTF_Font *oldFont = font;
+    if (screen.getScale() != scale)
+    {
+        rescale();
+    }
     font = scaled;
     draw(screen.getScaled(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
     font = oldFont;
+}
+
+void Font::rescale()
+{
+    TTF_CloseFont(scaled);
+    scale = screen.getScale();
+    scaled = loadFont(screen.doScale(uSize));
+}
+
+TTF_Font* Font::loadFont(int ptsize)
+{
+    SDL_RWops *op = SDL_RWFromMem(data, resSize);
+    TTF_Font* f = TTF_OpenFontRW(op, 1, ptsize);
+
+    if (! f)
+        throw Exception(L"Error loading font " + name);
+    
+    return f;
 }
 
 int Font::getWidth(const std::wstring &text)
