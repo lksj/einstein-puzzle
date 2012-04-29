@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -40,7 +42,10 @@ class MenuBackground: public Widget
 void MenuBackground::draw()
 {
     SDL_Surface *title = loadImage(L"nova.bmp");
-    screen.draw(0, 0, title);
+    SDL_Surface *u = scaleUp(title);
+    SDL_FreeSurface(title);
+    title = u;
+    screen.drawDirect(0, 0, title);
     SDL_FreeSurface(title);
     Font font(L"nova.ttf", 28);
     std::wstring s(msg(L"einsteinFlowix"));
