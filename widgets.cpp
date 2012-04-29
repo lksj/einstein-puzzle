@@ -29,10 +29,54 @@ using namespace std;
 
 
 
-HighlightableWidget::HighlightableWidget()
+BoundedWidget::BoundedWidget()
 {
     scale = -1.0;
+    image = NULL;
     sImage = NULL;
+}
+
+
+BoundedWidget::~BoundedWidget()
+{
+    SDL_FreeSurface(image);
+    SDL_FreeSurface(sImage);
+}
+
+
+SDL_Surface* BoundedWidget::getImage()
+{
+    return sImage;
+}
+
+
+void BoundedWidget::draw()
+{
+    if (!sImage || screen.getScale() != scale)
+    {
+        rescale();
+    }
+    screen.drawDirect(left, top, getImage());
+    screen.addRegionToUpdate(left, top, width, height);
+}
+
+
+void BoundedWidget::rescale()
+{
+    if (!sImage)
+    {
+        SDL_FreeSurface(sImage);
+    }
+    
+    scale = screen.getScale();
+    sImage = scaleUp(image);
+    
+    SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+}
+
+HighlightableWidget::HighlightableWidget()
+{
+    highlighted = NULL;
     sHighlighted = NULL;
     mouseInside = false;
 }
@@ -40,44 +84,26 @@ HighlightableWidget::HighlightableWidget()
 
 HighlightableWidget::~HighlightableWidget()
 {
-    SDL_FreeSurface(image);
     SDL_FreeSurface(highlighted);
-    SDL_FreeSurface(sImage);
     SDL_FreeSurface(sHighlighted);
 }
 
 
-void HighlightableWidget::draw()
+SDL_Surface* HighlightableWidget::getImage()
 {
-    if (!sImage || screen.getScale() != scale)
-    {
-        rescale();
-    }
-    if (mouseInside)
-    {
-        screen.drawDirect(left, top, sHighlighted);
-    }
-    else
-    {
-        screen.drawDirect(left, top, sImage);
-    }
-    screen.addRegionToUpdate(left, top, width, height);
+    return (mouseInside ? sHighlighted : sImage);
 }
 
 
 void HighlightableWidget::rescale()
 {
-    if (!sImage)
+    BoundedWidget::rescale();
+    if (!sHighlighted)
     {
-        SDL_FreeSurface(sImage);
         SDL_FreeSurface(sHighlighted);
     }
     
-    scale = screen.getScale();
-    sImage = scaleUp(image);
     sHighlighted = scaleUp(highlighted);
-    
-    SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
     SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
 }
 
@@ -810,34 +836,23 @@ bool Checkbox::onMouseMove(int x, int y)
 
 Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
 {
-    SDL_Surface *s = loadImage(name, transparent);
-    width = s->w;
-    height = s->h;
-    image = scaleUp(s);
-    SDL_FreeSurface(s);
+    SDL_Surface *image = loadImage(name, transparent);
+    width = image->w;
+    height = image->h;
     left = x;
     top = y;
 }
 
+
 Picture::Picture(int x, int y, SDL_Surface *img)
 {
-    image = scaleUp(img);
+    image = SDL_DisplayFormat(img);
     left = x;
     top = y;
     width = img->w;
     height = img->h;
 }
 
-Picture::~Picture() 
-{ 
-    SDL_FreeSurface(image); 
-}
-
-void Picture::draw()
-{
-    screen.drawDirect(left, top, image);
-    screen.addRegionToUpdate(left, top, width, height);
-}
 
 void Picture::moveX(const int newX) 
 { 

@@ -62,9 +62,18 @@ class Widget
 class BoundedWidget: public Widget
 {
     protected:
+        SDL_Surface *image, *sImage;
         int left, top, width, height;
+        float scale;
+    
+    protected:
+        BoundedWidget();
+        virtual ~BoundedWidget();
+        virtual SDL_Surface* getImage();
     
     public:
+        virtual void draw();
+        virtual void rescale();
         int getLeft() const { return left; };
         int getTop() const { return top; };
         int getWidth() const { return width; };
@@ -82,17 +91,15 @@ class BoundedWidget: public Widget
 class HighlightableWidget: public BoundedWidget
 {
     protected:
-        SDL_Surface *image, *highlighted;
-        SDL_Surface *sImage, *sHighlighted;    
-        float scale;
+        SDL_Surface *highlighted, *sHighlighted;
         bool mouseInside;
     
     protected:
         HighlightableWidget();
         virtual ~HighlightableWidget();
+        virtual SDL_Surface* getImage();
     
     public:
-        virtual void draw();
         virtual void rescale();
 };
 
@@ -326,16 +333,11 @@ class Checkbox: public TextHighlightWidget
 
 class Picture: public BoundedWidget
 {
-    protected:
-        SDL_Surface *image;
-        
     public:
         Picture(int x, int y, const std::wstring &name, bool transparent=true);
         Picture(int x, int y, SDL_Surface *image);
-        virtual ~Picture();
 
     public:
-        virtual void draw();
         void moveX(const int newX);
 };
 
