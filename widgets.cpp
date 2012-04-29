@@ -31,6 +31,9 @@ using namespace std;
 
 HighlightableWidget::HighlightableWidget()
 {
+    scale = -1.0;
+    sImage = NULL;
+    sHighlighted = NULL;
     mouseInside = false;
 }
 
@@ -39,20 +42,43 @@ HighlightableWidget::~HighlightableWidget()
 {
     SDL_FreeSurface(image);
     SDL_FreeSurface(highlighted);
+    SDL_FreeSurface(sImage);
+    SDL_FreeSurface(sHighlighted);
 }
 
 
 void HighlightableWidget::draw()
 {
+    if (!sImage || screen.getScale() != scale)
+    {
+        rescale();
+    }
     if (mouseInside)
     {
-        screen.drawDirect(left, top, highlighted);
+        screen.drawDirect(left, top, sHighlighted);
     }
     else
     {
-        screen.drawDirect(left, top, image);
+        screen.drawDirect(left, top, sImage);
     }
     screen.addRegionToUpdate(left, top, width, height);
+}
+
+
+void HighlightableWidget::rescale()
+{
+    if (!sImage)
+    {
+        SDL_FreeSurface(sImage);
+        SDL_FreeSurface(sHighlighted);
+    }
+    
+    scale = screen.getScale();
+    sImage = scaleUp(image);
+    sHighlighted = scaleUp(highlighted);
+    
+    SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+    SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
 }
 
 
@@ -784,11 +810,6 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *f,
     checked(chk)
 {
     image = makeBox(width, height, bg);
-        
-    SDL_Surface *s = scaleUp(image);
-    SDL_FreeSurface(image);
-    image = s;
-    
     highlighted = adjustBrightness(image, 1.5, false);
 }
 
@@ -1014,9 +1035,6 @@ CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v,
     options = o;
     
     image = makeBox(width, height, L"blue.bmp");
-    SDL_Surface *s = scaleUp(image);
-    SDL_FreeSurface(image);
-    image = s;
     highlighted = adjustBrightness(image, 1.5, false);
 }
 

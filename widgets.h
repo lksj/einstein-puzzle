@@ -83,6 +83,8 @@ class HighlightableWidget: public BoundedWidget
 {
     protected:
         SDL_Surface *image, *highlighted;
+        SDL_Surface *sImage, *sHighlighted;    
+        float scale;
         bool mouseInside;
     
     protected:
@@ -91,6 +93,7 @@ class HighlightableWidget: public BoundedWidget
     
     public:
         virtual void draw();
+        virtual void rescale();
 };
 
 
