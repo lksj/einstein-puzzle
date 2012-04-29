@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -71,8 +71,11 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
     if (possib->isDefined(col, row)) {
         int element = possib->getDefined(col, row);
         if (element > 0)
-            screen.draw(posX, posY, iconSet.getLargeIcon(row, element, 
-                        (hCol == col) && (hRow == row)));
+        {
+            SDL_Surface *s = scaleUp(iconSet.getLargeIcon(row, element, (hCol == col) && (hRow == row)));
+            screen.drawDirect(posX, posY, s);
+            SDL_FreeSurface(s);
+        }
     } else {
         SDL_Surface* emptyFieldIcon = iconSet.getEmptyFieldIcon();
         SDL_Surface* newTile = SDL_ConvertSurface(emptyFieldIcon, emptyFieldIcon->format, emptyFieldIcon->flags);
@@ -92,7 +95,10 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
             } else
                 x += (FIELD_TILE_WIDTH / 3);
         }
-        screen.draw(posX, posY, newTile);
+        SDL_Surface *s = scaleUp(newTile);
+        SDL_FreeSurface(newTile);
+        newTile = s;
+        screen.drawDirect(posX, posY, newTile);
         SDL_FreeSurface(newTile);
     }
     if (addToUpdate)
