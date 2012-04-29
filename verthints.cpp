@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -111,8 +111,16 @@ void VertHints::drawCell(int col, bool addToUpdate)
     if (r)
         r->draw(x, y, iconSet, highlighted == col);
     else {
-        screen.draw(x, y, iconSet.getEmptyHintIcon());
-        screen.draw(x, y + TILE_HEIGHT, iconSet.getEmptyHintIcon());
+        SDL_Surface *t = iconSet.getEmptyHintIcon();
+        SDL_Surface *s = makeSWSurface(t->w, t->h * 2);
+
+        blitDraw(0, 0, t, s);
+        blitDraw(0, t->h, t, s);
+        SDL_Surface *u = scaleUp(s);
+        SDL_FreeSurface(s);
+        s = u;
+        screen.drawDirect(x, y, s);
+        SDL_FreeSurface(s);
     }
     
     if (addToUpdate)
