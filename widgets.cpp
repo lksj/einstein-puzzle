@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -28,6 +28,11 @@
 using namespace std;
 
 
+
+HighlightableWidget::HighlightableWidget()
+{
+    mouseInside = false;
+}
 
 void HighlightableWidget::draw()
 {
@@ -725,8 +730,6 @@ Checkbox::Checkbox(int x, int y, int w, int h, Font *f,
     image = s;
     
     highlighted = adjustBrightness(image, 1.5, false);
-    
-    mouseInside = false;
 }
 
 
@@ -980,8 +983,6 @@ CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v, std::vecto
     image = NULL;
     highlighted = NULL;
     drawTiles();
-  
-    mouseInside = false;
 }
 
 
