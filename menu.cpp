@@ -41,10 +41,7 @@ class MenuBackground: public Widget
 
 void MenuBackground::draw()
 {
-    SDL_Surface *title = loadImage(L"nova.bmp");
-    SDL_Surface *u = scaleUp(title);
-    SDL_FreeSurface(title);
-    title = u;
+    SDL_Surface *title = loadImage(L"nova.bmp", false, true);
     screen.drawDirect(0, 0, title);
     SDL_FreeSurface(title);
     Font font(L"nova.ttf", 28);

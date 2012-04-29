@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -117,7 +117,7 @@ int getCornerPixel(SDL_Surface *surface)
 
 
 
-SDL_Surface* loadImage(const std::wstring &name, bool transparent)
+SDL_Surface* loadImage(const std::wstring &name, bool transparent, bool scaled)
 {
     int size;
     void *bmp;
@@ -135,6 +135,14 @@ SDL_Surface* loadImage(const std::wstring &name, bool transparent)
     SDL_FreeSurface(s);
     if (! screenS)
         throw Exception(L"Error translating to screen format " + name);
+    
+    if (scaled)
+    {
+        SDL_Surface *s = scaleUp(screenS);
+        SDL_FreeSurface(screenS);
+        screenS = s;
+    }
+    
     if (transparent)
         SDL_SetColorKey(screenS, SDL_SRCCOLORKEY, getCornerPixel(screenS));
     return screenS;

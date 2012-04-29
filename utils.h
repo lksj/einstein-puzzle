@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -38,7 +38,7 @@ SDL_Surface* scaleDown(SDL_Surface* tile);
 void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst);
 void drawTiled(const std::wstring &name, SDL_Surface *s);
 SDL_Surface* makeSWSurface(int width, int height);
-SDL_Surface* loadImage(const std::wstring &name, bool transparent=false);
+SDL_Surface* loadImage(const std::wstring &name, bool transparent=false, bool scaled = false);
 SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent=false);
 int gettimeofday(struct timeval* tp);
 bool isInRect(int evX, int evY, int x, int y, int w, int h);
