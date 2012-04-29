@@ -35,6 +35,7 @@
 
 SDL_Surface* scaleUp(SDL_Surface* tile);
 SDL_Surface* scaleDown(SDL_Surface* tile);
+SDL_Surface* scaleTo(SDL_Surface* tile, int width, int height);
 void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst);
 void drawTiled(const std::wstring &name, SDL_Surface *s);
 SDL_Surface* makeSWSurface(int width, int height);

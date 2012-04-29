@@ -42,19 +42,17 @@
 
 SDL_Surface* scaleUp(SDL_Surface* tile)
 {
-    SDL_Surface *s = makeSWSurface(screen.doScale(tile->w),
-                                    screen.doScale(tile->h));
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, s->w, s->h };
-    SDL_SoftStretch(tile, &src, s, &dst);
-    
-    return s;
+    return scaleTo(tile, screen.doScale(tile->w), screen.doScale(tile->h));
 }
 
 SDL_Surface* scaleDown(SDL_Surface* tile)
 {
-    SDL_Surface *s = makeSWSurface(screen.reverseScale(tile->w),
-                                    screen.reverseScale(tile->h));
+    return scaleTo(tile, screen.reverseScale(tile->w), screen.reverseScale(tile->h));
+}
+
+SDL_Surface* scaleTo(SDL_Surface* tile, int width, int height)
+{
+    SDL_Surface *s = makeSWSurface(width, height);
     SDL_Rect src = { 0, 0, tile->w, tile->h };
     SDL_Rect dst = { 0, 0, s->w, s->h };
     SDL_SoftStretch(tile, &src, s, &dst);
