@@ -686,7 +686,10 @@ void InputField::draw()
             setPixel(s, 0, i, red, green, blue);
             setPixel(s, 1, i, red, green, blue);
         }
-        screen.draw(left + pad + screen.reverseScale(pos), top + 2, s);
+        SDL_Surface *t = scaleUp(s);
+        SDL_FreeSurface(s);
+        s = t;
+        screen.drawDirect(left + pad + screen.reverseScale(pos), top + 2, s);
         SDL_FreeSurface(s);
     }
     
