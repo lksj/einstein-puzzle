@@ -116,13 +116,15 @@ class TextHighlightWidget: public HighlightableWidget
 };
 
 
-class Button: public BoundedWidget
+class Button: public TextHighlightWidget
 {
     protected:
-        SDL_Surface *image, *highlighted;
-        bool mouseInside;
         Command *command;
+        std::wstring text;
         
+    protected:
+        virtual std::wstring getText();
+    
     public:
         Button(int x, int y, int width, int height, Font *font, 
                 int fR, int fG, int fB, int hR, int hG, int hB, 
@@ -133,10 +135,8 @@ class Button: public BoundedWidget
         Button(int x, int y, int width, int height, Font *font, 
                 int r, int g, int b, const std::wstring &background, 
                 const std::wstring &text, bool bevel, Command *cmd=NULL);
-        virtual ~Button();
 
     public:
-        virtual void draw();
         virtual bool onMouseButtonDown(int button, int x, int y);
         virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };

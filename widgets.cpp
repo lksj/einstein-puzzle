@@ -152,40 +152,25 @@ void TextHighlightWidget::draw()
 
 Button::Button(int x, int y, int w, int h, Font *font, 
         int fR, int fG, int fB, int hR, int hG, int hB,
-        const std::wstring &text, Command *cmd)
+        const std::wstring &text, Command *cmd):
+    TextHighlightWidget(x, y, w, h, font, fR, fG, fB, hR, hG, hB),
+    text(text)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-
     SDL_Surface *s = screen.getRegion(left, top, width, height);
-    
-    int tW, tH;
-    font->getSize(text, tW, tH);
-    font->draw(s, (width - tW) / 2, (height - tH) / 2, fR, fG, fB, true, text);
     image = SDL_DisplayFormat(s);
-    SDL_FreeSurface(s);
-    
-    s = screen.getRegion(left, top, width, height);
-    font->draw(s, (width - tW) / 2, (height - tH) / 2, hR, hG, hB, true, text);
     highlighted = SDL_DisplayFormat(s);
     SDL_FreeSurface(s);
     
-    mouseInside = false;
     command = cmd;
 }
 
 
 Button::Button(int x, int y, int w, int h, Font *font, 
         int r, int g, int b, const std::wstring &bg, 
-        const std::wstring &text, bool bevel, Command *cmd)
-{
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-
+        const std::wstring &text, bool bevel, Command *cmd):
+    TextHighlightWidget(x, y, w, h, font, r, g, b),
+    text(text)
+{  
     if (bevel)
     {
         image = makeBox(width, height, bg);
@@ -196,56 +181,30 @@ Button::Button(int x, int y, int w, int h, Font *font,
         drawTiled(bg, image);
     }
     
-    int tW, tH;
-    font->getSize(text, tW, tH);
-    font->draw(image, (width - tW) / 2, (height - tH) / 2, r, g, b, true, text);
-    
     highlighted = adjustBrightness(image, 1.5, false);
     SDL_SetColorKey(image, SDL_SRCCOLORKEY, getCornerPixel(image));
     SDL_SetColorKey(highlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
     
-    mouseInside = false;
     command = cmd;
 }
-
 
 
 Button::Button(int x, int y, int w, int h, Font *font, 
         int r, int g, int b, const std::wstring &bg, 
-        const std::wstring &text, Command *cmd)
-{
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-
+        const std::wstring &text, Command *cmd):
+    TextHighlightWidget(x, y, w, h, font, r, g, b),
+    text(text)
+{  
     image = makeBox(width, height, bg);
-    
-    int tW, tH;
-    font->getSize(text, tW, tH);
-    font->draw(image, (width - tW) / 2, (height - tH) / 2, r, g, b, true, text);
-    
     highlighted = adjustBrightness(image, 1.5, false);
     
-    mouseInside = false;
     command = cmd;
 }
 
 
-Button::~Button()
+std::wstring Button::getText()
 {
-    SDL_FreeSurface(image);
-    SDL_FreeSurface(highlighted);
-}
-
-
-void Button::draw()
-{
-    if (mouseInside)
-        screen.draw(left, top, highlighted);
-    else
-        screen.draw(left, top, image);
-    screen.addRegionToUpdate(left, top, width, height);
+    return text;
 }
 
 
