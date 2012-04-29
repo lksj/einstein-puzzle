@@ -108,6 +108,29 @@ void HighlightableWidget::rescale()
 }
 
 
+bool ClickableWidget::onMouseButtonDown(int button, int x, int y)
+{
+    if (isInRect(x, y, left, top, width, height)) {
+        sound->play(L"click.wav");
+        handleClick(button);
+        
+        return true;
+    } else
+        return false;
+}
+
+
+bool ClickableWidget::onMouseMove(int x, int y)
+{
+    bool in = isInRect(x, y, left, top, width, height);
+    if (in != mouseInside) {
+        mouseInside = in;
+        draw();
+    }
+    return false;
+}
+
+
 TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
         int fR, int fG, int fB, int hR, int hG, int hB)
 {
@@ -234,26 +257,12 @@ std::wstring Button::getText()
 }
 
 
-bool Button::onMouseButtonDown(int button, int x, int y)
+void Button::handleClick(int button)
 {
-    if (isInRect(x, y, left, top, width, height)) {
-        sound->play(L"click.wav");
-        if (command)
-            command->doAction();
-        return true;
-    } else
-        return false;
-}
-
-
-bool Button::onMouseMove(int x, int y)
-{
-    bool in = isInRect(x, y, left, top, width, height);
-    if (in != mouseInside) {
-        mouseInside = in;
-        draw();
+    if (command)
+    {
+        command->doAction();
     }
-    return false;
 }
 
 
@@ -805,26 +814,10 @@ std::wstring Checkbox::getText()
 }
 
 
-bool Checkbox::onMouseButtonDown(int button, int x, int y)
+void Checkbox::handleClick(int button)
 {
-    if (isInRect(x, y, left, top, width, height)) {
-        sound->play(L"click.wav");
-        checked = ! checked;
-        draw();
-        return true;
-    } else
-        return false;
-}
-
-
-bool Checkbox::onMouseMove(int x, int y)
-{
-    bool in = isInRect(x, y, left, top, width, height);
-    if (in != mouseInside) {
-        mouseInside = in;
-        draw();
-    }
-    return false;
+    checked = ! checked;
+    draw();
 }
 
 
@@ -1018,25 +1011,8 @@ std::wstring CycleButton::getText()
     return options[value];
 }
 
-bool CycleButton::onMouseButtonDown(int button, int x, int y)
+void CycleButton::handleClick(int button)
 {
-    if (isInRect(x, y, left, top, width, height)) {
-        sound->play(L"click.wav");
-        value = (value + 1) % (options.size());
-        draw();
-        
-        return true;
-    } else
-        return false;
-}
-
-
-bool CycleButton::onMouseMove(int x, int y)
-{
-    bool in = isInRect(x, y, left, top, width, height);
-    if (in != mouseInside) {
-        mouseInside = in;
-        draw();
-    }
-    return false;
+    value = (value + 1) % (options.size());
+    draw();
 }

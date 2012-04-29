@@ -104,7 +104,17 @@ class HighlightableWidget: public BoundedWidget
 };
 
 
-class TextHighlightWidget: public HighlightableWidget
+class ClickableWidget: public HighlightableWidget
+{
+    protected:
+        virtual void handleClick(int button) = 0;
+    
+    public:
+        virtual bool onMouseButtonDown(int button, int x, int y);
+        virtual bool onMouseMove(int x, int y);
+};
+
+class TextHighlightWidget: public ClickableWidget
 {
     protected:
         int red, green, blue;
@@ -131,6 +141,7 @@ class Button: public TextHighlightWidget
         
     protected:
         virtual std::wstring getText();
+        virtual void handleClick(int button);
     
     public:
         Button(int x, int y, int width, int height, Font *font, 
@@ -144,8 +155,6 @@ class Button: public TextHighlightWidget
                 const std::wstring &text, bool bevel, Command *cmd=NULL);
 
     public:
-        virtual bool onMouseButtonDown(int button, int x, int y);
-        virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
 };
 
@@ -324,10 +333,9 @@ class Checkbox: public TextHighlightWidget
 
     protected:
         virtual std::wstring getText();
+        virtual void handleClick(int button);
     
     public:
-        virtual bool onMouseButtonDown(int button, int x, int y);
-        virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
 };
 
@@ -383,10 +391,9 @@ class CycleButton: public TextHighlightWidget
     
     protected:
         virtual std::wstring getText();
+        virtual void handleClick(int button);
     
     public:
-        virtual bool onMouseButtonDown(int buttons, int x, int y);
-        virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };
 };
 
