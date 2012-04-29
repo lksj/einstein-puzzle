@@ -301,12 +301,10 @@ class InputField: public Window, public TimerHandler
 };
 
 
-class Checkbox: public HighlightableWidget
+class Checkbox: public TextHighlightWidget
 {
     protected:
         bool &checked;
-        Font* font;
-        int red, green, blue;
         
     public:
         Checkbox(int x, int y, int width, int height, Font *font, 
@@ -314,8 +312,10 @@ class Checkbox: public HighlightableWidget
                 bool &checked);
         virtual ~Checkbox();
 
+    protected:
+        virtual std::wstring getText();
+    
     public:
-        virtual void draw();
         virtual bool onMouseButtonDown(int button, int x, int y);
         virtual bool onMouseMove(int x, int y);
         void moveTo(int x, int y) { left = x; top = y; };

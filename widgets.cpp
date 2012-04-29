@@ -769,21 +769,12 @@ void InputField::moveCursor(int pos)
 //////////////////////////////////////////////////////////////////
 
 
-
 Checkbox::Checkbox(int x, int y, int w, int h, Font *f, 
         int r, int g, int b, const std::wstring &bg, 
-        bool &chk): checked(chk)
+        bool &chk):
+    TextHighlightWidget(x, y, w, h, f, r, g, b), 
+    checked(chk)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-    checked = chk;
-    font = f;
-    red = r;
-    green = g;
-    blue = b;
-
     image = makeBox(width, height, bg);
         
     SDL_Surface *s = scaleUp(image);
@@ -801,27 +792,9 @@ Checkbox::~Checkbox()
 }
 
 
-void Checkbox::draw()
+std::wstring Checkbox::getText()
 {
-    HighlightableWidget::draw();
-    
-    if (checked)
-    {
-        int r = red;
-        int g = green;
-        int b = blue;
-        
-        int tW, tH;
-        font->getSize(L"X", tW, tH);
-        
-        if (mouseInside)
-        {
-            adjustBrightness(&r, &g, &b, 1.5);
-            
-        }
-        font->draw(left + ((width - tW) / 2), top + ((height - tH) / 2), r, g, b, true, L"X");
-    }
-    screen.addRegionToUpdate(left, top, width, height);
+    return (checked ? L"X" : L"");
 }
 
 
