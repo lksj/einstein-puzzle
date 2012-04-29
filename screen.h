@@ -90,7 +90,6 @@ class Screen
         void updateMouse();
         void flush();
         void addRegionToUpdate(int x, int y, int w, int h);
-        void draw(int x, int y, SDL_Surface *surface);
         void drawDirect(int x, int y, SDL_Surface *tile);
         void setCursor(bool nice);
         void initCursors();

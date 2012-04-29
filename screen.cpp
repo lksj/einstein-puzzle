@@ -301,25 +301,6 @@ void Screen::addRegionToUpdate(int chkX, int chkY, int chkW, int chkH)
 }
 
 
-void Screen::draw(int x, int y, SDL_Surface *tile)
-{
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect u_dst = { x, y, tile->w, tile->h };
-    SDL_BlitSurface(tile, &src, unscaled, &u_dst);
-    
-    SDL_PixelFormat* fmt = screen->format;
-    SDL_Surface *s = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
-                                                                    doScale(tile->w), doScale(tile->h), fmt->BitsPerPixel,
-                                                                    fmt->Rmask, fmt->Gmask,
-                                                                    fmt->Bmask, fmt->Amask);
-    SDL_Rect s_dst = { 0, 0, s->w, s->h };
-    SDL_SoftStretch(unscaled, &u_dst, s, &s_dst);
-    
-    SDL_Rect dst = { this->doScale(x), this->doScale(y), s->w, s->h };
-    SDL_BlitSurface(s, &s_dst, screen, &dst);
-    SDL_FreeSurface(s);
-}
-
 void Screen::drawDirect(int x, int y, SDL_Surface *tile)
 {
     SDL_Rect src = { 0, 0, tile->w, tile->h };
