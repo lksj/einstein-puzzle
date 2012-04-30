@@ -78,26 +78,35 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
         }
     } else {
         SDL_Surface* emptyFieldIcon = iconSet.getEmptyFieldIcon();
-        SDL_Surface* newTile = SDL_ConvertSurface(emptyFieldIcon, emptyFieldIcon->format, emptyFieldIcon->flags);
+        SDL_Surface* newTile = scaleUp(emptyFieldIcon);
         int x = 0;
         int y = (FIELD_TILE_HEIGHT / 6);
         for (int i = 0; i < 6; i++) {
             if (possib->isPossible(col, row, i + 1))
             {
-                SDL_Surface* smallIcon = iconSet.getSmallIcon(row, i + 1, (hCol == col) && (hRow == row) && (i + 1 == subHNo));
+                SDL_Surface *origIcon = iconSet.getLargeIcon(row, i + 1, (hCol == col) && (hRow == row) && (i + 1 == subHNo));
+                SDL_Surface *smallIcon = scaleTo(origIcon, newTile->w / 3, newTile->h / 3);
+                for (int w = 0; w < smallIcon->w; w++)
+                {
+                    setPixel(smallIcon, w, 0, 0, 0, 0);
+                    setPixel(smallIcon, w, smallIcon->h-1, 0, 0, 0);
+                }
+                for (int h = 0; h < smallIcon->h; h++)
+                {
+                    setPixel(smallIcon, 0, h, 0, 0, 0);
+                    setPixel(smallIcon, smallIcon->w-1, h, 0, 0, 0);
+                }
                 SDL_Rect src = { 0, 0, smallIcon->w, smallIcon->h };
                 SDL_Rect dst = { x, y, smallIcon->w, smallIcon->h };
                 SDL_BlitSurface(smallIcon, &src, newTile, &dst);
+                SDL_FreeSurface(smallIcon);
             }
             if (i == 2) {
                 x = 0;
-                y += (FIELD_TILE_HEIGHT / 3);
+                y += (newTile->h / 3);
             } else
-                x += (FIELD_TILE_WIDTH / 3);
+                x += (newTile->w / 3);
         }
-        SDL_Surface *s = scaleUp(newTile);
-        SDL_FreeSurface(newTile);
-        newTile = s;
         screen.drawDirect(posX, posY, newTile);
         SDL_FreeSurface(newTile);
     }
