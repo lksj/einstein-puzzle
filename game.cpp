@@ -285,7 +285,7 @@ class FailCommand: public Command
             area.add(gameArea);
             area.add(new Window(220, 240, 360, 140, L"redpattern.bmp", 6));
             area.add(new Label(&font, 250, 230, 300, 100, Label::ALIGN_CENTER,
-                        Label::ALIGN_MIDDLE, 255,255,0, msg(L"loose")));
+                        Label::ALIGN_MIDDLE, 255,255,0, msg(L"lost")));
             OkDlgCommand newGameCmd(&area, newGame);
             area.add(new Button(250, 340, 90, 25, &btnFont, 255,255,0, 
                         L"redpattern.bmp", msg(L"startNew"), &newGameCmd));
