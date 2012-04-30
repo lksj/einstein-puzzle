@@ -29,7 +29,8 @@ using namespace std;
 
 
 
-BoundedWidget::BoundedWidget()
+BoundedWidget::BoundedWidget(bool transparent):
+    transparent(transparent)
 {
     scale = -1.0;
     image = NULL;
@@ -71,10 +72,14 @@ void BoundedWidget::rescale()
     scale = screen.getScale();
     sImage = scaleUp(image);
     
-    SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+    if (transparent)
+    {
+        SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+    }
 }
 
-HighlightableWidget::HighlightableWidget()
+HighlightableWidget::HighlightableWidget(bool transparent):
+    BoundedWidget(transparent)
 {
     highlighted = NULL;
     sHighlighted = NULL;
@@ -104,7 +109,17 @@ void HighlightableWidget::rescale()
     }
     
     sHighlighted = scaleUp(highlighted);
-    SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
+    
+    if (transparent)
+    {
+        SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
+    }
+}
+
+
+ClickableWidget::ClickableWidget(bool transparent):
+    HighlightableWidget(transparent)
+{
 }
 
 
@@ -132,7 +147,8 @@ bool ClickableWidget::onMouseMove(int x, int y)
 
 
 TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
-        int fR, int fG, int fB, int hR, int hG, int hB)
+        int fR, int fG, int fB, int hR, int hG, int hB, bool transparent):
+    ClickableWidget(transparent)
 {
     left = x;
     top = y;
@@ -150,7 +166,8 @@ TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f,
 
 
 TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
-        int r, int g, int b)
+        int r, int g, int b, bool transparent):
+    ClickableWidget(transparent)
 {
     left = x;
     top = y;
@@ -202,7 +219,7 @@ void TextHighlightWidget::draw()
 Button::Button(int x, int y, int w, int h, Font *font, 
         int fR, int fG, int fB, int hR, int hG, int hB,
         const std::wstring &text, Command *cmd):
-    TextHighlightWidget(x, y, w, h, font, fR, fG, fB, hR, hG, hB),
+    TextHighlightWidget(x, y, w, h, font, fR, fG, fB, hR, hG, hB, true),
     text(text)
 {
     SDL_Surface *s = screen.getRegion(left, top, width, height);
@@ -217,7 +234,7 @@ Button::Button(int x, int y, int w, int h, Font *font,
 Button::Button(int x, int y, int w, int h, Font *font, 
         int r, int g, int b, const std::wstring &bg, 
         const std::wstring &text, bool bevel, Command *cmd):
-    TextHighlightWidget(x, y, w, h, font, r, g, b),
+    TextHighlightWidget(x, y, w, h, font, r, g, b, !bevel),
     text(text)
 {  
     if (bevel)

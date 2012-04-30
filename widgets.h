@@ -65,9 +65,10 @@ class BoundedWidget: public Widget
         SDL_Surface *image, *sImage;
         int left, top, width, height;
         float scale;
+        bool transparent;
     
     protected:
-        BoundedWidget();
+        BoundedWidget(bool transparent = false);
         virtual ~BoundedWidget();
         virtual SDL_Surface* getImage();
     
@@ -95,7 +96,7 @@ class HighlightableWidget: public BoundedWidget
         bool mouseInside;
     
     protected:
-        HighlightableWidget();
+        HighlightableWidget(bool transparent = false);
         virtual ~HighlightableWidget();
         virtual SDL_Surface* getImage();
     
@@ -107,7 +108,8 @@ class HighlightableWidget: public BoundedWidget
 class ClickableWidget: public HighlightableWidget
 {
     protected:
-        virtual void handleClick(int button) = 0;
+    ClickableWidget(bool transparent = false);    
+    virtual void handleClick(int button) = 0;
     
     public:
         virtual bool onMouseButtonDown(int button, int x, int y);
@@ -123,9 +125,11 @@ class TextHighlightWidget: public ClickableWidget
         
     protected:
         TextHighlightWidget(int x, int y, int w, int h, Font *f, 
-                int fR, int fG, int fB, int hR, int hG, int hB);
+                int fR, int fG, int fB, int hR, int hG, int hB,
+                bool transparent = false);
         TextHighlightWidget(int x, int y, int w, int h, Font *f, 
-                int r, int g, int b);
+                int r, int g, int b,
+                bool transparent = false);
         virtual std::wstring getText() = 0;
     
     public:
