@@ -296,9 +296,7 @@ void Screen::addRegionToUpdate(int chkX, int chkY, int chkW, int chkH)
 
 void Screen::drawDirect(int x, int y, SDL_Surface *tile)
 {
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect s_dst = { doScale(x), doScale(y), tile->w, tile->h };
-    SDL_BlitSurface(tile, &src, screen, &s_dst);
+    blitDraw(doScale(x), doScale(y), tile, screen);
 }
 
 void Screen::setCursor(bool nice)
