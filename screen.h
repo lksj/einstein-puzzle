@@ -58,7 +58,6 @@ class Screen
 {
     private:
         SDL_Surface *screen;
-        SDL_Surface *unscaled;
         float scale;
         bool fullScreen;
         int screenSize;

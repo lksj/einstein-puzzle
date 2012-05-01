@@ -37,7 +37,6 @@ int DESKTOP_HEIGHT = 0;
 Screen::Screen()
 {
     screen = NULL;
-    unscaled = NULL;
     mouseImage = NULL;
     mouseSave = NULL;
     mouseVisible = false;
@@ -114,12 +113,6 @@ void Screen::applyMode()
     if (! screen)
         throw Exception(L"Couldn't set video mode: " + 
                 fromMbcs((SDL_GetError())));
-    if (!unscaled)
-    {
-      unscaled = SDL_CreateRGBSurface(SDL_SWSURFACE, UNSCALED_WIDTH, UNSCALED_HEIGHT, 
-                                                            screen->format->BitsPerPixel, screen->format->Rmask, screen->format->Gmask,
-                                                            screen->format->Bmask, screen->format->Amask);
-    }
 }
 
 
@@ -357,12 +350,7 @@ SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
 
 void Screen::drawWallpaper(const std::wstring &name)
 {
-    drawTiled(name, unscaled);
-    
-    //HACK: using draw causes seams so do the scale here
-    SDL_Rect src_full = { 0, 0, unscaled->w, unscaled->h };
-    SDL_Rect dst_full = { 0, 0, screen->w, screen->h };
-    SDL_SoftStretch(unscaled, &src_full, screen, &dst_full);
+    drawTiled(name, screen);
 }
 
 SDL_PixelFormat* Screen::getFormat()
