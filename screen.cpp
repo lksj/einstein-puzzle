@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -394,16 +394,6 @@ int Screen::reverseScale(int i)
     return (int)(i/scale);
 }
 
-SDL_Surface* Screen::getRegion(int x, int y, int w, int h)
-{
-    SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h,
-            24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0/*0xFF000000*/);
-    SDL_Rect src = { x, y, w, h };
-    SDL_Rect dst = { 0, 0, w, h };
-    SDL_BlitSurface(unscaled, &src, s, &dst);
-    
-    return s;
-}
 
 void Screen::setSize(int size)
 {
