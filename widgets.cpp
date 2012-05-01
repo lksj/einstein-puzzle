@@ -117,11 +117,14 @@ void HighlightableWidget::rescale()
         SDL_FreeSurface(sHighlighted);
     }
     
-    sHighlighted = scaleUp(highlighted);
-    
-    if (transparent)
+    if (highlighted)
     {
-        SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
+        sHighlighted = scaleUp(highlighted);
+    
+        if (transparent)
+        {
+            SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
+        }
     }
 }
 
