@@ -956,6 +956,14 @@ bool Slider::onMouseButtonDown(int button, int x, int y)
             dragging = true;
             dragOffsetX = screen.reverseScale(x) - left - sliderX;
         }
+        else
+        {
+            if (isInRect(x, y, left, (top + (height / 2) - 2), width, 4))
+            {
+                value = xToValue(screen.reverseScale(x) - left - (height / 2));
+                draw();
+            }
+        }
     }
     return in;
 }
