@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -57,8 +57,14 @@ void BoundedWidget::draw()
     {
         rescale();
     }
-    screen.drawDirect(left, top, getImage());
-    screen.addRegionToUpdate(left, top, width, height);
+    
+    SDL_Surface *s = getImage();
+    
+    if (s)
+    {
+        screen.drawDirect(left, top, s);
+        screen.addRegionToUpdate(left, top, width, height);
+    }
 }
 
 
@@ -69,12 +75,15 @@ void BoundedWidget::rescale()
         SDL_FreeSurface(sImage);
     }
     
-    scale = screen.getScale();
-    sImage = scaleUp(image);
-    
-    if (transparent)
+    if (image)
     {
-        SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+        scale = screen.getScale();
+        sImage = scaleUp(image);
+        
+        if (transparent)
+        {
+            SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+        }
     }
 }
 
