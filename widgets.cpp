@@ -234,10 +234,8 @@ Button::Button(int x, int y, int w, int h, Font *font,
     TextHighlightWidget(x, y, w, h, font, fR, fG, fB, hR, hG, hB, true),
     text(text)
 {
-    SDL_Surface *s = screen.getRegion(left, top, width, height);
-    image = SDL_DisplayFormat(s);
-    highlighted = SDL_DisplayFormat(s);
-    SDL_FreeSurface(s);
+    image = NULL;
+    highlighted = NULL;
     
     command = cmd;
 }
