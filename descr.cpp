@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -199,23 +199,9 @@ void Description::updateInfo()
 {
     deleteWidgets();
     printPage();
-    if (0 == currentPage)
-    {
-        area.remove(btnPrev);
-    }
-    else
-    {
-        area.add(btnPrev);  
-    }
     
-    if ((text->getPageCount() - 1) == currentPage)
-    {
-        area.remove(btnNext);
-    }
-    else
-    {
-        area.add(btnNext);  
-    }
+    area.setVisible(btnPrev, (0 != currentPage));
+    area.setVisible(btnNext, (currentPage < (text->getPageCount() - 1)));
     
     area.draw();
 }

@@ -397,6 +397,18 @@ void Area::remove(Widget *widget)
     notManagedWidgets.insert(widget);
 }
 
+void Area::setVisible(Widget *widget, bool visible)
+{
+    if (visible)
+    {
+        add(widget);
+    }
+    else
+    {
+        remove(widget);
+    }
+}
+
 void Area::handleEvent(const SDL_Event &event)
 {
     switch (event.type) {

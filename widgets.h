@@ -203,6 +203,7 @@ class Area: public Widget
         bool contains(Widget * widget);
         void add(Widget *widget, bool manage=true);
         void remove(Widget *widget);
+        void setVisible(Widget *widget, bool visible);
         void handleEvent(const SDL_Event &event);
         void run();
         void finishEventLoop();
