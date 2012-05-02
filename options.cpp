@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@
 #include "main.h"
 #include "messages.h"
 #include "sound.h"
+#include "utils.h"
 
 
 class OptionsChangedCommand: public Command
@@ -78,6 +79,25 @@ class OptionsChangedCommand: public Command
                 var));
 #define OPTION(y, s, var) LABEL(y, s) CHECKBOX(y, var)
 
+//This class exists solely so that the click noise for the OK button
+//will be played at the volume that is set in the Slider
+class OptionsOkButton: public Button
+{  
+    public:
+        OptionsOkButton(int x, int y, int w, int h, Font *font, 
+                                    int r, int g, int b, const std::wstring &bg, 
+                                    const std::wstring &text, Command *cmd):
+            Button(x, y, w, h, font, r, g, b, bg, text, cmd)
+        {
+        }
+        
+        void doClick()
+        {
+            handleClick();
+            sound->play(L"click.wav");
+        }
+};
+
 void showOptionsWindow(Area *parentArea)
 {
     Font titleFont(L"nova.ttf", 26);
@@ -108,7 +128,7 @@ void showOptionsWindow(Area *parentArea)
     
     ExitCommand exitCmd(area);
     OptionsChangedCommand okCmd(&area, fullscreen, niceCursor, screenSize, volume);
-    area.add(new Button(315, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 
+    area.add(new OptionsOkButton(315, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 
                 msg(L"ok"), &okCmd));
     area.add(new Button(405, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 
                 msg(L"cancel"), &exitCmd));
