@@ -48,8 +48,8 @@ Screen::Screen()
 Screen::~Screen()
 {
     SDL_SetCursor(cursor);
-    if (mouseImage) SDL_FreeSurface(mouseImage);
-    if (mouseSave) SDL_FreeSurface(mouseSave);
+    SDL_FreeSurface(mouseImage);
+    SDL_FreeSurface(mouseSave);
     if (regionsList) free(regionsList);
 }
 

@@ -73,10 +73,7 @@ void BoundedWidget::draw()
 
 void BoundedWidget::rescale()
 {
-    if (!sImage)
-    {
-        SDL_FreeSurface(sImage);
-    }
+    SDL_FreeSurface(sImage);
     
     if (image)
     {
@@ -123,10 +120,7 @@ SDL_Surface* HighlightableWidget::getImage()
 void HighlightableWidget::rescale()
 {
     BoundedWidget::rescale();
-    if (!sHighlighted)
-    {
-        SDL_FreeSurface(sHighlighted);
-    }
+    SDL_FreeSurface(sHighlighted);
     
     if (highlighted)
     {
@@ -934,12 +928,9 @@ Slider::Slider(int x, int y, int w, int h, float &v): value(v)
 
 Slider::~Slider()
 {
-    if (background)
-        SDL_FreeSurface(background);
-    if (slider)
-        SDL_FreeSurface(slider);
-    if (activeSlider)
-        SDL_FreeSurface(activeSlider);
+    SDL_FreeSurface(background);
+    SDL_FreeSurface(slider);
+    SDL_FreeSurface(activeSlider);
 }
 
 void Slider::draw()
