@@ -135,11 +135,17 @@ ClickableWidget::ClickableWidget(bool transparent):
 }
 
 
+void ClickableWidget::doClick()
+{
+    sound->play(L"click.wav");
+    handleClick();
+}
+
+
 bool ClickableWidget::onMouseButtonDown(int button, int x, int y)
 {
     if (isInRect(x, y, left, top, width, height)) {
-        sound->play(L"click.wav");
-        handleClick();
+        doClick();
         
         return true;
     } else

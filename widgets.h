@@ -112,6 +112,7 @@ class ClickableWidget: public HighlightableWidget
     virtual void handleClick() = 0;
     
     public:
+        virtual void doClick();
         virtual bool onMouseButtonDown(int button, int x, int y);
         virtual bool onMouseMove(int x, int y);
 };
