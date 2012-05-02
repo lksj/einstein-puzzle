@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -109,7 +109,7 @@ class ClickableWidget: public HighlightableWidget
 {
     protected:
     ClickableWidget(bool transparent = false);    
-    virtual void handleClick(int button) = 0;
+    virtual void handleClick() = 0;
     
     public:
         virtual bool onMouseButtonDown(int button, int x, int y);
@@ -145,7 +145,7 @@ class Button: public TextHighlightWidget
         
     protected:
         virtual std::wstring getText();
-        virtual void handleClick(int button);
+        virtual void handleClick();
     
     public:
         Button(int x, int y, int width, int height, Font *font, 
@@ -337,7 +337,7 @@ class Checkbox: public TextHighlightWidget
 
     protected:
         virtual std::wstring getText();
-        virtual void handleClick(int button);
+        virtual void handleClick();
     
     public:
         void moveTo(int x, int y) { left = x; top = y; };
@@ -395,7 +395,7 @@ class CycleButton: public TextHighlightWidget
     
     protected:
         virtual std::wstring getText();
-        virtual void handleClick(int button);
+        virtual void handleClick();
     
     public:
         void moveTo(int x, int y) { left = x; top = y; };

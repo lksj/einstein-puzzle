@@ -139,7 +139,7 @@ bool ClickableWidget::onMouseButtonDown(int button, int x, int y)
 {
     if (isInRect(x, y, left, top, width, height)) {
         sound->play(L"click.wav");
-        handleClick(button);
+        handleClick();
         
         return true;
     } else
@@ -284,7 +284,7 @@ std::wstring Button::getText()
 }
 
 
-void Button::handleClick(int button)
+void Button::handleClick()
 {
     if (command)
     {
@@ -844,7 +844,7 @@ std::wstring Checkbox::getText()
 }
 
 
-void Checkbox::handleClick(int button)
+void Checkbox::handleClick()
 {
     checked = ! checked;
     draw();
@@ -1049,7 +1049,7 @@ std::wstring CycleButton::getText()
     return options[value];
 }
 
-void CycleButton::handleClick(int button)
+void CycleButton::handleClick()
 {
     value = (value + 1) % (options.size());
     draw();
