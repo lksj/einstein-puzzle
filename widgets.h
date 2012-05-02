@@ -75,17 +75,11 @@ class BoundedWidget: public Widget
     public:
         virtual void draw();
         virtual void rescale();
-        int getLeft() const { return left; };
-        int getTop() const { return top; };
-        int getWidth() const { return width; };
-        int getHeight() const { return height; };
-        void getBounds(int &l, int &t, int &w, int &h)
-        {
-            l = left;
-            t = top;
-            w = width;
-            h = height;
-        }
+        int getLeft();
+        int getTop();
+        int getWidth();
+        int getHeight();
+        void getBounds(int &l, int &t, int &w, int &h);
 };
 
 

@@ -88,6 +88,35 @@ void BoundedWidget::rescale()
 }
 
 
+int BoundedWidget::getLeft()
+{
+    return left;
+};
+
+int BoundedWidget::getTop()
+{
+    return top;
+};
+
+int BoundedWidget::getWidth()
+{
+    return width;
+};
+
+int BoundedWidget::getHeight()
+{
+    return height;
+};
+
+void BoundedWidget::getBounds(int &l, int &t, int &w, int &h)
+{
+    l = getLeft();
+    t = getTop();
+    w = getWidth();
+    h = getHeight();
+}
+
+
 //////////////////////////////////////////////////////////////////
 //
 // HighlightableWidget
