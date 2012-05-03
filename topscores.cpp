@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-28 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-02 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@
 #include "font.h"
 #include "convert.h"
 #include "messages.h"
-#include "main.h"
+#include "widgets.h"
 
 TopScores::TopScores()
 {
@@ -116,25 +116,29 @@ int TopScores::getMaxScore()
 
 class ScoresWindow: public Window
 {
+    private:
+        Area area;
+        Font* titleFont;
+        Font* entryFont;
+        Font* timeFont;
+    
     public:
         ScoresWindow(int x, int y, TopScores *scores, int highlight);
+        ~ScoresWindow();
+        void draw();
 };
 
 
 ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight): 
                 Window(x, y, 320, 350, L"blue.bmp")
 {
-    Font titleFont(L"nova.ttf", 26);
-    Font entryFont(L"laudcn2.ttf", 14);
-    Font timeFont(L"luximb.ttf", 14);
+    titleFont = new Font(L"nova.ttf", 26);
+    entryFont = new Font(L"laudcn2.ttf", 14);
+    timeFont = new Font(L"luximb.ttf", 14);
     
-    titleFont.setScaled(true);
-    entryFont.setScaled(true);
-    timeFont.setScaled(true);
-    
-    std::wstring txt = msg(L"topScores");
-    int w = titleFont.getWidth(txt);
-    titleFont.draw(background, (screen.doScale(320) - w) / 2, screen.doScale(15), 255,255,0, true, txt);
+    area.add(new Label(titleFont, left, top + 15, width, height,
+                                    Label::ALIGN_CENTER, Label::ALIGN_TOP,
+                                    255, 255, 0, msg(L"topScores")));
 
     TopScores::ScoresList &list = scores->getScores();
     int no = 1;
@@ -144,21 +148,38 @@ ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight):
     {
         TopScores::Entry &e = *i;
         std::wstring s(toString(no) + L".");
-        int w = entryFont.getWidth(s);
         int c = ((no - 1) == highlight) ? 0 : 255;
-        entryFont.draw(background, screen.doScale(30) - w, screen.doScale(pos), 255,255,c, true, s);
-        SDL_Rect rect = { screen.doScale(40), screen.doScale(pos-20), screen.doScale(180), screen.doScale(40) };
-        SDL_SetClipRect(background, &rect);
-        entryFont.draw(background, screen.doScale(40), screen.doScale(pos), 255,255,c, true, e.name);
-        SDL_SetClipRect(background, NULL);
+        area.add(new Label(entryFont, left, top + pos, 30, 0,
+                                    Label::ALIGN_RIGHT, Label::ALIGN_TOP,
+                                    255, 255, c, s));
+        
+        area.add(new Label(entryFont, left + 40, top + pos, width, 0,
+                                    Label::ALIGN_LEFT, Label::ALIGN_TOP,
+                                    255, 255, c, e.name));
+        
         s = secToStr(e.score);
-        w = timeFont.getWidth(s);
-        timeFont.draw(background, screen.doScale(305)-w, screen.doScale(pos), 255,255,c, true, s);
+        area.add(new Label(timeFont, left, top + pos, width - 20, 0,
+                                    Label::ALIGN_RIGHT, Label::ALIGN_TOP,
+                                    255, 255, c, s));
+        
         pos += 20;
         no++;
     }
 }
 
+ScoresWindow::~ScoresWindow()
+{
+    delete titleFont;
+    delete entryFont;
+    delete timeFont;
+}
+
+void ScoresWindow::draw()
+{
+    Window::draw();
+    
+    area.draw();
+}
 
 void showScoresWindow(Area *parentArea, TopScores *scores, int highlight)
 {
