@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-02 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -51,7 +51,7 @@ void GameBackground::draw()
 
     // draw title
     SDL_Surface *tile = loadImage(L"title.bmp", false, true);
-    screen.drawDirect(8, 10, tile);
+    screen.draw(8, 10, tile);
     SDL_FreeSurface(tile);
     
     Font titleFont(L"nova.ttf", 28);
@@ -161,7 +161,7 @@ void Watch::draw()
     SDL_FillRect(box, &rect, 
             SDL_MapRGB(screen.getFormat(), 0, 0, 255));
     
-    screen.drawDirect(x-2, y-2, box);
+    screen.draw(x-2, y-2, box);
     SDL_FreeSurface(box);
     font->draw(x, y, 255,255,255, true, s);
     screen.addRegionToUpdate(x-2, y-2, w+4, h+4);

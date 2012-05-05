@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -65,7 +65,7 @@ void BoundedWidget::draw()
     
     if (s)
     {
-        screen.drawDirect(left, top, s);
+        screen.draw(left, top, s);
         screen.addRegionToUpdate(left, top, width, height);
     }
 }
@@ -659,7 +659,7 @@ Window::~Window()
 
 void Window::draw()
 {
-    screen.drawDirect(left, top, background);
+    screen.draw(left, top, background);
     screen.addRegionToUpdate(left, top, width, height);
 }
 
@@ -782,7 +782,7 @@ void InputField::draw()
         SDL_Surface *t = scaleUp(s);
         SDL_FreeSurface(s);
         s = t;
-        screen.drawDirect(left + pad + screen.reverseScale(pos), top + 2, s);
+        screen.draw(left + pad + screen.reverseScale(pos), top + 2, s);
         SDL_FreeSurface(s);
     }
     
@@ -978,11 +978,11 @@ void Slider::draw()
 {
     if (! background)
         createBackground();
-    screen.drawDirect(left, top, background);
+    screen.draw(left, top, background);
     screen.addRegionToUpdate(left, top, width, height);
     int posX = valueToX(value);
     SDL_Surface *s = highlight ? activeSlider : slider;
-    screen.drawDirect(left + posX, top, s);
+    screen.draw(left + posX, top, s);
 }
 
 void Slider::createBackground()
