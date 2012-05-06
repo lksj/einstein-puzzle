@@ -611,18 +611,19 @@ bool AnyKeyAccel::onMouseButtonDown(int button, int x, int y)
 
 
 Window::Window(int x, int y, int w, int h, const std::wstring &bg, 
-                bool frameWidth, bool raised)
+                bool frameWidth, bool raised):
+    BoundedWidget()
 {
     left = x;
     top = y;
     width = w;
     height = h;
     
-    SDL_Surface *win = makeSWSurface(width, height);
+    image = makeSWSurface(width, height);
     
-    drawTiled(bg, win);
+    drawTiled(bg, image);
 
-    SDL_LockSurface(win);
+    SDL_LockSurface(image);
     double k = 2.6;
     double f = 0.1;
     for (int i = 0; i < frameWidth; i++) {
@@ -633,38 +634,18 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
             ltK = f;  rbK = k;
         }
         for (int j = i; j < height - i - 1; j++)
-            adjustBrightness(win, i, j, ltK);
+            adjustBrightness(image, i, j, ltK);
         for (int j = i; j < width - i; j++)
-            adjustBrightness(win, j, i, ltK);
+            adjustBrightness(image, j, i, ltK);
         for (int j = i+1; j < height - i; j++)
-            adjustBrightness(win, width - i - 1, j, rbK);
+            adjustBrightness(image, width - i - 1, j, rbK);
         for (int j = i; j < width - i - 1; j++)
-            adjustBrightness(win, j, height - i - 1, rbK);
+            adjustBrightness(image, j, height - i - 1, rbK);
         k -= 0.2;
         f += 0.1;
     }
-    SDL_UnlockSurface(win);
-    
-    SDL_Surface *s = scaleUp(win);
-    
-    background = SDL_DisplayFormat(s);
-    SDL_FreeSurface(win);
-    SDL_FreeSurface(s);
+    SDL_UnlockSurface(image);
 }
-
-
-Window::~Window()
-{
-    SDL_FreeSurface(background);
-}
-
-
-void Window::draw()
-{
-    screen.draw(left, top, background);
-    screen.addRegionToUpdate(left, top, width, height);
-}
-
 
 
 //////////////////////////////////////////////////////////////////

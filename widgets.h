@@ -238,19 +238,11 @@ class AnyKeyAccel: public Widget
 };
 
 
-class Window: public Widget
+class Window: public BoundedWidget
 {
-    protected:
-        int left, top, width, height;
-        SDL_Surface *background;
-    
     public:
         Window(int x, int y, int w, int h, const std::wstring &background, 
                 bool frameWidth=4, bool raised=true);
-        virtual ~Window();
-
-    public:
-        virtual void draw();
 };
 
 
