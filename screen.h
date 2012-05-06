@@ -90,7 +90,7 @@ class Screen
         void flush();
         void addRegionToUpdate(int x, int y, int w, int h);
         SDL_Surface* getSurface() { return screen; };
-        void draw(int x, int y, SDL_Surface *tile);
+        void draw(int x, int y, SDL_Surface *surface);
         void setCursor(bool nice);
         void initCursors();
         void doneCursors();
