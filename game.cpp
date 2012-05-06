@@ -88,10 +88,12 @@ class Watch: public TimerHandler, public Widget
         Uint32 elapsed;
         bool stoped;
         int lastUpdate;
+        Font *font;
     
     public:
         Watch();
         Watch(std::istream &stream);
+        virtual ~Watch();
 
     public:
         virtual void onTimer();
@@ -108,6 +110,7 @@ Watch::Watch()
 {
     lastRun = elapsed = lastUpdate = 0;
     stop();
+    font = new Font(L"luximb.ttf", 16);
 }
 
 Watch::Watch(std::istream &stream)
@@ -115,6 +118,12 @@ Watch::Watch(std::istream &stream)
     elapsed = readInt(stream);
     lastUpdate = 0;
     stop();
+    font = new Font(L"luximb.ttf", 16);
+}
+
+Watch::~Watch()
+{
+    delete font;
 }
 
 void Watch::onTimer()
@@ -144,7 +153,6 @@ void Watch::start()
 
 void Watch::draw()
 {
-    Font *font = new Font(L"luximb.ttf", 16);
     int time = elapsed / 1000;
     std::wstring s = secToStr(time);
     
@@ -152,20 +160,13 @@ void Watch::draw()
     int y = 24;
     int w, h;
     font->getSize(s, w, h);
-    
-    SDL_Rect rect = { 0, 0, w+screen.doScale(4), h+screen.doScale(4) };
-    
-    SDL_Surface *box = makeSWSurface(rect.w, rect.h);
-    SDL_FillRect(box, &rect, 
-            SDL_MapRGB(screen.getFormat(), 0, 0, 255));
-    
-    screen.draw(x-2, y-2, box);
-    SDL_FreeSurface(box);
+    SDL_Rect rect = { screen.doScale(x-2), screen.doScale(y-2), w+screen.doScale(4), h+screen.doScale(4) };
+    SDL_FillRect(screen.getSurface(), &rect, 
+            SDL_MapRGB(screen.getSurface()->format, 0, 0, 255));
     font->draw(x, y, 255,255,255, true, s);
     screen.addRegionToUpdate(x-2, y-2, w+4, h+4);
     
     lastUpdate = time;
-    delete font;
 }
 
 void Watch::save(std::ostream &stream)
