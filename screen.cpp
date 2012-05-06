@@ -194,7 +194,7 @@ void Screen::hideMouse()
         SDL_Rect dst = { saveX, saveY, mouseSave->w, mouseSave->h };
         if (src.w > 0) {
             SDL_BlitSurface(mouseSave, &src, screen, &dst);
-            addRegionToUpdate(reverseScale(dst.x), reverseScale(dst.y), dst.w, dst.h);
+            addRegionToUpdate(scaleDown(dst.x), scaleDown(dst.y), dst.w, dst.h);
         }
     }
     mouseVisible = false;
@@ -220,7 +220,7 @@ void Screen::showMouse()
         if (src.w > 0) {
             SDL_BlitSurface(screen, &dst, mouseSave, &src);
             SDL_BlitSurface(mouseImage, &src, screen, &dst);
-            addRegionToUpdate(reverseScale(dst.x), reverseScale(dst.y), dst.w, dst.h);
+            addRegionToUpdate(scaleDown(dst.x), scaleDown(dst.y), dst.w, dst.h);
         }
     }
     mouseVisible = true;
@@ -269,10 +269,10 @@ void Screen::flush()
 
 void Screen::addRegionToUpdate(int chkX, int chkY, int chkW, int chkH)
 {
-    int x = this->doScale(chkX);
-    int y = this->doScale(chkY);
-    int w = this->doScale(chkW);
-    int h = this->doScale(chkH);
+    int x = scaleUp(chkX);
+    int y = scaleUp(chkY);
+    int w = scaleUp(chkW);
+    int h = scaleUp(chkH);
     
     if (((x >= screen->w) || (y >= screen->h)) || (0 >= w) || (0 >= h))
         return;
@@ -297,7 +297,7 @@ void Screen::addRegionToUpdate(int chkX, int chkY, int chkW, int chkH)
 
 void Screen::draw(int x, int y, SDL_Surface *tile)
 {
-    blitDraw(doScale(x), doScale(y), tile, screen);
+    blitDraw(scaleUp(x), scaleUp(y), tile, screen);
 }
 
 void Screen::setCursor(bool nice)
@@ -336,12 +336,12 @@ void Screen::doneCursors()
 SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
 {
     SDL_Surface *s = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
-            doScale(width), doScale(height), screen->format->BitsPerPixel,
+            scaleUp(width), scaleUp(height), screen->format->BitsPerPixel,
             screen->format->Rmask, screen->format->Gmask,
             screen->format->Bmask, screen->format->Amask);
     if (! s)
         throw Exception(L"Error creating buffer surface");
-    SDL_Rect src = { doScale(x), doScale(y), doScale(width), doScale(height) };
+    SDL_Rect src = { scaleUp(x), scaleUp(y), scaleUp(width), scaleUp(height) };
     SDL_Rect dst = { 0, 0, src.w, src.h };
     SDL_BlitSurface(screen, &src, s, &dst);
     return s;
@@ -361,8 +361,8 @@ void Screen::setClipRect(SDL_Rect* rect)
 {
     if (rect)
     {
-      SDL_Rect sRect = { doScale(rect->x), doScale(rect->y),
-                                      doScale(rect->w), doScale(rect->h) };
+      SDL_Rect sRect = { scaleUp(rect->x), scaleUp(rect->y),
+                                      scaleUp(rect->w), scaleUp(rect->h) };
       SDL_SetClipRect(screen, &sRect);
     }
     else
@@ -370,17 +370,6 @@ void Screen::setClipRect(SDL_Rect* rect)
         SDL_SetClipRect(screen, rect);
     }
 }
-
-int Screen::doScale(int i)
-{
-    return (int)(i*scale);
-}
-
-int Screen::reverseScale(int i)
-{
-    return (int)(i/scale);
-}
-
 
 void Screen::setSize(int size)
 {

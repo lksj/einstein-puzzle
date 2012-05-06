@@ -40,14 +40,25 @@
 
 
 
+int scaleUp(int i)
+{
+    return (int)(i * screen.getScale());
+}
+
+int scaleDown(int i)
+{
+    return (int)(i / screen.getScale());
+}
+
+
 SDL_Surface* scaleUp(SDL_Surface* tile)
 {
-    return scaleTo(tile, screen.doScale(tile->w), screen.doScale(tile->h));
+    return scaleTo(tile, scaleUp(tile->w), scaleUp(tile->h));
 }
 
 SDL_Surface* scaleDown(SDL_Surface* tile)
 {
-    return scaleTo(tile, screen.reverseScale(tile->w), screen.reverseScale(tile->h));
+    return scaleTo(tile, scaleDown(tile->w), scaleDown(tile->h));
 }
 
 SDL_Surface* scaleTo(SDL_Surface* tile, int width, int height)
@@ -312,8 +323,8 @@ SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent)
 
 bool isInRect(int evX, int evY, int x, int y, int w, int h)
 {
-    return ((evX >= screen.doScale(x)) && (evX < screen.doScale(x + w)) 
-                    && (evY >= screen.doScale(y)) && (evY < screen.doScale(y + h)));
+    return ((evX >= scaleUp(x)) && (evX < scaleUp(x + w)) 
+                    && (evY >= scaleUp(y)) && (evY < scaleUp(y + h)));
 }
 
 std::wstring secToStr(int time)

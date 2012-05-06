@@ -357,7 +357,7 @@ void TextParser::parseNextPage()
                 }
             } else {
                 int width = font.getWidth(word);
-                if (lineWidth + width > screen.doScale(pageWidth)) {
+                if (lineWidth + width > scaleUp(pageWidth)) {
                     if (! lineWidth) {
                         line = word;
                         addLine(page, line, curPosY, lineWidth);

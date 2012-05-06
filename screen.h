@@ -96,8 +96,6 @@ class Screen
         void doneCursors();
         SDL_Surface* createSubimage(int x, int y, int width, int height);
         void drawWallpaper(const std::wstring &name);
-        int doScale(int i);
-        int reverseScale(int i);
         SDL_PixelFormat* getFormat();
         void setClipRect(SDL_Rect* rect);
         void setSize(int screenSize);

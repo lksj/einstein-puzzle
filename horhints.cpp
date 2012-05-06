@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -202,8 +202,8 @@ int HorHints::getRuleNo(int x, int y)
                 (TILE_HEIGHT + TILE_GAP_Y) * HINTS_ROWS))
         return -1;
 
-    x = screen.reverseScale(x) - TILE_X;
-    y = screen.reverseScale(y) - TILE_Y;
+    x = scaleDown(x) - TILE_X;
+    y = scaleDown(y) - TILE_Y;
 
     int col = x / (TILE_WIDTH*3 + TILE_GAP_X);
     if (col * (TILE_WIDTH*3 + TILE_GAP_X) + TILE_WIDTH*3 < x)

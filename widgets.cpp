@@ -269,8 +269,8 @@ void TextHighlightWidget::draw()
     
     int tW, tH;
     font->getSize(getText(), tW, tH);
-    tW = screen.reverseScale(tW);
-    tH = screen.reverseScale(tH);
+    tW = scaleDown(tW);
+    tH = scaleDown(tH);
     font->draw(left + ((width - tW) / 2), top + ((height - tH) / 2), r, g, b, true, getText());
     
     screen.addRegionToUpdate(left, top, width, height);
@@ -712,8 +712,8 @@ void Label::draw()
 {
     int w, h, x, y;
     font->getSize(text, w, h);
-    w = screen.reverseScale(w);
-    h = screen.reverseScale(h);
+    w = scaleDown(w);
+    h = scaleDown(h);
 
     switch (hAlign) {
         case ALIGN_RIGHT: x = left + width - w; break;
@@ -784,7 +784,7 @@ void InputField::draw()
         SDL_Surface *t = scaleUp(s);
         SDL_FreeSurface(s);
         s = t;
-        screen.draw(left + pad + screen.reverseScale(pos), top + 2, s);
+        screen.draw(left + pad + scaleDown(pos), top + 2, s);
         SDL_FreeSurface(s);
     }
     
@@ -992,7 +992,7 @@ void Slider::createBackground()
     background = screen.createSubimage(left, top, width, height);
     int y = background->h / 2;
     SDL_LockSurface(background);
-    drawBevel(background, 0, y - screen.doScale(2), background->w, screen.doScale(4), false, 1);
+    drawBevel(background, 0, y - scaleUp(2), background->w, scaleUp(4), false, 1);
     SDL_UnlockSurface(background);
 }
 
@@ -1019,13 +1019,13 @@ bool Slider::onMouseButtonDown(int button, int x, int y)
         bool hl = isInRect(x, y, left + sliderX, top, height, height);
         if (hl) {
             dragging = true;
-            dragOffsetX = screen.reverseScale(x) - left - sliderX;
+            dragOffsetX = scaleDown(x) - left - sliderX;
         }
         else
         {
             if (isInRect(x, y, left, (top + (height / 2) - 2), width, 4))
             {
-                value = xToValue(screen.reverseScale(x) - left - (height / 2));
+                value = xToValue(scaleDown(x) - left - (height / 2));
                 draw();
             }
         }
@@ -1067,7 +1067,7 @@ float Slider::xToValue(int pos)
 bool Slider::onMouseMove(int x, int y)
 {
     if (dragging) {
-        float val = xToValue(screen.reverseScale(x) - left - dragOffsetX);
+        float val = xToValue(scaleDown(x) - left - dragOffsetX);
         if (val != value) {
             value = val;
             draw();

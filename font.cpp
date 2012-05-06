@@ -103,7 +103,7 @@ void Font::draw(int x, int y, int r, int g, int b, bool shadow,
         const std::wstring &text)
 {
     rescale();
-    draw(screen.getSurface(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
+    draw(screen.getSurface(), scaleUp(x), scaleUp(y), r,g,b, shadow, text);
 }
 
 void Font::rescale()
@@ -112,7 +112,7 @@ void Font::rescale()
     {
         TTF_CloseFont(font);
         scale = screen.getScale();
-        font = loadFont(screen.doScale(uSize));
+        font = loadFont(scaleUp(uSize));
     }
 }
 

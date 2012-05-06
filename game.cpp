@@ -160,7 +160,7 @@ void Watch::draw()
     int y = 24;
     int w, h;
     font->getSize(s, w, h);
-    SDL_Rect rect = { screen.doScale(x-2), screen.doScale(y-2), w+screen.doScale(4), h+screen.doScale(4) };
+    SDL_Rect rect = { scaleUp(x-2), scaleUp(y-2), w+scaleUp(4), h+scaleUp(4) };
     SDL_FillRect(screen.getSurface(), &rect, 
             SDL_MapRGB(screen.getSurface()->format, 0, 0, 255));
     font->draw(x, y, 255,255,255, true, s);

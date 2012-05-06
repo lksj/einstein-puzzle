@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -190,8 +190,8 @@ int VertHints::getRuleNo(int x, int y)
                 TILE_HEIGHT * 2))
         return -1;
 
-    x = screen.reverseScale(x) - TILE_X;
-    y = screen.reverseScale(y) - TILE_Y;
+    x = scaleDown(x) - TILE_X;
+    y = scaleDown(y) - TILE_Y;
 
     int no = x / (TILE_WIDTH + TILE_GAP);
     if (no * (TILE_WIDTH + TILE_GAP) + TILE_WIDTH < x)

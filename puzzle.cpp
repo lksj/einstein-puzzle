@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -188,8 +188,8 @@ bool Puzzle::getCellNo(int x, int y, int &col, int &row, int &subNo)
                 (FIELD_TILE_HEIGHT + FIELD_GAP_Y) * PUZZLE_SIZE))
         return false;
 
-    x = screen.reverseScale(x) - FIELD_OFFSET_X;
-    y = screen.reverseScale(y) - FIELD_OFFSET_Y;
+    x = scaleDown(x) - FIELD_OFFSET_X;
+    y = scaleDown(y) - FIELD_OFFSET_Y;
 
     col = x / (FIELD_TILE_WIDTH + FIELD_GAP_X);
     if (col * (FIELD_TILE_WIDTH + FIELD_GAP_X) + FIELD_TILE_WIDTH < x)
