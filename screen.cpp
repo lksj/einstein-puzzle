@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -28,8 +28,9 @@
 
 #define UNSCALED_WIDTH      800
 #define UNSCALED_HEIGHT     600
+#define NUM_MODES           4
 
-int modes[][2]={{800,600},{1024,768},{1152,864},{1400,1050}};
+int modes[NUM_MODES][2]={{800,600},{1024,768},{1152,864},{1400,1050}};
 
 int DESKTOP_WIDTH = 0;
 int DESKTOP_HEIGHT = 0;
@@ -56,7 +57,7 @@ Screen::~Screen()
 std::vector<std::wstring> Screen::getModeList()
 {
     std::vector<std::wstring> v;
-    int n = sizeof(modes)/sizeof(int*);
+    int n = NUM_MODES;
     v.reserve(n);
     
     for (int i = 0; i < n; i++)
