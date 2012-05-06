@@ -927,7 +927,7 @@ void Checkbox::handleClick()
 
 Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
 {
-    SDL_Surface *image = loadImage(name, transparent);
+    image = loadImage(name, transparent);
     width = image->w;
     height = image->h;
     left = x;
