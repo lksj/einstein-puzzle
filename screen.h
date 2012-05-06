@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -89,6 +89,7 @@ class Screen
         void updateMouse();
         void flush();
         void addRegionToUpdate(int x, int y, int w, int h);
+        SDL_Surface* getSurface() { return screen; };
         void draw(int x, int y, SDL_Surface *tile);
         void setCursor(bool nice);
         void initCursors();
@@ -101,7 +102,6 @@ class Screen
         void setClipRect(SDL_Rect* rect);
         void setSize(int screenSize);
         std::vector<std::wstring> getModeList();
-        SDL_Surface* getScaled();
         float getScale();
 };
 

@@ -103,7 +103,7 @@ void Font::draw(int x, int y, int r, int g, int b, bool shadow,
         const std::wstring &text)
 {
     rescale();
-    draw(screen.getScaled(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
+    draw(screen.getSurface(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
 }
 
 void Font::rescale()

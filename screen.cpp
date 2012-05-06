@@ -394,10 +394,6 @@ void Screen::setSize(int size)
     }
 }
 
-SDL_Surface* Screen::getScaled()
-{
-    return screen;
-}
 
 float Screen::getScale()
 {
