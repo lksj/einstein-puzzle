@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -62,18 +62,15 @@ Font::Font(const std::wstring &name, int ptsize):
     if (! data)
         throw Exception(name + L" not found");
     
-    unscaled = loadFont(ptsize);
-    scale = 1.0;
-    scaled = loadFont(ptsize);
-    font = unscaled;
+    scale = -1.0;
+    font = NULL;
     rescale();
 }
 
 
 Font::~Font()
 {
-    TTF_CloseFont(unscaled);
-    TTF_CloseFont(scaled);
+    TTF_CloseFont(font);
     resources->delRef(data);
 }
 
@@ -105,21 +102,18 @@ void Font::draw(SDL_Surface *s, int x, int y, int r, int g, int b,
 void Font::draw(int x, int y, int r, int g, int b, bool shadow, 
         const std::wstring &text)
 {
-    TTF_Font *oldFont = font;
-    if (screen.getScale() != scale)
-    {
-        rescale();
-    }
-    font = scaled;
+    rescale();
     draw(screen.getScaled(), screen.doScale(x), screen.doScale(y), r,g,b, shadow, text);
-    font = oldFont;
 }
 
 void Font::rescale()
 {
-    TTF_CloseFont(scaled);
-    scale = screen.getScale();
-    scaled = loadFont(screen.doScale(uSize));
+    if (screen.getScale() != scale)
+    {
+        TTF_CloseFont(font);
+        scale = screen.getScale();
+        font = loadFont(screen.doScale(uSize));
+    }
 }
 
 TTF_Font* Font::loadFont(int ptsize)
@@ -135,6 +129,7 @@ TTF_Font* Font::loadFont(int ptsize)
 
 int Font::getWidth(const std::wstring &text)
 {
+    rescale();
     int w, h;
     Uint16 *str = strToUint16(text);
     TTF_SizeUNICODE(font, str, &w, &h);
@@ -143,6 +138,7 @@ int Font::getWidth(const std::wstring &text)
 
 int Font::getWidth(wchar_t ch)
 {
+    rescale();
     int minx, maxx, miny, maxy, advance;
     TTF_GlyphMetrics(font, (Uint16)ch, &minx, &maxx, &miny, &maxy, &advance);
     return advance;
@@ -150,6 +146,7 @@ int Font::getWidth(wchar_t ch)
 
 int Font::getHeight(const std::wstring &text)
 {
+    rescale();
     int w, h;
     Uint16 *str = strToUint16(text);
     TTF_SizeUNICODE(font, str, &w, &h);
@@ -158,11 +155,7 @@ int Font::getHeight(const std::wstring &text)
 
 void Font::getSize(const std::wstring &text, int &width, int &height)
 {
+    rescale();
     Uint16 *str = strToUint16(text);
     TTF_SizeUNICODE(font, str, &width, &height);
-}
-
-void Font::setScaled(bool isScaled)
-{
-    font = isScaled ? scaled : unscaled;
 }

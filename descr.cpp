@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@
 #include "utils.h"
 #include "tokenizer.h"
 #include "storage.h"
-
+#include "main.h"
 
 #define WIDTH		600
 #define HEIGHT		500
@@ -357,7 +357,7 @@ void TextParser::parseNextPage()
                 }
             } else {
                 int width = font.getWidth(word);
-                if (lineWidth + width > pageWidth) {
+                if (lineWidth + width > screen.doScale(pageWidth)) {
                     if (! lineWidth) {
                         line = word;
                         addLine(page, line, curPosY, lineWidth);

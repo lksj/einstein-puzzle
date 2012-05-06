@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -269,6 +269,8 @@ void TextHighlightWidget::draw()
     
     int tW, tH;
     font->getSize(getText(), tW, tH);
+    tW = screen.reverseScale(tW);
+    tH = screen.reverseScale(tH);
     font->draw(left + ((width - tW) / 2), top + ((height - tH) / 2), r, g, b, true, getText());
     
     screen.addRegionToUpdate(left, top, width, height);
@@ -710,6 +712,8 @@ void Label::draw()
 {
     int w, h, x, y;
     font->getSize(text, w, h);
+    w = screen.reverseScale(w);
+    h = screen.reverseScale(h);
 
     switch (hAlign) {
         case ALIGN_RIGHT: x = left + width - w; break;
@@ -769,9 +773,7 @@ void InputField::draw()
         int pos = 0;
         if (cursorPos > 0)
         {
-            font->setScaled(true);
             pos += font->getWidth(text.substr(0, cursorPos));
-            font->setScaled(false);
         }
         SDL_Surface *s = makeSWSurface(2, height-4);
         
