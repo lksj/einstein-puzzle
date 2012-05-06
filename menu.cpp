@@ -36,12 +36,12 @@ class MenuBackground: public Area
 {
     public:
         MenuBackground();
-        virtual void draw();
 };
 
 
 MenuBackground::MenuBackground()
 {
+    add(new Picture(0, 0, L"nova.bmp"));
     std::wstring s(msg(L"einsteinFlowix"));
     add(new ManagedLabel(L"nova.ttf", 28, 0, 30, screen.getWidth(), 0,
                             Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 255, s));
@@ -50,17 +50,6 @@ MenuBackground::MenuBackground()
     add(new ManagedLabel(L"luximb.ttf", 16, 0, 60, screen.getWidth(), 0,
                             Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 0, s));
 }
-
-void MenuBackground::draw()
-{
-    SDL_Surface *title = loadImage(L"nova.bmp", false, true);
-    screen.draw(0, 0, title);
-    SDL_FreeSurface(title);    
-    screen.addRegionToUpdate(0, 0, screen.getWidth(), screen.getHeight());
-    
-    Area::draw();
-}
-
 
 
 class NewGameCommand: public Command
