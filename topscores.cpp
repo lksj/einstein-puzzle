@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-02 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -118,7 +118,6 @@ class ScoresWindow: public Window
 {
     private:
         Area area;
-        Font* titleFont;
         Font* entryFont;
         Font* timeFont;
     
@@ -132,11 +131,10 @@ class ScoresWindow: public Window
 ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight): 
                 Window(x, y, 320, 350, L"blue.bmp")
 {
-    titleFont = new Font(L"nova.ttf", 26);
     entryFont = new Font(L"laudcn2.ttf", 14);
     timeFont = new Font(L"luximb.ttf", 14);
     
-    area.add(new Label(titleFont, left, top + 15, width, height,
+    area.add(new ManagedLabel(L"nova.ttf", 26, left, top + 15, width, height,
                                     Label::ALIGN_CENTER, Label::ALIGN_TOP,
                                     255, 255, 0, msg(L"topScores")));
 
@@ -169,7 +167,6 @@ ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight):
 
 ScoresWindow::~ScoresWindow()
 {
-    delete titleFont;
     delete entryFont;
     delete timeFont;
 }

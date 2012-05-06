@@ -34,35 +34,21 @@
 
 class MenuBackground: public Area
 {
-    protected:
-        Font *titleFont;
-        Font *urlFont;
-    
     public:
         MenuBackground();
-        ~MenuBackground();
         virtual void draw();
 };
 
 
 MenuBackground::MenuBackground()
 {
-    titleFont = new Font(L"nova.ttf", 28);
-    
     std::wstring s(msg(L"einsteinFlowix"));
-    add(new Label(titleFont, 0, 30, screen.getWidth(), 0,
+    add(new ManagedLabel(L"nova.ttf", 28, 0, 30, screen.getWidth(), 0,
                             Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 255, s));
     
-    urlFont = new Font(L"luximb.ttf", 16);
     s = L"http://games.flowix.com";
-    add(new Label(urlFont, 0, 60, screen.getWidth(), 0,
+    add(new ManagedLabel(L"luximb.ttf", 16, 0, 60, screen.getWidth(), 0,
                             Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 0, s));
-}
-
-MenuBackground::~MenuBackground()
-{
-    delete titleFont;
-    delete urlFont;
 }
 
 void MenuBackground::draw()

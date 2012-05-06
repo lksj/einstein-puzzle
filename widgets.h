@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -287,6 +287,17 @@ class Label: public Widget
 
     public:
         virtual void draw();
+};
+
+
+class ManagedLabel: public Label
+{
+    public:
+        ManagedLabel(std::wstring fontName, int ptSize, int x, int y,
+                int r, int g, int b, std::wstring text, bool shadow=true);
+        ManagedLabel(std::wstring fontName, int ptSize, int x, int y, int width, int height,
+                HorAlign hAlign, VerAlign vAlign, int r, int g, int b, const std::wstring &text);
+        ~ManagedLabel();
 };
 
 

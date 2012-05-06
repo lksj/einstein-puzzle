@@ -735,6 +735,33 @@ void Label::draw()
 
 //////////////////////////////////////////////////////////////////
 //
+// ManagedLabel
+//
+//////////////////////////////////////////////////////////////////
+
+
+ManagedLabel::ManagedLabel(std::wstring fontName, int ptSize, int x, int y,
+                int r, int g, int b, std::wstring text, bool shadow):
+    Label(new Font(fontName, ptSize), x, y, r, g, b, text, shadow)
+{
+}
+
+
+ManagedLabel::ManagedLabel(std::wstring fontName, int ptSize, int x, int y, int w, int h,
+        HorAlign hA, VerAlign vA, int r, int g, int b, const std::wstring &s): 
+    Label(new Font(fontName, ptSize), x, y, w, h, hA, vA, r, g, b, s)
+{
+}
+
+
+ManagedLabel::~ManagedLabel()
+{
+    delete font;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
 // InputField
 //
 //////////////////////////////////////////////////////////////////
