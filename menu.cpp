@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -32,27 +32,47 @@
 
 
 
-class MenuBackground: public Widget
+class MenuBackground: public Area
 {
+    protected:
+        Font *titleFont;
+        Font *urlFont;
+    
     public:
+        MenuBackground();
+        ~MenuBackground();
         virtual void draw();
 };
 
+
+MenuBackground::MenuBackground()
+{
+    titleFont = new Font(L"nova.ttf", 28);
+    
+    std::wstring s(msg(L"einsteinFlowix"));
+    add(new Label(titleFont, 0, 30, screen.getWidth(), 0,
+                            Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 255, s));
+    
+    urlFont = new Font(L"luximb.ttf", 16);
+    s = L"http://games.flowix.com";
+    add(new Label(urlFont, 0, 60, screen.getWidth(), 0,
+                            Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 0, s));
+}
+
+MenuBackground::~MenuBackground()
+{
+    delete titleFont;
+    delete urlFont;
+}
 
 void MenuBackground::draw()
 {
     SDL_Surface *title = loadImage(L"nova.bmp", false, true);
     screen.draw(0, 0, title);
-    SDL_FreeSurface(title);
-    Font font(L"nova.ttf", 28);
-    std::wstring s(msg(L"einsteinFlowix"));
-    int width = font.getWidth(s);
-    font.draw((screen.getWidth() - width) / 2, 30, 255,255,255, true, s);
-    Font urlFont(L"luximb.ttf", 16);
-    s = L"http://games.flowix.com";
-    width = urlFont.getWidth(s);
-    urlFont.draw((screen.getWidth() - width) / 2, 60, 255,255,0, true, s);
+    SDL_FreeSurface(title);    
     screen.addRegionToUpdate(0, 0, screen.getWidth(), screen.getHeight());
+    
+    Area::draw();
 }
 
 
