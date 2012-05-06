@@ -126,7 +126,7 @@ int getCornerPixel(SDL_Surface *surface)
 
 
 
-SDL_Surface* loadImage(const std::wstring &name, bool transparent, bool scaled)
+SDL_Surface* loadImage(const std::wstring &name, bool transparent)
 {
     int size;
     void *bmp;
@@ -144,13 +144,6 @@ SDL_Surface* loadImage(const std::wstring &name, bool transparent, bool scaled)
     SDL_FreeSurface(s);
     if (! screenS)
         throw Exception(L"Error translating to screen format " + name);
-    
-    if (scaled)
-    {
-        SDL_Surface *s = scaleUp(screenS);
-        SDL_FreeSurface(screenS);
-        screenS = s;
-    }
     
     if (transparent)
         SDL_SetColorKey(screenS, SDL_SRCCOLORKEY, getCornerPixel(screenS));

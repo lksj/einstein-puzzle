@@ -40,7 +40,7 @@ SDL_Surface* scaleTo(SDL_Surface* tile, int width, int height);
 void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst);
 void drawTiled(const std::wstring &name, SDL_Surface *s);
 SDL_Surface* makeSWSurface(int width, int height);
-SDL_Surface* loadImage(const std::wstring &name, bool transparent=false, bool scaled = false);
+SDL_Surface* loadImage(const std::wstring &name, bool transparent=false);
 SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent=false);
 int gettimeofday(struct timeval* tp);
 bool isInRect(int evX, int evY, int x, int y, int w, int h);
