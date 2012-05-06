@@ -69,6 +69,7 @@ class BoundedWidget: public Widget
     
     protected:
         BoundedWidget(bool transparent = false);
+        BoundedWidget(int left, int top, int width, int height, bool transparent = false);
         virtual ~BoundedWidget();
         virtual SDL_Surface* getImage();
     
@@ -91,6 +92,7 @@ class HighlightableWidget: public BoundedWidget
     
     protected:
         HighlightableWidget(bool transparent = false);
+        HighlightableWidget(int left, int top, int width, int height, bool transparent = false);
         virtual ~HighlightableWidget();
         virtual SDL_Surface* getImage();
     
@@ -102,7 +104,8 @@ class HighlightableWidget: public BoundedWidget
 class ClickableWidget: public HighlightableWidget
 {
     protected:
-    ClickableWidget(bool transparent = false);    
+    ClickableWidget(bool transparent = false);
+    ClickableWidget(int left, int top, int width, int height, bool transparent = false);
     virtual void handleClick() = 0;
     
     public:

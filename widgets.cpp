@@ -41,6 +41,15 @@ BoundedWidget::BoundedWidget(bool transparent):
 }
 
 
+BoundedWidget::BoundedWidget(int x, int y, int w, int h, bool t):
+    left(x), top(y), width(w), height(h), transparent(t)
+{
+    scale = -1.0;
+    image = NULL;
+    sImage = NULL;
+}
+
+
 BoundedWidget::~BoundedWidget()
 {
     SDL_FreeSurface(image);
@@ -133,6 +142,15 @@ HighlightableWidget::HighlightableWidget(bool transparent):
 }
 
 
+HighlightableWidget::HighlightableWidget(int x, int y, int w, int h, bool t):
+    BoundedWidget(x, y, w, h, t)
+{
+    highlighted = NULL;
+    sHighlighted = NULL;
+    mouseInside = false;
+}
+
+
 HighlightableWidget::~HighlightableWidget()
 {
     SDL_FreeSurface(highlighted);
@@ -176,6 +194,12 @@ ClickableWidget::ClickableWidget(bool transparent):
 }
 
 
+ClickableWidget::ClickableWidget(int x, int y, int w, int h, bool t):
+    HighlightableWidget(x, y, w, h, t)
+{
+}
+
+
 void ClickableWidget::doClick()
 {
     sound->play(L"click.wav");
@@ -214,12 +238,8 @@ bool ClickableWidget::onMouseMove(int x, int y)
 
 TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
         int fR, int fG, int fB, int hR, int hG, int hB, bool transparent):
-    ClickableWidget(transparent)
+    ClickableWidget(x, y, w, h, transparent)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
     font = f;
     
     red = fR;
@@ -233,12 +253,8 @@ TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f,
 
 TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
         int r, int g, int b, bool transparent):
-    ClickableWidget(transparent)
+    ClickableWidget(x, y, w, h, transparent)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
     font = f;
     
     red = r;
@@ -612,13 +628,8 @@ bool AnyKeyAccel::onMouseButtonDown(int button, int x, int y)
 
 Window::Window(int x, int y, int w, int h, const std::wstring &bg, 
                 bool frameWidth, bool raised):
-    BoundedWidget()
+    BoundedWidget(x, y, w, h)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-    
     image = makeSWSurface(width, height);
     
     drawTiled(bg, image);
@@ -943,13 +954,10 @@ Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
 }
 
 
-Picture::Picture(int x, int y, SDL_Surface *img)
+Picture::Picture(int x, int y, SDL_Surface *img):
+    BoundedWidget(x, y, img->w, img->h)
 {
     image = SDL_DisplayFormat(img);
-    left = x;
-    top = y;
-    width = img->w;
-    height = img->h;
 }
 
 
