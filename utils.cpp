@@ -90,7 +90,6 @@ SDL_Surface* loadImage(const std::wstring &name, bool transparent)
 
 #ifdef WIN32
 #include <sys/timeb.h>
-struct timezone { };
 
 int gettimeofday(struct timeval* tp, int* /*tz*/) 
 {
