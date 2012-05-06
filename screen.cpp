@@ -350,6 +350,7 @@ SDL_Surface* Screen::createSubimage(int x, int y, int width, int height)
 void Screen::drawWallpaper(const std::wstring &name)
 {
     drawTiled(name, screen);
+    addRegionToUpdate(0, 0, getWidth(), getHeight());
 }
 
 SDL_PixelFormat* Screen::getFormat()
