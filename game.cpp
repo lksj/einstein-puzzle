@@ -37,28 +37,25 @@
 
 
 
-class GameBackground: public Widget
+class GameBackground: public Area
 {
     public:
+        GameBackground();
         virtual void draw();
 };
 
+GameBackground::GameBackground()
+{
+    add(new Picture(8, 10, L"title.bmp"));
+    add(new ManagedLabel(L"nova.ttf", 28, 20, 20, 255, 255, 0, msg(L"einsteinPuzzle"), true));
+}
 
 void GameBackground::draw()
 {
     // draw background
     screen.drawWallpaper(L"rain.bmp");
-
-    // draw title
-    SDL_Surface *tile = loadImage(L"title.bmp", false, true);
-    screen.draw(8, 10, tile);
-    SDL_FreeSurface(tile);
     
-    Font titleFont(L"nova.ttf", 28);
-    titleFont.draw(20, 20, 255,255,0, true, 
-            msg(L"einsteinPuzzle"));
-    
-    screen.addRegionToUpdate(0, 0, screen.getWidth(), screen.getHeight());
+    Area::draw();
 }
 
 
