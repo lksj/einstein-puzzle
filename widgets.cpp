@@ -35,65 +35,12 @@
 BoundedWidget::BoundedWidget(bool transparent):
     transparent(transparent)
 {
-    scale = -1.0;
-    image = NULL;
-    sImage = NULL;
 }
 
 
 BoundedWidget::BoundedWidget(int x, int y, int w, int h, bool t):
     left(x), top(y), width(w), height(h), transparent(t)
 {
-    scale = -1.0;
-    image = NULL;
-    sImage = NULL;
-}
-
-
-BoundedWidget::~BoundedWidget()
-{
-    SDL_FreeSurface(image);
-    SDL_FreeSurface(sImage);
-}
-
-
-SDL_Surface* BoundedWidget::getImage()
-{
-    return sImage;
-}
-
-
-void BoundedWidget::draw()
-{
-    if (!sImage || screen.getScale() != scale)
-    {
-        rescale();
-    }
-    
-    SDL_Surface *s = getImage();
-    
-    if (s)
-    {
-        screen.draw(left, top, s);
-        screen.addRegionToUpdate(left, top, width, height);
-    }
-}
-
-
-void BoundedWidget::rescale()
-{
-    SDL_FreeSurface(sImage);
-    
-    if (image)
-    {
-        scale = screen.getScale();
-        sImage = scaleUp(image);
-        
-        if (transparent)
-        {
-            SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
-        }
-    }
 }
 
 
@@ -128,13 +75,85 @@ void BoundedWidget::getBounds(int &l, int &t, int &w, int &h)
 
 //////////////////////////////////////////////////////////////////
 //
+// TileWidget
+//
+//////////////////////////////////////////////////////////////////
+
+
+TileWidget::TileWidget(bool transparent):
+    BoundedWidget(transparent)
+{
+    scale = -1.0;
+    image = NULL;
+    sImage = NULL;
+}
+
+
+TileWidget::TileWidget(int x, int y, int w, int h, bool t):
+    BoundedWidget(x, y, w, h, t)
+{
+    scale = -1.0;
+    image = NULL;
+    sImage = NULL;
+}
+
+
+TileWidget::~TileWidget()
+{
+    SDL_FreeSurface(image);
+    SDL_FreeSurface(sImage);
+}
+
+
+SDL_Surface* TileWidget::getImage()
+{
+    return sImage;
+}
+
+
+void TileWidget::draw()
+{
+    if (!sImage || screen.getScale() != scale)
+    {
+        rescale();
+    }
+    
+    SDL_Surface *s = getImage();
+    
+    if (s)
+    {
+        screen.draw(getLeft(), getTop(), s);
+        screen.addRegionToUpdate(left, top, width, height);
+    }
+}
+
+
+void TileWidget::rescale()
+{
+    SDL_FreeSurface(sImage);
+    
+    if (image)
+    {
+        scale = screen.getScale();
+        sImage = scaleUp(image);
+        
+        if (transparent)
+        {
+            SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
 // HighlightableWidget
 //
 //////////////////////////////////////////////////////////////////
 
 
 HighlightableWidget::HighlightableWidget(bool transparent):
-    BoundedWidget(transparent)
+    TileWidget(transparent)
 {
     highlighted = NULL;
     sHighlighted = NULL;
@@ -143,7 +162,7 @@ HighlightableWidget::HighlightableWidget(bool transparent):
 
 
 HighlightableWidget::HighlightableWidget(int x, int y, int w, int h, bool t):
-    BoundedWidget(x, y, w, h, t)
+    TileWidget(x, y, w, h, t)
 {
     highlighted = NULL;
     sHighlighted = NULL;
@@ -166,7 +185,7 @@ SDL_Surface* HighlightableWidget::getImage()
 
 void HighlightableWidget::rescale()
 {
-    BoundedWidget::rescale();
+    TileWidget::rescale();
     SDL_FreeSurface(sHighlighted);
     
     if (highlighted)
@@ -628,7 +647,7 @@ bool AnyKeyAccel::onMouseButtonDown(int button, int x, int y)
 
 Window::Window(int x, int y, int w, int h, const std::wstring &bg, 
                 bool frameWidth, bool raised):
-    BoundedWidget(x, y, w, h)
+    TileWidget(x, y, w, h)
 {
     image = makeSWSurface(width, height);
     
@@ -668,11 +687,10 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
 
 
 Label::Label(Font *f, int x, int y, int r, int g, int b, std::wstring s,
-        bool sh): text(s)
+        bool sh):
+    BoundedWidget(x, y, f->getWidth(s), f->getHeight(s)), text(s)
 {
     font = f;
-    left = x;
-    top = y;
     red = r;
     green = g;
     blue = b;
@@ -684,18 +702,14 @@ Label::Label(Font *f, int x, int y, int r, int g, int b, std::wstring s,
 
 Label::Label(Font *f, int x, int y, int w, int h, HorAlign hA, VerAlign vA, 
         int r, int g, int b, const std::wstring &s): 
-                text(s)
+    BoundedWidget(x, y, w, h), text(s)
 {
     font = f;
-    left = x;
-    top = y;
     red = r;
     green = g;
     blue = b;
     hAlign = hA;
     vAlign = vA;
-    width = w;
-    height = h;
     shadow = true;
 }
 
@@ -955,7 +969,7 @@ Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
 
 
 Picture::Picture(int x, int y, SDL_Surface *img):
-    BoundedWidget(x, y, img->w, img->h)
+    TileWidget(x, y, img->w, img->h)
 {
     image = SDL_DisplayFormat(img);
 }
@@ -973,12 +987,9 @@ void Picture::moveX(const int newX)
 //
 //////////////////////////////////////////////////////////////////
 
-Slider::Slider(int x, int y, int w, int h, float &v): value(v)
+Slider::Slider(int x, int y, int w, int h, float &v):
+    BoundedWidget(x, y, w, h), value(v)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
     background = NULL;
     createSlider(height);
     highlight = false;

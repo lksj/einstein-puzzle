@@ -62,20 +62,12 @@ class Widget
 class BoundedWidget: public Widget
 {
     protected:
-        SDL_Surface *image, *sImage;
         int left, top, width, height;
-        float scale;
         bool transparent;
-    
-    protected:
         BoundedWidget(bool transparent = false);
         BoundedWidget(int left, int top, int width, int height, bool transparent = false);
-        virtual ~BoundedWidget();
-        virtual SDL_Surface* getImage();
     
     public:
-        virtual void draw();
-        virtual void rescale();
         int getLeft();
         int getTop();
         int getWidth();
@@ -84,7 +76,25 @@ class BoundedWidget: public Widget
 };
 
 
-class HighlightableWidget: public BoundedWidget
+class TileWidget: public BoundedWidget
+{
+    protected:
+        SDL_Surface *image, *sImage;
+        float scale;
+    
+    protected:
+        TileWidget(bool transparent = false);
+        TileWidget(int left, int top, int width, int height, bool transparent = false);
+        virtual ~TileWidget();
+        virtual SDL_Surface* getImage();
+    
+    public:
+        virtual void draw();
+        virtual void rescale();
+};
+
+
+class HighlightableWidget: public TileWidget
 {
     protected:
         SDL_Surface *highlighted, *sHighlighted;
@@ -241,7 +251,7 @@ class AnyKeyAccel: public Widget
 };
 
 
-class Window: public BoundedWidget
+class Window: public TileWidget
 {
     public:
         Window(int x, int y, int w, int h, const std::wstring &background, 
@@ -249,7 +259,7 @@ class Window: public BoundedWidget
 };
 
 
-class Label: public Widget
+class Label: public BoundedWidget
 {
     public:
         typedef enum {
@@ -267,7 +277,6 @@ class Label: public Widget
     protected:
         Font *font;
         std::wstring text;
-        int left, top, width, height;
         int red, green, blue;
         HorAlign hAlign;
         VerAlign vAlign;
@@ -345,7 +354,7 @@ class Checkbox: public TextHighlightWidget
         void moveTo(int x, int y) { left = x; top = y; };
 };
 
-class Picture: public BoundedWidget
+class Picture: public TileWidget
 {
     public:
         Picture(int x, int y, const std::wstring &name, bool transparent=true);
@@ -356,10 +365,9 @@ class Picture: public BoundedWidget
 };
 
 
-class Slider: public Widget
+class Slider: public BoundedWidget
 {
     private:
-        int left, top, width, height;
         float &value;
         SDL_Surface *background;
         SDL_Surface *slider;
