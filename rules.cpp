@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-05 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -69,10 +69,7 @@ DrawableRule::DrawableRule(std::istream &stream, std::wstring ruleType):
 void DrawableRule::draw(int x, int y, IconSet &iconSet, bool highlighted)
 {
     SDL_Surface *s = getImage(iconSet, highlighted);
-    SDL_Surface *t = scaleUp(s);
-    SDL_FreeSurface(s);
-    s = t;
-    screen.draw(x, y, s);
+    screen.drawScaled(x, y, s);
     SDL_FreeSurface(s);
 }
 

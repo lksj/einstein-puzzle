@@ -72,9 +72,7 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
         int element = possib->getDefined(col, row);
         if (element > 0)
         {
-            SDL_Surface *s = scaleUp(iconSet.getLargeIcon(row, element, (hCol == col) && (hRow == row)));
-            screen.draw(posX, posY, s);
-            SDL_FreeSurface(s);
+            screen.drawScaled(posX, posY, iconSet.getLargeIcon(row, element, (hCol == col) && (hRow == row)));
         }
     } else {
         SDL_Surface* emptyFieldIcon = iconSet.getEmptyFieldIcon();
@@ -107,7 +105,7 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
             } else
                 x += (newTile->w / 3);
         }
-        screen.draw(posX, posY, newTile);
+        screen.draw(scaleUp(posX), scaleUp(posY), newTile);
         SDL_FreeSurface(newTile);
     }
     if (addToUpdate)

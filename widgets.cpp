@@ -46,12 +46,12 @@ BoundedWidget::BoundedWidget(int x, int y, int w, int h, bool t):
 
 int BoundedWidget::getLeft()
 {
-    return left;
+    return scaleUp(left);
 };
 
 int BoundedWidget::getTop()
 {
-    return top;
+    return scaleUp(top);
 };
 
 int BoundedWidget::getWidth()
@@ -814,10 +814,7 @@ void InputField::draw()
             setPixel(s, 0, i, red, green, blue);
             setPixel(s, 1, i, red, green, blue);
         }
-        SDL_Surface *t = scaleUp(s);
-        SDL_FreeSurface(s);
-        s = t;
-        screen.draw(left + pad + scaleDown(pos), top + 2, s);
+        screen.drawScaled(left + pad + scaleDown(pos), top + 2, s);
         SDL_FreeSurface(s);
     }
     
@@ -1007,11 +1004,11 @@ void Slider::draw()
 {
     if (! background)
         createBackground();
-    screen.draw(left, top, background);
+    screen.draw(getLeft(), getTop(), background);
     screen.addRegionToUpdate(left, top, width, height);
-    int posX = valueToX(value);
+    int posX = scaleUp(valueToX(value));
     SDL_Surface *s = highlight ? activeSlider : slider;
-    screen.draw(left + posX, top, s);
+    screen.draw(getLeft() + posX, getTop(), s);
 }
 
 void Slider::createBackground()

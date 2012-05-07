@@ -91,6 +91,7 @@ class Screen
         void addRegionToUpdate(int x, int y, int w, int h);
         SDL_Surface* getSurface() { return screen; };
         void draw(int x, int y, SDL_Surface *surface);
+        void drawScaled(int x, int y, SDL_Surface *surface);
         void setCursor(bool nice);
         void initCursors();
         void doneCursors();

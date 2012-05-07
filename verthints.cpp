@@ -116,10 +116,7 @@ void VertHints::drawCell(int col, bool addToUpdate)
 
         blitDraw(0, 0, t, s);
         blitDraw(0, t->h, t, s);
-        SDL_Surface *u = scaleUp(s);
-        SDL_FreeSurface(s);
-        s = u;
-        screen.draw(x, y, s);
+        screen.drawScaled(x, y, s);
         SDL_FreeSurface(s);
     }
     

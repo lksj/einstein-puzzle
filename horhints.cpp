@@ -122,10 +122,7 @@ void HorHints::drawCell(int col, int row, bool addToUpdate)
         {
             blitDraw(0 + (i * t->w), 0, t, s);
         }
-        SDL_Surface *u = scaleUp(s);
-        SDL_FreeSurface(s);
-        s = u;
-        screen.draw(x, y, s);
+        screen.drawScaled(x, y, s);
         SDL_FreeSurface(s);
     }
     

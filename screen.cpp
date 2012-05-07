@@ -297,7 +297,14 @@ void Screen::addRegionToUpdate(int chkX, int chkY, int chkW, int chkH)
 
 void Screen::draw(int x, int y, SDL_Surface *tile)
 {
-    blitDraw(scaleUp(x), scaleUp(y), tile, screen);
+    blitDraw(x, y, tile, screen);
+}
+
+void Screen::drawScaled(int x, int y, SDL_Surface *tile)
+{
+    SDL_Surface *s = scaleUp(tile);
+    blitDraw(scaleUp(x), scaleUp(y), s, screen);
+    SDL_FreeSurface(s);
 }
 
 void Screen::setCursor(bool nice)
