@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-08-03 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -77,13 +77,13 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
     } else {
         SDL_Surface* emptyFieldIcon = iconSet.getEmptyFieldIcon();
         SDL_Surface* newTile = scaleUp(emptyFieldIcon);
-        int x = 0;
-        int y = (FIELD_TILE_HEIGHT / 6);
+        SDL_Rect src = { 0, 0, newTile->w / 3, newTile->h / 3 };
+        SDL_Rect dst = { 0, (FIELD_TILE_HEIGHT / 6), src.w, src.h };
         for (int i = 0; i < 6; i++) {
             if (possib->isPossible(col, row, i + 1))
             {
                 SDL_Surface *origIcon = iconSet.getLargeIcon(row, i + 1, (hCol == col) && (hRow == row) && (i + 1 == subHNo));
-                SDL_Surface *smallIcon = scaleTo(origIcon, newTile->w / 3, newTile->h / 3);
+                SDL_Surface *smallIcon = scaleTo(origIcon, src.w, src.h);
                 for (int w = 0; w < smallIcon->w; w++)
                 {
                     setPixel(smallIcon, w, 0, 0, 0, 0);
@@ -94,16 +94,14 @@ void Puzzle::drawCell(int col, int row, bool addToUpdate)
                     setPixel(smallIcon, 0, h, 0, 0, 0);
                     setPixel(smallIcon, smallIcon->w-1, h, 0, 0, 0);
                 }
-                SDL_Rect src = { 0, 0, smallIcon->w, smallIcon->h };
-                SDL_Rect dst = { x, y, smallIcon->w, smallIcon->h };
                 SDL_BlitSurface(smallIcon, &src, newTile, &dst);
                 SDL_FreeSurface(smallIcon);
             }
             if (i == 2) {
-                x = 0;
-                y += (newTile->h / 3);
+                dst.x = 0;
+                dst.y += src.h;
             } else
-                x += (newTile->w / 3);
+                dst.x += src.w;
         }
         screen.draw(scaleUp(posX), scaleUp(posY), newTile);
         SDL_FreeSurface(newTile);
