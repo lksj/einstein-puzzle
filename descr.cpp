@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-08-04 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -103,8 +103,6 @@ class Description
         typedef std::list<Widget *> WidgetsList;
         WidgetsList widgets;
 
-        CursorCommand *prevCmd;		// Sobytie na nazhatie knopki <PREV>
-        CursorCommand *nextCmd;		// Sobytie na nazhatie knopki <PREV>
         Button *btnPrev;
         Button *btnNext;
         
@@ -170,8 +168,9 @@ Description::Description(Area *parentArea)
     textHeight = (int)(textFont->getHeight(L"A") * 1.0);
     text = new TextParser(msg(L"rulesText"), *textFont, START_X, START_Y, 
                 CLIENT_WIDTH, CLIENT_HEIGHT);
-    prevCmd = new CursorCommand(-1, *this, &currentPage);
-    nextCmd = new CursorCommand(1, *this, &currentPage);
+    
+    CursorCommand *prevCmd = new CursorCommand(-1, *this, &currentPage);
+    CursorCommand *nextCmd = new CursorCommand(1, *this, &currentPage);
     btnPrev = new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"), prevCmd);
     btnNext = new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), nextCmd);
 }
