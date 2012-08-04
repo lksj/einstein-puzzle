@@ -160,7 +160,7 @@ void showDescription(Area *parentArea)
 Description::Description(Area *parentArea)
 {
     currentPage = 0;
-    //area.add(parentArea, false);
+    add(parentArea, false);
     titleFont = new Font(L"nova.ttf", 26);
     buttonFont = new Font(L"laudcn2.ttf", 14);
     textFont = new Font(L"laudcn2.ttf", 16);
