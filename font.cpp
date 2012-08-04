@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-08-04 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -43,8 +43,14 @@ static Uint16 *strToUint16(const std::wstring &text)
         } else
             if (bufSize < len + 1) {
                 size_t sz = len * 2 + 1;
-                convBuf = (Uint16*)realloc(convBuf, sizeof(Uint16) * sz);
-                // I should check if it is NULL, but I'm too lazy today
+                
+                Uint16 *buf = (Uint16*)realloc(convBuf, sizeof(Uint16) * sz);
+                if (!buf)
+                {
+                    free(convBuf);
+                    throw Exception(L"Buffer realloc failed during string conversion");
+                }
+                convBuf = buf;
                 bufSize = sz;
             }
         for (unsigned int i = 0; i <= len; i++)
