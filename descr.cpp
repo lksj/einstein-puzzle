@@ -97,7 +97,7 @@ class CursorCommand;
 
 
 // Otobrazhaet pravila igry na ekran
-class Description
+class Description: public Area
 {
     private:
         typedef std::list<Widget *> WidgetsList;
@@ -106,7 +106,6 @@ class Description
         Button *btnPrev;
         Button *btnNext;
         
-        Area area;			// Mesto gde risovat'
         //std::vector<RulesPage *> pages;	// Spisok stranits teksta
         unsigned int currentPage;	// Tekuschaja stranitsa dlja prosmotra
 
@@ -189,7 +188,7 @@ void Description::deleteWidgets()
 {
     for (WidgetsList::iterator i = widgets.begin(); 
             i != widgets.end(); i++)
-        area.remove(*i);
+        remove(*i);
     widgets.clear();
 }
 
@@ -199,22 +198,22 @@ void Description::updateInfo()
     deleteWidgets();
     printPage();
     
-    area.setVisible(btnPrev, (0 != currentPage));
-    area.setVisible(btnNext, (currentPage < (text->getPageCount() - 1)));
+    setVisible(btnPrev, (0 != currentPage));
+    setVisible(btnNext, (currentPage < (text->getPageCount() - 1)));
     
-    area.draw();
+    draw();
 }
 
 void Description::run()
 {
-    area.add(new Window(100, 50, WIDTH, HEIGHT, L"blue.bmp"));
-    area.add(new Label(titleFont, 250, 60, 300, 40, Label::ALIGN_CENTER, Label::ALIGN_MIDDLE, 255, 255, 0, msg(L"rules")));
-    area.add(btnNext);
-    ExitCommand exitCmd(area);
-    area.add(new Button(610, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"close"), &exitCmd));
-    area.add(new KeyAccel(SDLK_ESCAPE, &exitCmd));
+    add(new Window(100, 50, WIDTH, HEIGHT, L"blue.bmp"));
+    add(new Label(titleFont, 250, 60, 300, 40, Label::ALIGN_CENTER, Label::ALIGN_MIDDLE, 255, 255, 0, msg(L"rules")));
+    add(btnNext);
+    ExitCommand exitCmd(*this);
+    add(new Button(610, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"close"), &exitCmd));
+    add(new KeyAccel(SDLK_ESCAPE, &exitCmd));
     printPage();
-    area.run();
+    Area::run();
 }
 
 void Description::printPage()
@@ -227,7 +226,7 @@ void Description::printPage()
         Widget *w = page->getWidget(i);
         if (w) {
             widgets.push_back(w);
-            area.add(w);
+            add(w);
         }
     }
 }
