@@ -169,10 +169,10 @@ Description::Description(Area *parentArea)
     text = new TextParser(msg(L"rulesText"), *textFont, START_X, START_Y, 
                 CLIENT_WIDTH, CLIENT_HEIGHT);
     
-    CursorCommand *prevCmd = new CursorCommand(-1, *this, &currentPage);
-    CursorCommand *nextCmd = new CursorCommand(1, *this, &currentPage);
-    btnPrev = new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"), prevCmd);
-    btnNext = new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), nextCmd);
+    btnPrev = new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"),
+                                        new CursorCommand(-1, *this, &currentPage));
+    btnNext = new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), 
+                                        new CursorCommand(1, *this, &currentPage));
 }
 
 Description::~Description()
