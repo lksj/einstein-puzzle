@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2012-08-04 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -141,36 +143,6 @@ class ResourceFile
         /// be placed
         /// \param outSize size of unpacked data
         void unpack(char *in, int inSize, char *out, int outSize);
-};
-
-
-/// Simple resource file wrapper.
-/// Used at boot time when ResourcesCollection
-/// is not available yet.
-class SimpleResourceFile: public ResourceFile
-{
-    private:
-        typedef std::map<std::wstring, DirectoryEntry> DirectoryMap;
-        DirectoryMap directory;  /// Directory map.
-        
-    public:
-        /// Open resource file.  Throws exception if file can't be opened.
-        /// \param fileName the name of resource file.
-        /// \param buffer buffer for temporary data.
-        /// Can be shared with other resource files.
-        SimpleResourceFile(const std::wstring &fileName, Buffer *buffer=NULL);
-
-    public:
-        /// Load data.  Memory returned by this method should be freed
-        /// by free() function call.
-        /// \param name name of resource
-        /// \param size returns size of resource
-        virtual void* load(const std::wstring &name, int &size);
-
-        /// Load data into the buffer.
-        /// \param name name of resource
-        /// \param buffer buffer for resource data
-        virtual void load(const std::wstring &name, Buffer &buffer);
 };
 
 

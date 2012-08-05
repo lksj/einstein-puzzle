@@ -291,48 +291,6 @@ void* ResourceFile::load(long offset, long packedSize, long unpackedSize,
 
 ///////////////////////////////////////////////////////////////////
 //
-// SimpleResourceFile
-//
-///////////////////////////////////////////////////////////////////
-
-
-SimpleResourceFile::SimpleResourceFile(const std::wstring &fileName,
-        Buffer *buf): ResourceFile(fileName, buf)
-{
-    Directory entries;    
-    getDirectory(entries);
-    for (Directory::iterator i = entries.begin(); i != entries.end(); i++) {
-        DirectoryEntry &e = *i;
-        directory[e.name] = e;
-    }
-}
-
-void* SimpleResourceFile::load(const std::wstring &name, int &size)
-{
-    DirectoryMap::iterator i = directory.find(name);
-    if (i != directory.end()) {
-        DirectoryEntry &e = (*i).second;
-        size = e.unpackedSize;
-        return ResourceFile::load(e.offset, e.packedSize, e.unpackedSize,
-                e.level);
-    } else
-        throw Exception(L"Resource '" + name + L"' not found");
-}
-
-void SimpleResourceFile::load(const std::wstring &name, Buffer &outBuf)
-{
-    DirectoryMap::iterator i = directory.find(name);
-    if (i != directory.end()) {
-        DirectoryEntry &e = (*i).second;
-        outBuf.setSize(e.unpackedSize);
-        ResourceFile::load((char*)outBuf.getData(), e.offset, 
-                e.packedSize, e.unpackedSize, e.level);
-    } else
-        throw Exception(L"Resource '" + name + L"' not found");
-}
-
-///////////////////////////////////////////////////////////////////
-//
 // ResVariant
 //
 ///////////////////////////////////////////////////////////////////
