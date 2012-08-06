@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-08-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -955,13 +955,12 @@ void Checkbox::handleClick()
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
+Picture::Picture(int x, int y, const std::wstring &name, bool transparent):
+    TileWidget(x, y, 0, 0, false)
 {
     image = loadImage(name, transparent);
     width = image->w;
     height = image->h;
-    left = x;
-    top = y;
 }
 
 
