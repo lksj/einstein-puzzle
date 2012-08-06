@@ -311,7 +311,6 @@ class InputField: public Window, public TimerHandler
         Font *font;
         Uint32 lastCursor;
         bool cursorVisible;
-        char lastChar;
         Uint32 lastKeyUpdate;
     
     public:
