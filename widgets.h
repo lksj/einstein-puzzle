@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2012-08-06 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -64,7 +64,6 @@ class BoundedWidget: public Widget
     protected:
         int left, top, width, height;
         bool transparent;
-        BoundedWidget(bool transparent = false);
         BoundedWidget(int left, int top, int width, int height, bool transparent = false);
     
     public:
@@ -83,7 +82,6 @@ class TileWidget: public BoundedWidget
         float scale;
     
     protected:
-        TileWidget(bool transparent = false);
         TileWidget(int left, int top, int width, int height, bool transparent = false);
         virtual ~TileWidget();
         virtual SDL_Surface* getImage();
@@ -101,7 +99,6 @@ class HighlightableWidget: public TileWidget
         bool mouseInside;
     
     protected:
-        HighlightableWidget(bool transparent = false);
         HighlightableWidget(int left, int top, int width, int height, bool transparent = false);
         virtual ~HighlightableWidget();
         virtual SDL_Surface* getImage();
@@ -114,7 +111,6 @@ class HighlightableWidget: public TileWidget
 class ClickableWidget: public HighlightableWidget
 {
     protected:
-    ClickableWidget(bool transparent = false);
     ClickableWidget(int left, int top, int width, int height, bool transparent = false);
     virtual void handleClick() = 0;
     

@@ -32,12 +32,6 @@
 //////////////////////////////////////////////////////////////////
 
 
-BoundedWidget::BoundedWidget(bool transparent):
-    transparent(transparent)
-{
-}
-
-
 BoundedWidget::BoundedWidget(int x, int y, int w, int h, bool t):
     left(x), top(y), width(w), height(h), transparent(t)
 {
@@ -78,15 +72,6 @@ void BoundedWidget::getBounds(int &l, int &t, int &w, int &h)
 // TileWidget
 //
 //////////////////////////////////////////////////////////////////
-
-
-TileWidget::TileWidget(bool transparent):
-    BoundedWidget(transparent)
-{
-    scale = -1.0;
-    image = NULL;
-    sImage = NULL;
-}
 
 
 TileWidget::TileWidget(int x, int y, int w, int h, bool t):
@@ -152,15 +137,6 @@ void TileWidget::rescale()
 //////////////////////////////////////////////////////////////////
 
 
-HighlightableWidget::HighlightableWidget(bool transparent):
-    TileWidget(transparent)
-{
-    highlighted = NULL;
-    sHighlighted = NULL;
-    mouseInside = false;
-}
-
-
 HighlightableWidget::HighlightableWidget(int x, int y, int w, int h, bool t):
     TileWidget(x, y, w, h, t)
 {
@@ -205,12 +181,6 @@ void HighlightableWidget::rescale()
 // ClickableWidget
 //
 //////////////////////////////////////////////////////////////////
-
-
-ClickableWidget::ClickableWidget(bool transparent):
-    HighlightableWidget(transparent)
-{
-}
 
 
 ClickableWidget::ClickableWidget(int x, int y, int w, int h, bool t):
