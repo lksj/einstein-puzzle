@@ -387,8 +387,8 @@ bool KeyAccel::onKeyDown(SDLKey k, unsigned char ch)
 
 
 Area::Area():
-    timer(NULL),
-    terminate(true)
+    terminate(true),
+    timer(NULL)
 {
 }
 
