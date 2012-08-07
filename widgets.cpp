@@ -955,12 +955,15 @@ void Picture::moveX(const int newX)
 //////////////////////////////////////////////////////////////////
 
 Slider::Slider(int x, int y, int w, int h, float &v):
-    BoundedWidget(x, y, w, h), value(v)
+    BoundedWidget(x, y, w, h),
+    value(v),
+    background(NULL),
+    highlight(false),
+    dragging(false),
+    dragOffsetX(0)
+    
 {
-    background = NULL;
     createSlider(height);
-    highlight = false;
-    dragging = false;
 }
 
 Slider::~Slider()
