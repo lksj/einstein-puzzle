@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 #include <set>
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include "font.h"
 
 

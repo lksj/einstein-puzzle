@@ -4,7 +4,7 @@
 
 #include <string>
 #include <map>
-#include <SDL_mixer.h>
+#include <SDL/SDL_mixer.h>
 
 
 class Sound

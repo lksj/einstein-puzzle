@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include "screen.h"
 #include "exceptions.h"
 #include "unicode.h"

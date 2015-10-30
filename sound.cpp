@@ -1,7 +1,7 @@
 #include "sound.h"
 
 #include <iostream>
-#include <SDL_events.h>
+#include <SDL/SDL_events.h>
 #include "resources.h"
 
 

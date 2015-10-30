@@ -3,7 +3,7 @@
 
 
 #include <string>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 
 
 class Font

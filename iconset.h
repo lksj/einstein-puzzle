@@ -2,7 +2,7 @@
 #define __ICONSET_H__
 
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 
 class IconSet

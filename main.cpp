@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
-#include <SDL.h>
-#include <SDL_main.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_main.h>
+#include <SDL/SDL_ttf.h>
 #include "main.h"
 #include "utils.h"
 #include "storage.h"

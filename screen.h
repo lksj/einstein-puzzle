@@ -2,7 +2,7 @@
 #define __SCREEN_H__
 
 
-#include "SDL.h"
+#include "SDL/SDL.h"
 #include <vector>
 #include <list>
 
