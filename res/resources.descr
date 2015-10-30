@@ -1,0 +1,109 @@
+priority = 100
+
+resources = {
+    { name = "cursor.bmp" }
+    { name = "rain.bmp" }
+    { name = "tile.bmp" }
+    { name = "hint-tile.bmp" }
+    { name = "a1.bmp", file="small-a1.bmp" }
+    { name = "a2.bmp", file="small-a2.bmp" }
+    { name = "a3.bmp", file="small-a3.bmp" }
+    { name = "a4.bmp", file="small-a4.bmp" }
+    { name = "a5.bmp", file="small-a5.bmp" }
+    { name = "a6.bmp", file="small-a6.bmp" }
+    { name = "A1.bmp", file="large-A1.bmp" }
+    { name = "A2.bmp", file="large-A2.bmp" }
+    { name = "A3.bmp", file="large-A3.bmp" }
+    { name = "A4.bmp", file="large-A4.bmp" }
+    { name = "A5.bmp", file="large-A5.bmp" }
+    { name = "A6.bmp", file="large-A6.bmp" }
+    { name = "b1.bmp", file="small-b1.bmp" }
+    { name = "b2.bmp", file="small-b2.bmp" }
+    { name = "b3.bmp", file="small-b3.bmp" }
+    { name = "b4.bmp", file="small-b4.bmp" }
+    { name = "b5.bmp", file="small-b5.bmp" }
+    { name = "b6.bmp", file="small-b6.bmp" }
+    { name = "B1.bmp", file="large-B1.bmp" }
+    { name = "B2.bmp", file="large-B2.bmp" }
+    { name = "B3.bmp", file="large-B3.bmp" }
+    { name = "B4.bmp", file="large-B4.bmp" }
+    { name = "B5.bmp", file="large-B5.bmp" }
+    { name = "B6.bmp", file="large-B6.bmp" }
+    { name = "c1.bmp", file="small-c1.bmp" }
+    { name = "c2.bmp", file="small-c2.bmp" }
+    { name = "c3.bmp", file="small-c3.bmp" }
+    { name = "c4.bmp", file="small-c4.bmp" }
+    { name = "c5.bmp", file="small-c5.bmp" }
+    { name = "c6.bmp", file="small-c6.bmp" }
+    { name = "C1.bmp", file="large-C1.bmp" }
+    { name = "C2.bmp", file="large-C2.bmp" }
+    { name = "C3.bmp", file="large-C3.bmp" }
+    { name = "C4.bmp", file="large-C4.bmp" }
+    { name = "C5.bmp", file="large-C5.bmp" }
+    { name = "C6.bmp", file="large-C6.bmp" }
+    { name = "d1.bmp", file="small-d1.bmp" }
+    { name = "d2.bmp", file="small-d2.bmp" }
+    { name = "d3.bmp", file="small-d3.bmp" }
+    { name = "d4.bmp", file="small-d4.bmp" }
+    { name = "d5.bmp", file="small-d5.bmp" }
+    { name = "d6.bmp", file="small-d6.bmp" }
+    { name = "D1.bmp", file="large-D1.bmp" }
+    { name = "D2.bmp", file="large-D2.bmp" }
+    { name = "D3.bmp", file="large-D3.bmp" }
+    { name = "D4.bmp", file="large-D4.bmp" }
+    { name = "D5.bmp", file="large-D5.bmp" }
+    { name = "D6.bmp", file="large-D6.bmp" }
+    { name = "e1.bmp", file="small-e1.bmp" }
+    { name = "e2.bmp", file="small-e2.bmp" }
+    { name = "e3.bmp", file="small-e3.bmp" }
+    { name = "e4.bmp", file="small-e4.bmp" }
+    { name = "e5.bmp", file="small-e5.bmp" }
+    { name = "e6.bmp", file="small-e6.bmp" }
+    { name = "E1.bmp", file="large-E1.bmp" }
+    { name = "E2.bmp", file="large-E2.bmp" }
+    { name = "E3.bmp", file="large-E3.bmp" }
+    { name = "E4.bmp", file="large-E4.bmp" }
+    { name = "E5.bmp", file="large-E5.bmp" }
+    { name = "E6.bmp", file="large-E6.bmp" }
+    { name = "f1.bmp", file="small-f1.bmp" }
+    { name = "f2.bmp", file="small-f2.bmp" }
+    { name = "f3.bmp", file="small-f3.bmp" }
+    { name = "f4.bmp", file="small-f4.bmp" }
+    { name = "f5.bmp", file="small-f5.bmp" }
+    { name = "f6.bmp", file="small-f6.bmp" }
+    { name = "F1.bmp", file="large-F1.bmp" }
+    { name = "F2.bmp", file="large-F2.bmp" }
+    { name = "F3.bmp", file="large-F3.bmp" }
+    { name = "F4.bmp", file="large-F4.bmp" }
+    { name = "F5.bmp", file="large-F5.bmp" }
+    { name = "F6.bmp", file="large-F6.bmp" }
+    { name = "opensquare.bmp" }
+    { name = "closed.bmp" }
+    { name = "verthint.bmp" }
+    { name = "hornearhint.bmp" }
+    { name = "horposhint.bmp" }
+    { name = "horbetweenhint.bmp" }
+    { name = "hint-near.bmp" }
+    { name = "hint-side.bmp" }
+    { name = "betwarr.bmp" }
+    { name = "title.bmp" }
+    { name = "marble1.bmp" }
+    { name = "blue.bmp" }
+    { name = "luximb.ttf" }
+    { name = "redpattern.bmp" }
+    { name = "greenpattern.bmp" }
+    { name = "darkpattern.bmp" }
+    { name = "nova.bmp" }
+    { name = "nova.ttf" }
+    { name = "laudcn2.ttf" }
+    { name = "btn.bmp" }
+    { name = "rules.txt", format = "messages" group = "messages" }
+    { name = "rules_ru.txt", format = "messages" group = "messages" }
+    { name = "messages.txt", format = "messages" group = "messages" }
+    { name = "messages_ru.txt", format = "messages" group = "messages" }
+    { name = "click.wav" }
+    { name = "applause.wav" }
+    { name = "glasbk2.wav" }
+    { name = "laser.wav" }
+    { name = "whizz.wav" }
+}

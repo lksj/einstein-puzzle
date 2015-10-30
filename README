@@ -1,0 +1,3 @@
+
+To build and install einstein edit Makefile and run `make install` as root.
+
