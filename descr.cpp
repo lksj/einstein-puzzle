@@ -11,6 +11,7 @@
 #include "convert.h"
 #include "utils.h"
 #include "tokenizer.h"
+#include "storage.h"
 
 
 #define WIDTH		600
@@ -259,7 +260,10 @@ void TextParser::addLine(TextPage *page, std::wstring &line, int &curPosY,
 {
     if (0 < line.length()) {
         page->add(new Label(&font, offsetX, offsetY + curPosY,
-                    255,255,255, line, false));
+                    getStorage()->get(L"text_red", 0),
+                    getStorage()->get(L"text_green", 0),
+                    getStorage()->get(L"text_blue", 100),
+                    line, false));
         line.clear();
         curPosY += 10 + charHeight;
         lineWidth = 0;
