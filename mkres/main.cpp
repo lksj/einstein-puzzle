@@ -2,7 +2,7 @@
 #include "exceptions.h"
 #include "unicode.h"
 #include "table.h"
-
+#include <string.h>
 
 static std::string sourceFile, outputFile;
 static bool verbose = false;

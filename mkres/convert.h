@@ -8,7 +8,7 @@
 
 #include "exceptions.h"
 #include "unicode.h"
-
+#include <typeinfo>
 
 /// Convert value to string
 /// \param x value
