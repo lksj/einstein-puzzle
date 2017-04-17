@@ -1,5 +1,5 @@
-*.o
-einstein
-mkres/*.o
-mkres/mkres
+src/einstein/*.o
+src/einstein/einstein
+src/mkres/*.o
+src/mkres/mkres
 
