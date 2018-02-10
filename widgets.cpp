@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-08-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -1023,6 +1023,7 @@ bool Slider::onMouseButtonDown(int button, int x, int y)
             if (isInRect(x, y, left, (top + (height / 2) - 2), width, 4))
             {
                 value = xToValue(scaleDown(x) - left - (height / 2));
+                sound->play(L"click.wav");
                 draw();
             }
         }
@@ -1034,6 +1035,7 @@ bool Slider::onMouseButtonUp(int button, int x, int y)
 {
     if (dragging) {
         dragging = false;
+        sound->play(L"click.wav");
         return true;
     } else
         return false;
