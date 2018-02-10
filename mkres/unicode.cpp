@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -592,8 +594,8 @@ std::wstring fromMbcs(const std::string &str)
 std::ostream& operator << (std::ostream &stream, const std::wstring &str)
 {
 #ifdef WIN32
-    if ((stream == std::cout) || (stream == std::cerr) || 
-            (stream == std::clog))
+    if ((&stream == &std::cout) || (&stream == &std::cerr) || 
+            (&stream == &std::clog))
         stream << toOem(str);
     else
 #endif

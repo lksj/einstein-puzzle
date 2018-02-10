@@ -3,6 +3,8 @@
 # Einstein Puzzle
 # Copyright (C) 2003-2005  Flowix Games
 
+# Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
+
 # Einstein Puzzle is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -20,6 +22,7 @@
 OPTIMIZE=-O6
 CFLAGS=-Wall $(OPTIMIZE)
 LNFLAGS=-lz
+LIBS=-lz
 
 TARGET=mkres
 SOURCES=main.cpp compressor.cpp unicode.cpp streams.cpp table.cpp \
