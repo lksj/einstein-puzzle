@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-08-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -363,7 +363,6 @@ class Picture: public TileWidget
 class Slider: public BoundedWidget
 {
     private:
-        float &value;
         SDL_Surface *background;
         SDL_Surface *slider;
         SDL_Surface *activeSlider;
@@ -380,6 +379,10 @@ class Slider: public BoundedWidget
         virtual bool onMouseButtonDown(int button, int x, int y);
         virtual bool onMouseButtonUp(int button, int x, int y);
         virtual bool onMouseMove(int x, int y);
+
+    protected:
+        float &value;
+        virtual void changeValue(float v);
 
     private:
         void createBackground();

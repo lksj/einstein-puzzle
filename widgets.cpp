@@ -1007,6 +1007,10 @@ void Slider::createSlider(int size)
     SDL_FreeSurface(image);
 }
 
+void Slider::changeValue(float v)
+{
+    value = v;
+}
 
 bool Slider::onMouseButtonDown(int button, int x, int y)
 {
@@ -1022,7 +1026,7 @@ bool Slider::onMouseButtonDown(int button, int x, int y)
         {
             if (isInRect(x, y, left, (top + (height / 2) - 2), width, 4))
             {
-                value = xToValue(scaleDown(x) - left - (height / 2));
+                changeValue(xToValue(scaleDown(x) - left - (height / 2)));
                 sound->play(L"click.wav");
                 draw();
             }
@@ -1068,7 +1072,7 @@ bool Slider::onMouseMove(int x, int y)
     if (dragging) {
         float val = xToValue(scaleDown(x) - left - dragOffsetX);
         if (val != value) {
-            value = val;
+            changeValue(val);
             draw();
         }
         return true;

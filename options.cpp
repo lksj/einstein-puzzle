@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-05-01 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,6 +26,22 @@
 #include "sound.h"
 #include "utils.h"
 
+class CancelCommand : public ExitCommand
+{
+    public:
+        CancelCommand(Area& a)
+            : ExitCommand(a)
+        {
+        }
+
+        void doAction() override
+        {
+            // need to make sure that we revert any changes that we made
+            float volume = ((float)getStorage()->get(L"volume", 20)) / 100.0f;
+            sound->setVolume(volume);
+            ExitCommand::doAction();
+        }
+};
 
 class OptionsChangedCommand: public Command
 {
@@ -79,12 +95,12 @@ class OptionsChangedCommand: public Command
                 var));
 #define OPTION(y, s, var) LABEL(y, s) CHECKBOX(y, var)
 
-//This class exists solely so that the click noise for the OK button
+//This class exists solely so that the click noise for the OK & Cancel button
 //will be played at the volume that is set in the Slider
-class OptionsOkButton: public Button
+class OptionsButton: public Button
 {  
     public:
-        OptionsOkButton(int x, int y, int w, int h, Font *font, 
+        OptionsButton(int x, int y, int w, int h, Font *font, 
                                     int r, int g, int b, const std::wstring &bg, 
                                     const std::wstring &text, Command *cmd):
             Button(x, y, w, h, font, r, g, b, bg, text, cmd)
@@ -95,6 +111,24 @@ class OptionsOkButton: public Button
         {
             handleClick();
             sound->play(L"click.wav");
+        }
+};
+
+//This class exists solely so that the click noise for the OK button
+//will be played at the volume that is set in the Slider
+class VolumeSlider: public Slider
+{
+    public:
+        VolumeSlider(int x, int y, int w, int h, float &v)
+            : Slider(x, y, w, h, v)
+        {
+        }
+        
+        void changeValue(float v) override
+        {
+            // set volume right away so we can tell what we set it to
+            sound->setVolume(v);
+            Slider::changeValue(v);
         }
 };
 
@@ -124,13 +158,13 @@ void showOptionsWindow(Area *parentArea)
    
     area.add(new Label(&font, 265, 330, 300, 20, Label::ALIGN_LEFT,
                 Label::ALIGN_MIDDLE, 255,255,255, msg(L"volume")));
-    area.add(new Slider(360, 332, 160, 16, volume));
+    area.add(new VolumeSlider(360, 332, 160, 16, volume));
     
-    ExitCommand exitCmd(area);
+    CancelCommand exitCmd(area);
     OptionsChangedCommand okCmd(&area, fullscreen, niceCursor, screenSize, volume);
-    area.add(new OptionsOkButton(315, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 
+    area.add(new OptionsButton(315, 390, 85, 25, &font, 255,255,0, L"blue.bmp",
                 msg(L"ok"), &okCmd));
-    area.add(new Button(405, 390, 85, 25, &font, 255,255,0, L"blue.bmp", 
+    area.add(new OptionsButton(405, 390, 85, 25, &font, 255,255,0, L"blue.bmp",
                 msg(L"cancel"), &exitCmd));
     area.add(new KeyAccel(SDLK_ESCAPE, &exitCmd));
     area.add(new KeyAccel(SDLK_RETURN, &okCmd));
