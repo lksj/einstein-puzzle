@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -17,8 +19,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef __MESSAGES_H__
-#define __MESSAGES_H__
+#ifndef __MSGWRITER_H__
+#define __MSGWRITER_H__
 
 
 #include <list>
@@ -51,7 +53,7 @@ class Message
 };
 
 
-class Messages
+class MsgWriter
 {
     private:
         typedef struct {
@@ -62,8 +64,8 @@ class Messages
         MsgMap messages;
     
     public:
-        Messages();
-        ~Messages();
+        MsgWriter();
+        ~MsgWriter();
 
     public:
         void add(const std::wstring &key, const std::wstring &msg);

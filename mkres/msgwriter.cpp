@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -17,7 +19,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include "messages.h"
+#include "msgwriter.h"
 
 #include <iostream>
 #include <sstream>
@@ -216,21 +218,21 @@ int Message::save(Buffer &buffer)
 
 //////////////////////////////////////////////////////////////////////////
 //
-// Messages
+// MsgWriter
 // 
 //////////////////////////////////////////////////////////////////////////
 
-Messages::Messages()
+MsgWriter::MsgWriter()
 {
 }
 
-Messages::~Messages()
+MsgWriter::~MsgWriter()
 {
     for (MsgMap::iterator i = messages.begin(); i != messages.end(); i++)
         delete (*i).second.message;
 }
 
-void Messages::add(const std::wstring &key, const std::wstring &msg)
+void MsgWriter::add(const std::wstring &key, const std::wstring &msg)
 {
     Message *message = new Message(msg);
     
@@ -245,7 +247,7 @@ void Messages::add(const std::wstring &key, const std::wstring &msg)
     messages[key] = entry;
 }
 
-int Messages::writeHeader(Buffer &buffer)
+int MsgWriter::writeHeader(Buffer &buffer)
 {
     buffer.putData("CMF", 3);
     int offset = 3;
@@ -254,7 +256,7 @@ int Messages::writeHeader(Buffer &buffer)
     return offset;
 }
 
-int Messages::writeMessages(Buffer &buffer, int offset)
+int MsgWriter::writeMessages(Buffer &buffer, int offset)
 {
     for (MsgMap::iterator i = messages.begin(); i != messages.end(); i++) {
         MsgEntry &e = (*i).second;
@@ -264,7 +266,7 @@ int Messages::writeMessages(Buffer &buffer, int offset)
     return offset;
 }
 
-int Messages::writeDirectory(Buffer &buffer)
+int MsgWriter::writeDirectory(Buffer &buffer)
 {
     int offset = buffer.putInteger(messages.size());
     for (MsgMap::iterator i = messages.begin(); i != messages.end(); i++) {
@@ -275,7 +277,7 @@ int Messages::writeDirectory(Buffer &buffer)
     return offset;
 }
 
-void Messages::save(Buffer &buffer)
+void MsgWriter::save(Buffer &buffer)
 {
     int offset = writeHeader(buffer);
     offset = writeMessages(buffer, offset);

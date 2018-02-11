@@ -3,6 +3,8 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
+// Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
+
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -20,7 +22,7 @@
 #include "msgformatter.h"
 #include "table.h"
 #include "unicode.h"
-#include "messages.h"
+#include "msgwriter.h"
 
 
 MsgFormatter::MsgFormatter()
@@ -30,7 +32,7 @@ MsgFormatter::MsgFormatter()
 void MsgFormatter::format(const std::wstring &fileName, Buffer &output)
 {
     Table table(toMbcs(fileName));
-    Messages msg;
+    MsgWriter msg;
     for (Table::Iterator i = table.begin(); i != table.end(); i++) {
         msg.add((*i).first, (*i).second->asString());
     }
