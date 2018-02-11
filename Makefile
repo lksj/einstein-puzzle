@@ -48,38 +48,50 @@ SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 	verthints.cpp random.cpp horhints.cpp menu.cpp font.cpp \
 	storage.cpp tablestorage.cpp regstorage.cpp \
 	topscores.cpp opensave.cpp descr.cpp options.cpp messages.cpp \
-	formatter.cpp buffer.cpp unicode.cpp convert.cpp table.cpp \
-	i18n.cpp lexal.cpp streams.cpp tokenizer.cpp sound.cpp
+	formatter.cpp i18n.cpp tokenizer.cpp sound.cpp
 OBJECTS=puzgen.o main.o screen.o resources.o utils.o game.o \
 	widgets.o iconset.o puzzle.o rules.o verthints.o random.o \
 	horhints.o menu.o font.o storage.o options.o \
 	tablestorage.o regstorage.o topscores.o opensave.o descr.o \
-	messages.o formatter.o buffer.o unicode.o convert.o table.o \
-	i18n.o lexal.o streams.o tokenizer.o sound.o
-HEADERS=screen.h main.h exceptions.h resources.h utils.h \
+	messages.o formatter.o i18n.o tokenizer.o sound.o
+HEADERS=screen.h main.h resources.h utils.h \
 	widgets.h iconset.h puzzle.h verthints.h random.h horhints.h \
 	font.h storage.h tablestorage.h regstorage.h \
 	topscores.h opensave.h game.h descr.h options.h messages.h \
-	foramtter.h buffer.h visitor.h unicode.h convert.h table.h \
-	i18n.h lexal.h streams.h tokenizer.h sound.h
+	formatter.h visitor.h i18n.h tokenizer.h sound.h
+
+SHARE_SOURCES = unicode.cpp streams.cpp table.cpp buffer.cpp convert.cpp lexal.cpp
+SHARE_HEADERS = unicode.h exceptions.h streams.h table.h buffer.h convert.h lexal.h
+SHARE_OBJECTS = unicode.o streams.o table.o buffer.o convert.o lexal.o
+
+RES_SOURCES=mkres.cpp compressor.cpp format.cpp msgwriter.cpp msgformatter.cpp
+RES_HEADERS=compressor.h format.h msgwriter.h msgformatter.h
+RES_OBJECTS=mkres.o compressor.o format.o msgwriter.o msgformatter.o
+
+ALL_SOURCES=$(RES_SOURCES) $(SHARE_SOURCES) $(SOURCES)
+ALL_HEADERS=$(RES_HEADERS) $(SHARE_HEADERS) $(HEADERS)
+ALL_OBJECTS=$(RES_OBJECTS) $(SHARE_OBJECTS) $(OBJECTS)
+ALL_FILES=$(ALL_SOURCES) $(ALL_HEADERS)
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) -c $<
 
 all: $(TARGET)
 
+mkres: $(RES_OBJECTS) $(SHARE_OBJECTS)
+	$(CXX) -lz $(RES_OBJECTS) $(SHARE_OBJECTS) -lz -o mkres
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(TARGET) $(LNFLAGS)
+einstein: $(OBJECTS) $(SHARE_OBJECTS) einstein.res
+	$(CXX) $(OBJECTS) $(SHARE_OBJECTS) $(LIBS) -o einstein $(LNFLAGS)
 
 clean:
-	rm -f $(OBJECTS) core* *core $(TARGET) *~
+	$(RM) $(ALL_OBJECTS) *.exe *.res core* *core $(TARGET) *~
 
-depend:
-	@makedepend $(SOURCES) 2> /dev/null
+einstein.res: mkres
+	cd res  && ../mkres --source resources.descr --output ../einstein.res && cd ..
 
-run: $(TARGET)
-	./$(TARGET)
+run: einstein
+	./einstein
 
 install: $(TARGET)
 	$(INSTALL) -s -D $(TARGET) $(PREFIX)/bin/$(TARGET)
