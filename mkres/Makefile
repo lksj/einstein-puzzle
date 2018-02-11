@@ -3,7 +3,7 @@
 # Einstein Puzzle
 # Copyright (C) 2003-2005  Flowix Games
 
-# Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
+# Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
 
 # Einstein Puzzle is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,12 +25,12 @@ LNFLAGS=-lz
 LIBS=-lz
 
 TARGET=mkres
-SOURCES=main.cpp compressor.cpp unicode.cpp streams.cpp table.cpp \
+SOURCES=mkres.cpp compressor.cpp unicode.cpp streams.cpp table.cpp \
 	lexal.cpp convert.cpp buffer.cpp format.cpp messages.cpp \
 	msgformatter.cpp
 HEADERS=compressor.h unicode.h streams.h lexal.h convert.h table.h \
 	buffer.h format.h messages.h msgformatter.h
-OBJECTS=main.o compressor.o unicode.o streams.o lexal.o table.o \
+OBJECTS=mkres.o compressor.o unicode.o streams.o lexal.o table.o \
 	convert.o buffer.o format.o messages.o msgformatter.o
 
 .cpp.o:
