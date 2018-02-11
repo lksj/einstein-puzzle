@@ -3,7 +3,7 @@
 // Einstein Puzzle
 // Copyright (C) 2003-2005  Flowix Games
 
-// Modified 2012-08-06 by Jordan Evens <jordan.evens@gmail.com>
+// Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
 
 // Einstein Puzzle is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,6 +21,10 @@
 
 #include <time.h>
 #include <fstream>
+#ifdef WIN32
+#define UNICODE
+#include <shlobj.h>
+#endif
 #include "exceptions.h"
 #include "utils.h"
 #include "widgets.h"
@@ -29,8 +33,6 @@
 #include "unicode.h"
 #include "convert.h"
 #include "messages.h"
-
-
 
 #define MAX_SLOTS 10
 
@@ -164,9 +166,13 @@ static std::wstring getSavesPath()
     std::wstring path(fromMbcs(getenv("HOME")) + 
             std::wstring(L"/.einstein/save"));
 #else
-    std::wstring path(getStorage()->get(L"path", L""));
+    TCHAR szPath[MAX_PATH];
+    SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, SHGFP_TYPE_CURRENT, szPath);
+    std::wstring path(&szPath[0]);
     if (path.length() > 0)
         path += L"\\";
+    path += L"Einstein\\";
+    ensureDirExists(path);
     path += L"save";
 #endif
     ensureDirExists(path);
