@@ -35,11 +35,14 @@ class Buffer;
 class Messages
 {
     private:
-        typedef struct {
+        class ScoredStr {
+        public:
             int score;
             Formatter *message;
-        } ScoredStr;
-        typedef std::map<std::wstring, ScoredStr> StrMap;
+            ~ScoredStr();
+            ScoredStr(int score, Formatter* message);
+        };
+        typedef std::map<std::wstring, ScoredStr*> StrMap;
         StrMap messages;
     
     public:

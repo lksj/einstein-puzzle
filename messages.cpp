@@ -31,12 +31,27 @@
 Messages msg;
 
 
+Messages::ScoredStr::~ScoredStr()
+{
+    delete message;
+}
+
+
+Messages::ScoredStr::ScoredStr(int score, Formatter* message)
+    : score(score), message(message)
+{
+}
+
 Messages::Messages()
 {
 }
 
 Messages::~Messages()
 {
+    for (auto kv : messages)
+    {
+        delete kv.second;
+    }
 }
 
 class ResVisitor: public Visitor<Resource*>
@@ -85,7 +100,7 @@ std::wstring Messages::getMessage(const std::wstring &key) const
 {
     StrMap::const_iterator i = messages.find(key);
     if (i != messages.end())
-        return (*i).second.message->getMessage();
+        return (*i).second->message->getMessage();
     else
         return key;
 }
@@ -95,7 +110,7 @@ std::wstring Messages::format(const wchar_t *key, va_list ap) const
     std::wstring s;
     StrMap::const_iterator i = messages.find(key);
     if (i != messages.end())
-        s = (*i).second.message->format(ap);
+        s = (*i).second->message->format(ap);
     else
         s = key;
     return s;
@@ -138,13 +153,14 @@ void Messages::loadBundle(int score, unsigned char *data, size_t size)
             int msgOffset = readInt(data + offset + sz);
             StrMap::iterator i = messages.find(name);
             if (i == messages.end()) {
-                ScoredStr ss = { score, new Formatter(data, msgOffset) };
+                ScoredStr* ss = new ScoredStr(score, new Formatter(data, msgOffset));
                 messages[name] = ss;
             } else {
-                ScoredStr &ss = (*i).second;
-                if (ss.score <= score) {
-                    ss.score = score;
-                    ss.message = new Formatter(data, msgOffset);
+                ScoredStr* ss = (*i).second;
+                if (ss->score <= score) {
+                    ss->score = score;
+                    delete ss->message;
+                    ss->message = new Formatter(data, msgOffset);
                 }
             }
         }
