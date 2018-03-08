@@ -401,7 +401,7 @@ Resource::Resource(ResourceFile *file, int i18nScore,
 
 Resource::~Resource()
 {
-    for (Variants::iterator i = variants.begin(); i != variants.end(); i++)
+    for (Variants::iterator i = variants.begin(); i != variants.end(); ++i)
         delete *i;
 }
 
@@ -504,9 +504,9 @@ ResourcesCollection::ResourcesCollection(StringList &directories)
 
 ResourcesCollection::~ResourcesCollection()
 {
-    for (ResourcesMap::iterator i = resources.begin(); i != resources.end(); i++)
+    for (ResourcesMap::iterator i = resources.begin(); i != resources.end(); ++i)
         delete (*i).second;
-    for (ResourceFiles::iterator i = files.begin(); i != files.end(); i++)
+    for (ResourceFiles::iterator i = files.begin(); i != files.end(); ++i)
         delete *i;
 }
 
@@ -514,7 +514,7 @@ ResourcesCollection::~ResourcesCollection()
 void ResourcesCollection::loadResourceFiles(StringList &directories)
 {
     for (StringList::iterator i = directories.begin();
-            i != directories.end(); i++)
+            i != directories.end(); ++i)
     {
         const std::wstring &d = *i;
         DIR *dir = opendir(toMbcs(d).c_str());
@@ -537,12 +537,12 @@ void ResourcesCollection::processFiles()
 {
     ResourceFile::Directory dir;
     for (std::vector<ResourceFile*>::iterator i = files.begin(); 
-            i != files.end(); i++) 
+            i != files.end(); ++i) 
     {
         ResourceFile *file = *i;
         file->getDirectory(dir);
         for (ResourceFile::Directory::iterator j = dir.begin(); 
-                j != dir.end(); j++) 
+                j != dir.end(); ++j) 
         {
             ResourceFile::DirectoryEntry &de = *j;
             std::wstring name, ext, language, country;
@@ -607,7 +607,7 @@ void ResourcesCollection::forEachInGroup(const std::wstring &name,
 {
     if (groups.count(name) > 0) {
         ResourcesList &l = groups[name];
-        for (ResourcesList::iterator i = l.begin(); i != l.end(); i++) {
+        for (ResourcesList::iterator i = l.begin(); i != l.end(); ++i) {
             Resource *r = *i;
             visitor.onVisit(r);
         }

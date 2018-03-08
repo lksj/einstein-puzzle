@@ -244,7 +244,7 @@ static bool canSolve(SolvedPuzzle &puzzle, Rules &rules)
     
     do {
         changed = false;
-        for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+        for (Rules::iterator i = rules.begin(); i != rules.end(); ++i) {
             Rule *rule = *i;
             if (rule->apply(pos)) {
                 changed = true;
@@ -269,7 +269,7 @@ static void removeRules(SolvedPuzzle &puzzle, Rules &rules)
     
     do {
         possible = false;
-        for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+        for (Rules::iterator i = rules.begin(); i != rules.end(); ++i) {
             Rule *rule = *i;
             Rules excludedRules = rules;
             excludedRules.remove(rule);
@@ -293,7 +293,7 @@ static void genRules(SolvedPuzzle &puzzle, Rules &rules)
         if (rule) {
             std::wstring s = rule->getAsText();
             for (std::list<Rule*>::iterator i = rules.begin(); 
-                    i != rules.end(); i++) 
+                    i != rules.end(); ++i) 
                 if ((*i)->getAsText() == s) {
                     delete rule;
                     rule = NULL;
@@ -349,7 +349,7 @@ void genPuzzle(SolvedPuzzle &puzzle, Rules &rules)
 
 void openInitial(Possibilities &possib, Rules &rules)
 {
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+    for (Rules::iterator i = rules.begin(); i != rules.end(); ++i) {
         Rule *r = *i;
         if (r->applyOnStart())
             r->apply(possib);
@@ -362,7 +362,7 @@ void getHintsQty(Rules &rules, int &vert, int &horiz)
     vert = 0;
     horiz = 0;
 
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+    for (Rules::iterator i = rules.begin(); i != rules.end(); ++i) {
         Rule::ShowOptions so = (*i)->getShowOpts();
         switch (so) {
             case Rule::SHOW_VERT: vert++; break;
@@ -390,7 +390,7 @@ void loadPuzzle(SolvedPuzzle &puzzle, std::istream &stream)
 Rule* getRule(Rules &rules, int no)
 {
     int j = 0;
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+    for (Rules::iterator i = rules.begin(); i != rules.end(); ++i) {
         if (j == no)
             return *i;
         j++;

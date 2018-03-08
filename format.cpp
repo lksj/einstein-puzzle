@@ -33,7 +33,7 @@ FormatRegistry::FormatRegistry()
 FormatRegistry::~FormatRegistry()
 {
     for (FormattersMap::iterator i = formatters.begin(); 
-            i != formatters.end(); i++)
+            i != formatters.end(); ++i)
         delete (*i).second;
 }
 

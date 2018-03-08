@@ -259,7 +259,7 @@ void Screen::flush()
 
     int j = 0;
     for (std::list<SDL_Rect>::iterator i = regions.begin();
-            i != regions.end(); i++, j++)
+            i != regions.end(); ++i, ++j)
         regionsList[j] = *i;
 
     SDL_UpdateRects(screen, regions.size(), regionsList);

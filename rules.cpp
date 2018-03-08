@@ -613,7 +613,7 @@ Rule* genRule(SolvedPuzzle &puzzle)
 void saveRules(Rules &rules, std::ostream &stream)
 {
     writeInt(stream, rules.size());
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++)
+    for (Rules::iterator i = rules.begin(); i != rules.end(); ++i)
         (*i)->save(stream);
 }
 

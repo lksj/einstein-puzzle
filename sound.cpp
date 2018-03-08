@@ -43,7 +43,7 @@ Sound::~Sound()
 {
     if (! disabled)
         Mix_CloseAudio();
-    for (ChunkMap::iterator i = chunkCache.begin(); i != chunkCache.end(); i++)
+    for (ChunkMap::iterator i = chunkCache.begin(); i != chunkCache.end(); ++i)
         Mix_FreeChunk((*i).second);
     Mix_CloseAudio();
 }

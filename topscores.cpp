@@ -61,7 +61,7 @@ int TopScores::add(const std::wstring &name, int score)
     }
     
     int pos = 0;
-    for (ScoresList::iterator i = scores.begin(); i != scores.end(); i++) {
+    for (ScoresList::iterator i = scores.begin(); i != scores.end(); ++i) {
         Entry &e = *i;
         if (e.score > score) {
             Entry ne = { name, score };
@@ -88,7 +88,7 @@ void TopScores::save()
     Storage *storage = getStorage();
     int no = 0;
     
-    for (ScoresList::iterator i = scores.begin(); i != scores.end(); i++) {
+    for (ScoresList::iterator i = scores.begin(); i != scores.end(); ++i) {
         Entry &e = *i;
         storage->set(L"top_name_" + toString(no), e.name);
         storage->set(L"top_score_" + toString(no), e.score);
@@ -109,7 +109,7 @@ int TopScores::getMaxScore()
     if (scores.size() < 1)
         return -1;
     ScoresList::iterator i = scores.end();
-    i--;
+    --i;
     return (*i).score;
 }
 
@@ -142,7 +142,7 @@ ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight):
     int no = 1;
     int pos = 70;
     for (TopScores::ScoresList::iterator i = list.begin(); 
-            i != list.end(); i++) 
+            i != list.end(); ++i) 
     {
         TopScores::Entry &e = *i;
         std::wstring s(toString(no) + L".");

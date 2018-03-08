@@ -74,7 +74,7 @@ void HorHints::reset(Rules &r)
     numbersArr.clear();
     
     int no = 0;
-    for (Rules::iterator i = r.begin(); i != r.end(); i++) {
+    for (Rules::iterator i = r.begin(); i != r.end(); ++i) {
         Rule *rule = *i;
         if (rule->getShowOpts() == Rule::SHOW_HORIZ) {
             rules.push_back(rule);

@@ -33,7 +33,7 @@ void MsgFormatter::format(const std::wstring &fileName, Buffer &output)
 {
     Table table(toMbcs(fileName));
     MsgWriter msg;
-    for (Table::Iterator i = table.begin(); i != table.end(); i++) {
+    for (Table::Iterator i = table.begin(); i != table.end(); ++i) {
         msg.add((*i).first, (*i).second->asString());
     }
     msg.save(output);
