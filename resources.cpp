@@ -259,7 +259,7 @@ void ResourceFile::load(char *buf, long offset, long packedSize,
         unpack((char*)buffer->getData(), packedSize, buf, unpackedSize);
     } catch (Exception &e) {
         if (inBuf) free(inBuf);
-        throw e;
+        throw;
     } catch (...) {
         if (inBuf) free(inBuf);
         throw Exception(name + L": Error loading resource");
@@ -279,7 +279,7 @@ void* ResourceFile::load(long offset, long packedSize, long unpackedSize,
         load(outBuf, offset, packedSize, unpackedSize, level);
     } catch (Exception &e) {
         if (outBuf) free(outBuf);
-        throw e;
+        throw;
     } catch (...) {
         if (outBuf) free(outBuf);
         throw Exception(name + L": Error loading resource");
