@@ -151,7 +151,7 @@ g_utf8_get_char_extended (const  char *p,
       return (wchar_t)-1;
     }
   
-  if (max_len >= 0 && len > max_len)
+  if (len > max_len)
     {
       for (i = 1; i < max_len; i++)
 	{
