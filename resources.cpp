@@ -104,7 +104,7 @@ class MemoryResourceStream: public ResourceStream
         long pos;
     
     public:
-        MemoryResourceStream(ResVariant *resource);
+        explicit MemoryResourceStream(ResVariant *resource);
         virtual ~MemoryResourceStream();
 
     public:
@@ -410,7 +410,7 @@ class ScorePredicate
     public:
         int score;
         
-        ScorePredicate(int sc) { score = sc; }
+        explicit ScorePredicate(int sc) { score = sc; }
 
         bool operator() (const ResVariant *r) const {
             return r->getI18nScore() == score;

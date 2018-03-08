@@ -89,7 +89,7 @@ class Watch: public TimerHandler, public Widget
     
     public:
         Watch();
-        Watch(std::istream &stream);
+        explicit Watch(std::istream &stream);
         virtual ~Watch();
 
     public:
@@ -344,7 +344,7 @@ class CheatCommand: public Command
         Area *gameArea;
 
     public:
-        CheatCommand(Area *a) { gameArea = a; };
+        explicit CheatCommand(Area *a) { gameArea = a; };
         
         virtual void doAction() {
             Font font(L"nova.ttf", 30);
@@ -392,7 +392,7 @@ class GameOptionsCommand: public Command
         Area *gameArea;
 
     public:
-        GameOptionsCommand(Area *a) { 
+        explicit GameOptionsCommand(Area *a) { 
             gameArea = a; 
         };
         

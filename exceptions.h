@@ -31,7 +31,7 @@ class Exception
         std::wstring message;
     
     public:
-        Exception(const std::wstring& msg) { message = msg;  /*std::cout << msg << std::endl;*/ };
+        explicit Exception(const std::wstring& msg) { message = msg; };
         virtual ~Exception() { };
 
     public:

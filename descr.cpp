@@ -117,7 +117,7 @@ class Description: public Area
         TextParser *text;
         
     public:
-        Description(Area *parentArea);
+        explicit Description(Area *parentArea);
         ~Description();
 
     public:

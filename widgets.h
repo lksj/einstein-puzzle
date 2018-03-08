@@ -223,7 +223,7 @@ class ExitCommand: public Command
         Area &area;
     
     public:
-        ExitCommand(Area &a): area(a) { }
+        explicit ExitCommand(Area &a): area(a) { }
         
         virtual void doAction() {
             area.finishEventLoop();
@@ -238,7 +238,7 @@ class AnyKeyAccel: public Widget
 
     public:
         AnyKeyAccel();                  // use exit command by default
-        AnyKeyAccel(Command *command);
+        explicit AnyKeyAccel(Command *command);
         virtual ~AnyKeyAccel();
 
     public:

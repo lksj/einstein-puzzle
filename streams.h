@@ -38,7 +38,7 @@ class UtfStreamReader
     public:
         /// Create utf-8 stream reader.
         /// \param stream pointer to file stream.
-        UtfStreamReader(std::ifstream *stream);
+        explicit UtfStreamReader(std::ifstream *stream);
         
         /// Destructor
         ~UtfStreamReader();

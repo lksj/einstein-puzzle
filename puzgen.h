@@ -40,7 +40,7 @@ class Possibilities
     
     public:
         Possibilities();
-        Possibilities(std::istream &stream);
+        explicit Possibilities(std::istream &stream);
 
     public:
         void exclude(int col, int row, int element);

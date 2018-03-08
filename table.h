@@ -65,7 +65,7 @@ class Table
     public:
         Table();
         Table(const Table &table);
-        Table(const std::string &fileName);
+        explicit Table(const std::string &fileName);
         Table(Lexal &lexal, int startLine, int startPos);
         ~Table();
 

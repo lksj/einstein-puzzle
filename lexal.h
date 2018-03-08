@@ -64,7 +64,7 @@ class Lexal
         int pos;
         
     public:
-        Lexal(UtfStreamReader &reader);
+        explicit Lexal(UtfStreamReader &reader);
         ~Lexal() { };
 
     public:

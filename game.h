@@ -50,7 +50,7 @@ class Game
 
     public:
         Game();
-        Game(std::istream &stream);
+        explicit Game(std::istream &stream);
         ~Game();
 
     public:

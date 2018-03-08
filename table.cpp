@@ -33,7 +33,7 @@ class IntValue: public Value
         int value;
     
     public:
-        IntValue(int val) { value = val; };
+        explicit IntValue(int val) { value = val; };
         virtual ~IntValue() { };
 
     public:
@@ -54,7 +54,7 @@ class DoubleValue: public Value
         double value;
     
     public:
-        DoubleValue(double val) { value = val; };
+        explicit DoubleValue(double val) { value = val; };
         virtual ~DoubleValue() { };
 
     public:
@@ -75,7 +75,7 @@ class StringValue: public Value
         std::wstring value;
     
     public:
-        StringValue(const std::wstring& val): value(val) { };
+        explicit StringValue(const std::wstring& val): value(val) { };
         virtual ~StringValue() { };
 
     public:
@@ -96,7 +96,7 @@ class TableValue: public Value
         ::Table *value;
     
     public:
-        TableValue(::Table *val) { value = val; };
+        explicit TableValue(::Table *val) { value = val; };
         virtual ~TableValue() { delete value; };
 
     public:

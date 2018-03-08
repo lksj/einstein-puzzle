@@ -29,7 +29,7 @@
 class CancelCommand : public ExitCommand
 {
     public:
-        CancelCommand(Area& a)
+        explicit CancelCommand(Area& a)
             : ExitCommand(a)
         {
         }

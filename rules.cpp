@@ -135,8 +135,8 @@ SDL_Surface* HorizontalRule::getImage(IconSet &iconSet, bool h)
 class NearRule: public HorizontalRule
 {
     public:
-        NearRule(SolvedPuzzle puzzle);
-        NearRule(std::istream &stream);
+        explicit NearRule(SolvedPuzzle puzzle);
+        explicit NearRule(std::istream &stream);
         virtual bool apply(Possibilities &pos);
         virtual std::wstring getAsText();
     
@@ -235,8 +235,8 @@ SDL_Surface* NearRule::getMiddleIcon(IconSet &iconSet, bool h)
 class DirectionRule: public HorizontalRule
 {
     public:
-        DirectionRule(SolvedPuzzle puzzle);
-        DirectionRule(std::istream &stream);
+        explicit DirectionRule(SolvedPuzzle puzzle);
+        explicit DirectionRule(std::istream &stream);
         virtual bool apply(Possibilities &pos);
         virtual std::wstring getAsText();
     
@@ -310,8 +310,8 @@ class OpenRule: public Rule
         int col, row, thing;
         
     public:
-        OpenRule(SolvedPuzzle puzzle);
-        OpenRule(std::istream &stream);
+        explicit OpenRule(SolvedPuzzle puzzle);
+        explicit OpenRule(std::istream &stream);
         virtual bool apply(Possibilities &pos);
         virtual std::wstring getAsText();
         virtual bool applyOnStart() { return true; };
@@ -364,8 +364,8 @@ class UnderRule: public DrawableRule
         virtual SDL_Surface* getImage(IconSet &iconSet, bool h);
     
     public:
-        UnderRule(SolvedPuzzle puzzle);
-        UnderRule(std::istream &stream);
+        explicit UnderRule(SolvedPuzzle puzzle);
+        explicit UnderRule(std::istream &stream);
         virtual bool apply(Possibilities &pos);
         virtual std::wstring getAsText();
         virtual ShowOptions getShowOpts() { return SHOW_VERT; };
@@ -438,8 +438,8 @@ class BetweenRule: public HorizontalRule
         int centerRow, centerThing;
         
     public:
-        BetweenRule(SolvedPuzzle puzzle);
-        BetweenRule(std::istream &stream);
+        explicit BetweenRule(SolvedPuzzle puzzle);
+        explicit BetweenRule(std::istream &stream);
         virtual bool apply(Possibilities &pos);
         virtual std::wstring getAsText();
     

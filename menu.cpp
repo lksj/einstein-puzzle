@@ -58,7 +58,7 @@ class NewGameCommand: public Command
         Area *area;
     
     public:
-        NewGameCommand(Area *a) { area = a; };
+        explicit NewGameCommand(Area *a) { area = a; };
 
         virtual void doAction() {
             Game game;
@@ -75,7 +75,7 @@ class LoadGameCommand: public Command
         Area *area;
     
     public:
-        LoadGameCommand(Area *a) { area = a; };
+        explicit LoadGameCommand(Area *a) { area = a; };
 
         virtual void doAction() {
             Game *game = loadGame(area);
@@ -96,7 +96,7 @@ class TopScoresCommand: public Command
         Area *area;
     
     public:
-        TopScoresCommand(Area *a) { area = a; };
+        explicit TopScoresCommand(Area *a) { area = a; };
 
         virtual void doAction() {
             TopScores scores;
@@ -113,7 +113,7 @@ class RulesCommand: public Command
         Area *area;
     
     public:
-        RulesCommand(Area *a) { area = a; };
+        explicit RulesCommand(Area *a) { area = a; };
 
         virtual void doAction() {
             showDescription(area);
@@ -129,7 +129,7 @@ class OptionsCommand: public Command
         Area *area;
     
     public:
-        OptionsCommand(Area *a) { area = a; };
+        explicit OptionsCommand(Area *a) { area = a; };
 
         virtual void doAction() {
             showOptionsWindow(area);
@@ -145,7 +145,7 @@ class AboutCommand: public Command
         Area *parentArea;
     
     public:
-        AboutCommand(Area *a) { parentArea = a; };
+        explicit AboutCommand(Area *a) { parentArea = a; };
 
         virtual void doAction() {
             Area area;

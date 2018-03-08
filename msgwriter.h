@@ -47,7 +47,7 @@ class Message
         Commands commands;
 
     public:
-        Message(const std::wstring &msg);
+        explicit Message(const std::wstring &msg);
         ~Message();
         int save(Buffer &buffer);
 };

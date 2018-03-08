@@ -45,7 +45,7 @@ class SavedGame
         std::wstring name;
 
     public:
-        SavedGame(const std::wstring &fileName);
+        explicit SavedGame(const std::wstring &fileName);
         SavedGame(const SavedGame &s): fileName(s.fileName), name(s.name) {
             exists = s.exists;
         };

@@ -322,7 +322,7 @@ class ResourcesCollection
         
     public:
         /// Load resource files, make grouping and i18n optimizations.
-        ResourcesCollection(StringList &directories);
+        explicit ResourcesCollection(StringList &directories);
         ~ResourcesCollection();
 
     public:
@@ -379,7 +379,7 @@ class ResDataHolder
         ResDataHolder();
 
         /// Create holder and load data
-        ResDataHolder(const std::wstring &name);
+        explicit ResDataHolder(const std::wstring &name);
 
         ~ResDataHolder();
 

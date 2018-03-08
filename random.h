@@ -31,7 +31,7 @@ class Random
     
     public:
         Random();
-        Random(unsigned long int seed);
+        explicit Random(unsigned long int seed);
         Random(int keys[], int length);
         ~Random();
 
