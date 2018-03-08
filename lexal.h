@@ -48,7 +48,7 @@ class Lexeme
         ~Lexeme() { };
 
     public:
-        const Type getType() const { return type; };
+        Type getType() const { return type; };
         const std::wstring getContent() const { return content; };
         std::wstring getPosStr() const;
         int getLine() const { return line; };
