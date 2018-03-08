@@ -44,7 +44,7 @@ class DrawableRule: public Rule
 
     protected:
         DrawableRule();
-        DrawableRule(std::istream &stream, std::wstring ruleType);
+        DrawableRule(std::istream &stream, const std::wstring& ruleType);
         void save(std::ostream &stream);
         virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted) = 0;
         virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
@@ -56,7 +56,7 @@ DrawableRule::DrawableRule()
 }
 
 
-DrawableRule::DrawableRule(std::istream &stream, std::wstring ruleType):
+DrawableRule::DrawableRule(std::istream &stream, const std::wstring& ruleType):
     ruleType(ruleType)
 {
     row1 = readInt(stream);
@@ -88,7 +88,7 @@ class HorizontalRule: public DrawableRule
 {
     protected:
         HorizontalRule();
-        HorizontalRule(std::istream &stream, std::wstring ruleType);
+        HorizontalRule(std::istream &stream, const std::wstring& ruleType);
         virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) = 0;
         virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
@@ -101,7 +101,7 @@ HorizontalRule::HorizontalRule()
 }
 
 
-HorizontalRule::HorizontalRule(std::istream &stream, std::wstring ruleType):
+HorizontalRule::HorizontalRule(std::istream &stream, const std::wstring& ruleType):
     DrawableRule(stream, ruleType)
 {
 }

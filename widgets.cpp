@@ -656,7 +656,7 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
 
 
 
-Label::Label(Font *f, int x, int y, int r, int g, int b, std::wstring s,
+Label::Label(Font *f, int x, int y, int r, int g, int b, const std::wstring& s,
         bool sh):
     BoundedWidget(x, y, f->getWidth(s), f->getHeight(s)), text(s)
 {
@@ -716,14 +716,14 @@ void Label::draw()
 //////////////////////////////////////////////////////////////////
 
 
-ManagedLabel::ManagedLabel(std::wstring fontName, int ptSize, int x, int y,
-                int r, int g, int b, std::wstring text, bool shadow):
+ManagedLabel::ManagedLabel(const std::wstring& fontName, int ptSize, int x, int y,
+                int r, int g, int b, const std::wstring& text, bool shadow):
     Label(new Font(fontName, ptSize), x, y, r, g, b, text, shadow)
 {
 }
 
 
-ManagedLabel::ManagedLabel(std::wstring fontName, int ptSize, int x, int y, int w, int h,
+ManagedLabel::ManagedLabel(const std::wstring& fontName, int ptSize, int x, int y, int w, int h,
         HorAlign hA, VerAlign vA, int r, int g, int b, const std::wstring &s): 
     Label(new Font(fontName, ptSize), x, y, w, h, hA, vA, r, g, b, s)
 {
@@ -1100,7 +1100,7 @@ bool Slider::onMouseMove(int x, int y)
 //////////////////////////////////////////////////////////////////
 
 CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v,
-        std::vector<std::wstring> o)
+        const std::vector<std::wstring>& o)
     : TextHighlightWidget(x, y, w, h, f, 255, 255, 0),
         value(v), options(o)
 {

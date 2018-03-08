@@ -313,7 +313,7 @@ class CheatAccel: public Widget
         std::wstring cheat;
 
     public:
-        CheatAccel(const std::wstring s, Command *cmd): cheat(s) {
+        CheatAccel(const std::wstring& s, Command *cmd): cheat(s) {
             command = cmd;
         };
 

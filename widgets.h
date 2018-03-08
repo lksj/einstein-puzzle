@@ -280,7 +280,7 @@ class Label: public BoundedWidget
 
     public:
         Label(Font *font, int x, int y, int r, int g, int b, 
-                std::wstring text, bool shadow=true);
+                const std::wstring& text, bool shadow=true);
         Label(Font *font, int x, int y, int width, int height,
                 HorAlign hAlign, VerAlign vAlign, int r, int g, int b, 
                 const std::wstring &text);
@@ -293,9 +293,9 @@ class Label: public BoundedWidget
 class ManagedLabel: public Label
 {
     public:
-        ManagedLabel(std::wstring fontName, int ptSize, int x, int y,
-                int r, int g, int b, std::wstring text, bool shadow=true);
-        ManagedLabel(std::wstring fontName, int ptSize, int x, int y, int width, int height,
+        ManagedLabel(const std::wstring& fontName, int ptSize, int x, int y,
+                int r, int g, int b, const std::wstring& text, bool shadow=true);
+        ManagedLabel(const std::wstring& fontName, int ptSize, int x, int y, int width, int height,
                 HorAlign hAlign, VerAlign vAlign, int r, int g, int b, const std::wstring &text);
         ~ManagedLabel();
 };
@@ -399,7 +399,7 @@ class CycleButton: public TextHighlightWidget
         std::vector<std::wstring> options;
         
     public:
-        CycleButton(int x, int y, int width, int height, Font *font, int &value, std::vector<std::wstring> options);
+        CycleButton(int x, int y, int width, int height, Font *font, int &value, const std::vector<std::wstring>& options);
     
     protected:
         virtual std::wstring getText();
