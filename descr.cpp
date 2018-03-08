@@ -54,7 +54,7 @@ class TextPage
 
     public:
         Widget* getWidget(int no) { return widgets[no]; };
-        int getWidgetsCount() const { return widgets.size(); };
+        size_t getWidgetsCount() const { return widgets.size(); };
         void add(Widget *widget) { widgets.push_back(widget); };
         bool isEmpty() const { return ! widgets.size(); };
 };
@@ -81,7 +81,7 @@ class TextParser
 
     public:
         TextPage* getPage(unsigned int no);
-        int getPageCount();
+        size_t getPageCount();
 
     private:
         void addLine(TextPage *page, std::wstring &line, int &curPosY, 
@@ -107,7 +107,7 @@ class Description: public Area
         Button *btnNext;
         
         //std::vector<RulesPage *> pages;	// Spisok stranits teksta
-        unsigned int currentPage;	// Tekuschaja stranitsa dlja prosmotra
+        size_t currentPage;	// Tekuschaja stranitsa dlja prosmotra
 
         Font *titleFont;		// Shrift dlja risovanija zagolovka okna
         Font *buttonFont;		// Shrift dlja risovanija knopok v okne
@@ -137,10 +137,10 @@ class CursorCommand: public Command
     private:
         int step;			// Cherez skol'ko stranits listat'
         Description &description;	// Ukazatel' na ob"ekt Description
-        unsigned int *value;		// Ukazatel' na tekuschij nomer stranitsy
+        size_t *value;			// Ukazatel' na tekuschij nomer stranitsy
 
     public:
-        CursorCommand(int step, Description &d, unsigned int *v);
+        CursorCommand(int step, Description &d, size_t *v);
         virtual ~CursorCommand() { };
         
     public:
@@ -230,7 +230,7 @@ void Description::printPage()
     }
 }
 
-CursorCommand::CursorCommand(int s, Description &d, unsigned int *v):
+CursorCommand::CursorCommand(int s, Description &d, size_t *v):
                 description(d)
 {
     step = s;
@@ -396,7 +396,7 @@ TextPage* TextParser::getPage(unsigned int no)
         return pages[no];
 }
 
-int TextParser::getPageCount()
+size_t TextParser::getPageCount()
 {
     return pages.size();
 }
