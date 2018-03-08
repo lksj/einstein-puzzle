@@ -100,10 +100,10 @@ void Random::initLong(unsigned long s)
 unsigned long Random::genInt32(void)
 {
     unsigned long y;
-    static unsigned long mag01[2]={0x0UL, MATRIX_A};
-    /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
     if (mti >= RAND_N) { /* generate N words at one time */
+        static unsigned long mag01[2]={0x0UL, MATRIX_A};
+        /* mag01[x] = x * MATRIX_A  for x=0,1 */
         int kk;
 
         if (mti == RAND_N+1)   /* if init_genrand() has not been called, */

@@ -496,9 +496,8 @@ void Area::run()
     screen.showMouse();
     
     bool runTimer = timer ? true : false;
-    bool dispetchEvent;
     while (! terminate) {
-        dispetchEvent = true;
+        bool dispetchEvent = true;
         if (! timer) {
             SDL_WaitEvent(&event);
         } else {

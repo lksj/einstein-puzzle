@@ -217,20 +217,18 @@ void Possibilities::save(std::ostream &stream)
 
 static void shuffle(short arr[PUZZLE_SIZE])
 {
-    int a, b, c;
-    
     for (int i = 0; i < 30; i++) {
-        a = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
+        int a = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
         if ((a < 0) || (a >= PUZZLE_SIZE)) {
             std::cerr << "Index error" << std::endl;
             exit(1);
         }
-        b = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));        
+        int b = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
         if ((b < 0) || (b >= PUZZLE_SIZE)) {
             std::cerr << "Index error" << std::endl;
             exit(1);
         }
-        c = arr[a];
+        int c = arr[a];
         arr[a] = arr[b];
         arr[b] = c;
     }

@@ -312,7 +312,6 @@ g_unichar_to_utf8 (wchar_t c,
 {
   unsigned int len = 0;    
   int first;
-  int i;
 
   if (c < 0x80)
     {
@@ -347,7 +346,7 @@ g_unichar_to_utf8 (wchar_t c,
 
   if (outbuf)
     {
-      for (i = len - 1; i > 0; --i)
+      for (int i = len - 1; i > 0; --i)
 	{
 	  outbuf[i] = (c & 0x3f) | 0x80;
 	  c >>= 6;
