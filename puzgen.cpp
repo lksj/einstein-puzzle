@@ -170,21 +170,6 @@ bool Possibilities::isValid(SolvedPuzzle &puzzle)
     return true;
 }
 
-
-int Possibilities::getPosition(int row, int element)
-{
-    int cnt = 0;
-    int lastPos = -1;
-    
-    for (int i = 0; i < PUZZLE_SIZE; i++)
-        if (pos[i][row][element - 1] == element) {
-            cnt++;
-            lastPos = i;
-        }
-
-    return cnt == 1 ? lastPos : -1;
-}
-
 void Possibilities::print()
 {
     for (int row = 0; row < PUZZLE_SIZE; row++) {
@@ -199,11 +184,6 @@ void Possibilities::print()
         }
         std::cout << std::endl;
     }
-}
-
-void Possibilities::makePossible(int col, int row, int element)
-{
-    pos[col][row][element-1] = element;
 }
 
 void Possibilities::save(std::ostream &stream)

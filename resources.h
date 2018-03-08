@@ -50,10 +50,6 @@ class ResourceStream
         /// Get size of resource
         virtual size_t getSize() = 0;
 
-        /// Seek into resource.
-        /// \param offset offset from resource start
-        virtual void seek(long offset) = 0;
-
         /// Read data from resource into buffer.
         /// \param buffer buffer of size bytes.
         /// \param size number of bytes to read.
@@ -194,10 +190,6 @@ class ResVariant
         /// Is data managed by this object
         /// \param data pointer to dataa
         bool isDataOwned(void *data) const { return refCnt && data == this->data; };
-
-        /// return data.
-        /// destroy it after use with free()
-        void* getDynData();
 
         /// returns size of data
         long getSize() const { return unpackedSize; };
@@ -353,12 +345,6 @@ class ResourcesCollection
         /// Delete stream after use.
         /// \param name name of resource.
         ResourceStream* createStream(const std::wstring &name);
-
-        /// Load data into buffer.
-        /// Usually you don't need this, use getRef instead.
-        /// \param name name of resource.
-        /// \param buffer buffer for data.
-        void loadData(const std::wstring &name, Buffer &buffer);
 
     private:
         /// Open resource files.

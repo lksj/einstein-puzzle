@@ -397,12 +397,6 @@ int Table::getInt(const std::wstring &key, int dflt) const
     return (i != fields.end()) ? ((*i).second ? (*i).second->asInt() : dflt) : dflt;
 }
 
-double Table::getDouble(const std::wstring &key, double dflt) const
-{
-    ValuesMap::const_iterator i = fields.find(key);
-    return (i != fields.end()) ? (*i).second->asDouble() : dflt;
-}
-
 Table* Table::getTable(const std::wstring &key, Table *dflt) const
 {
     ValuesMap::const_iterator i = fields.find(key);
@@ -426,17 +420,6 @@ void Table::setInt(const std::wstring &key, int value)
 {
     setValue(key, new IntValue(value));
 }
-
-void Table::setDouble(const std::wstring &key, double value)
-{
-    setValue(key, new DoubleValue(value));
-}
-
-void Table::setTable(const std::wstring &key, Table *value)
-{
-    setValue(key, new TableValue(value));
-}
-
 
 void Table::save(const std::wstring &fileName) const
 {

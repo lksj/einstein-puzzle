@@ -126,12 +126,6 @@ bool Puzzle::onMouseButtonDown(int button, int x, int y)
         return false;
     
     if (! possib->isDefined(col, row)) {
-        /*if (button == 3) {
-            for (int i = 1; i <= PUZZLE_SIZE; i++)
-                possib->makePossible(col, row, i);
-            drawCell(col, row);
-        }
-    } else {*/
         if (element == -1)
             return false;
         if (button == 1) {

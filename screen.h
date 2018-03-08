@@ -77,12 +77,9 @@ class Screen
         ~Screen();
 
     public:
-        const VideoMode getVideoMode() const;
         int getWidth() const;
         int getHeight() const;
         void setMode(bool fullScreen);
-        std::vector<VideoMode> getFullScreenModes() const;
-        void centerMouse();
         void setMouseImage(SDL_Surface *image);
         void hideMouse();
         void showMouse();

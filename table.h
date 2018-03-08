@@ -83,12 +83,9 @@ class Table
         Value::Type getType(const std::wstring &key) const;
         std::wstring getString(const std::wstring &key, const std::wstring &dflt = L"") const;
         int getInt(const std::wstring &key, int dflt=0) const;
-        double getDouble(const std::wstring &key, double dflt=0) const;
         Table* getTable(const std::wstring &key, Table *dflt=NULL) const;
         void setString(const std::wstring &key, const std::wstring &value);
         void setInt(const std::wstring &key, int value);
-        void setDouble(const std::wstring &key, double value);
-        void setTable(const std::wstring &key, Table *value);
         
     private:
         void parse(Lexal &lexal, bool needBracket, int startLine, int startPos);

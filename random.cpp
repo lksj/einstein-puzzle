@@ -134,38 +134,11 @@ unsigned long Random::genInt32(void)
     return y;
 }
 
-/* generates a random number on [0,0x7fffffff]-interval */
-long Random::genInt31()
-{
-    return (long)(genInt32()>>1);
-}
-
-/* generates a random number on [0,1]-real-interval */
-double Random::genReal1(void)
-{
-    return genInt32()*(1.0/4294967295.0); 
-    /* divided by 2^32-1 */ 
-}
-
 /* generates a random number on [0,1)-real-interval */
 double Random::genReal2()
 {
     return genInt32()*(1.0/4294967296.0);
     /* divided by 2^32 */
-}
-
-/* generates a random number on (0,1)-real-interval */
-double Random::genReal3(void)
-{
-    return (((double)genInt32()) + 0.5)*(1.0/4294967296.0); 
-    /* divided by 2^32 */
-}
-
-/* generates a random number on [0,1) with 53-bit resolution*/
-double Random::genReal53(void)
-{
-    unsigned long a=genInt32()>>5, b=genInt32()>>6; 
-    return(a*67108864.0+b)*(1.0/9007199254740992.0); 
 }
 
 /* generate integer random number on [0, range) int interval */

@@ -67,12 +67,6 @@ std::vector<std::wstring> Screen::getModeList()
 }
 
 
-const VideoMode Screen::getVideoMode() const
-{
-    return VideoMode(screen->w, screen->h, screen->format->BitsPerPixel, fullScreen);
-}
-
-
 void Screen::setMode(bool isFullScreen)
 {
     if (!screen || fullScreen != isFullScreen)
@@ -114,13 +108,6 @@ void Screen::applyMode()
 }
 
 
-std::vector<VideoMode> Screen::getFullScreenModes() const
-{
-    std::vector<VideoMode> modes;
-    return modes;
-}
-
-        
 int Screen::getWidth() const
 {
     if (screen) 
@@ -134,14 +121,6 @@ int Screen::getHeight() const
 {
     if (screen) 
         return UNSCALED_HEIGHT;
-    else 
-        throw Exception(L"No video mode selected");
-}
-
-void Screen::centerMouse()
-{
-    if (screen) 
-        SDL_WarpMouse(screen->w / 2, screen->h / 2);
     else 
         throw Exception(L"No video mode selected");
 }

@@ -38,16 +38,8 @@ class Random
     public:
         /* generates a random number on [0,0xffffffff]-interval */
         unsigned long int genInt32();
-        /* generates a random number on [0,0x7fffffff]-interval */
-        long int genInt31();
         /* generates a random number on [0,1]-real-interval */
-        double genReal1(); 
-        /* generates a random number on [0,1)-real-interval */
         double genReal2(); 
-        /* generates a random number on (0,1)-real-interval */
-        double genReal3(); 
-        /* generates a random number on [0,1) with 53-bit resolution*/
-        double genReal53(); 
         /* generate integer random number on [0, range) int interval */
         int genInt(int range);
 

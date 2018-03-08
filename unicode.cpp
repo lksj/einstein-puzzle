@@ -520,21 +520,6 @@ std::string toOem(const std::wstring &str)
     return buf;
 }
 
-std::wstring fromOem(const std::string &str)
-{
-    if (! str.length())
-        return L"";
-    
-    int len = str.length();
-    wchar_t buf[len + 1];
-
-    int res = MultiByteToWideChar(CP_OEMCP, 0, str.c_str(), len + 1, 
-            buf, len + 1);
-    if (! res)
-        throw Exception(L"Error converting OEM to UCS-2");
-    return buf;
-}
-
 #endif
 
 

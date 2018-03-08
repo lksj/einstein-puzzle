@@ -56,7 +56,6 @@ class UnpackedResourceStream: public ResourceStream
 
     public:
         virtual size_t getSize() { return size; };
-        virtual void seek(long offset);
         virtual void read(char *buffer, size_t size);
         virtual long getPos() { return pos; };
 };
@@ -67,13 +66,6 @@ UnpackedResourceStream::UnpackedResourceStream(std::ifstream &s,
     offset = off;
     size = sz;
     pos = 0;
-}
-
-void UnpackedResourceStream::seek(long off)
-{
-    if ((off < 0) || ((size_t)off > size))
-        throw Exception(L"Invalid seek in ResourceStream");
-    pos = off;
 }
 
 void UnpackedResourceStream::read(char *buffer, size_t sz)
@@ -109,7 +101,6 @@ class MemoryResourceStream: public ResourceStream
 
     public:
         virtual size_t getSize() { return size; };
-        virtual void seek(long offset);
         virtual void read(char *buffer, size_t size);
         virtual long getPos() { return pos; };
 };
@@ -124,13 +115,6 @@ MemoryResourceStream::MemoryResourceStream(ResVariant *res)
 MemoryResourceStream::~MemoryResourceStream()
 {
     resource->delRef(data);
-}
-
-void MemoryResourceStream::seek(long off)
-{
-    if ((off < 0) || ((size_t)off > size))
-        throw Exception(L"Invalid seek in ResourceStream");
-    pos = off;
 }
 
 void MemoryResourceStream::read(char *buffer, size_t sz)
@@ -348,20 +332,6 @@ void ResVariant::delRef(void *dta)
     if (! refCnt) {
         free((char*)data - sizeof(ResVariant*));
         data = NULL;
-    }
-}
-
-void* ResVariant::getDynData()
-{
-    if (! refCnt)
-        return file->load(offset, packedSize, unpackedSize, level);
-    else {
-        char* d = (char*)malloc(unpackedSize);
-        if (! d)
-            throw Exception(L"ResVariant::getDynData memory allocation error");
-        memcpy(d, data, unpackedSize);
-        free(d);
-        return data;
     }
 }
 
@@ -612,12 +582,6 @@ void ResourcesCollection::forEachInGroup(const std::wstring &name,
             visitor.onVisit(r);
         }
     }
-}
-
-void ResourcesCollection::loadData(const std::wstring &name, Buffer &buffer)
-{
-    Resource *r = getResource(name);
-    r->getData(buffer);
 }
 
 

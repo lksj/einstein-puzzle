@@ -48,11 +48,9 @@ class Possibilities
         bool isPossible(int col, int row, int element);
         bool isDefined(int col, int row);
         int getDefined(int col, int row);
-        int getPosition(int row, int element);
         bool isSolved();
         void print();
         bool isValid(SolvedPuzzle &puzzle);
-        void makePossible(int col, int row, int element);
         void save(std::ostream &stream);
         void reset();
         void checkSingles(int row);

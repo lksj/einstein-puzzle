@@ -58,14 +58,6 @@ int BoundedWidget::getHeight()
     return height;
 };
 
-void BoundedWidget::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = getLeft();
-    t = getTop();
-    w = getWidth();
-    h = getHeight();
-}
-
 
 //////////////////////////////////////////////////////////////////
 //
@@ -862,11 +854,6 @@ bool InputField::onKeyDown(SDLKey key, unsigned char translatedChar)
     return false;
 }
 
-bool InputField::onKeyUp(SDLKey key)
-{
-    return false;
-}
-
 void InputField::onCharTyped(unsigned char ch)
 {
     if ((int)text.length() < maxLength) {
@@ -938,12 +925,6 @@ Picture::Picture(int x, int y, SDL_Surface *img):
     TileWidget(x, y, img->w, img->h)
 {
     image = SDL_DisplayFormat(img);
-}
-
-
-void Picture::moveX(const int newX) 
-{ 
-    left = newX; 
 }
 
 

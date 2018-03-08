@@ -71,7 +71,6 @@ class BoundedWidget: public Widget
         int getTop();
         int getWidth();
         int getHeight();
-        void getBounds(int &l, int &t, int &w, int &h);
 };
 
 
@@ -311,7 +310,6 @@ class InputField: public Window, public TimerHandler
         Font *font;
         Uint32 lastCursor;
         bool cursorVisible;
-        Uint32 lastKeyUpdate;
     
     public:
         InputField(int x, int y, int w, int h, const std::wstring &background, 
@@ -323,7 +321,6 @@ class InputField: public Window, public TimerHandler
         virtual void setParent(Area *a);
         virtual void onTimer();
         virtual bool onKeyDown(SDLKey key, unsigned char ch);
-        virtual bool onKeyUp(SDLKey key);
         virtual void onCharTyped(unsigned char ch);
 
     private:
@@ -354,9 +351,6 @@ class Picture: public TileWidget
     public:
         Picture(int x, int y, const std::wstring &name, bool transparent=true);
         Picture(int x, int y, SDL_Surface *image);
-
-    public:
-        void moveX(const int newX);
 };
 
 
