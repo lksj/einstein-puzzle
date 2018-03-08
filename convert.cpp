@@ -59,7 +59,7 @@ std::wstring numToStr(unsigned int num)
 #ifdef WIN32
     swprintf(buf, L"%u", num);
 #else
-    swprintf(buf, 29, L"%i", num);
+    swprintf(buf, 29, L"%u", num);
 #endif
     buf[29] = 0;
     return std::wstring(buf);
