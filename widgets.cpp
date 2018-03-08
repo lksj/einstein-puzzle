@@ -1100,12 +1100,10 @@ bool Slider::onMouseMove(int x, int y)
 //////////////////////////////////////////////////////////////////
 
 CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v,
-        std::vector<std::wstring> o):
-    TextHighlightWidget(x, y, w, h, f, 255, 255, 0),
-    value(v)
+        std::vector<std::wstring> o)
+    : TextHighlightWidget(x, y, w, h, f, 255, 255, 0),
+        value(v), options(o)
 {
-    options = o;
-    
     image = makeBox(width, height, L"blue.bmp");
     highlighted = adjustBrightness(image, 1.5, false);
 }

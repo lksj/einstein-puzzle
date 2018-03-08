@@ -24,11 +24,8 @@
 
         
 Lexeme::Lexeme(Type t, const std::wstring &cont, int line, int pos)
+    :  type(t), content(cont), line(line), pos(pos)
 {
-    type = t;
-    content = cont;
-    this->line = line;
-    this->pos = pos;
 }
 
 std::wstring Lexeme::getPosStr() const
