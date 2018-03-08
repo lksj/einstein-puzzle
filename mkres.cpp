@@ -111,7 +111,7 @@ static void parseFile(const std::string &fileName)
                 throw Exception(L"Invalid resource entry");
             Table *t = value->asTable();
             const std::wstring &name = t->getString(L"name");
-            if (0 >= name.length())
+            if (0 == name.length())
                 throw Exception(L"Unnamed resource entry");
             const std::wstring &format = t->getString(L"format");
             Formatter *formatter = formatRegistry.get(format);
