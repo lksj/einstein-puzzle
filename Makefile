@@ -52,27 +52,19 @@ TARGET=einstein
 SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 	widgets.cpp iconset.cpp puzzle.cpp rules.cpp \
 	verthints.cpp random.cpp horhints.cpp menu.cpp font.cpp \
-	conf.cpp storage.cpp tablestorage.cpp regstorage.cpp \
+	storage.cpp tablestorage.cpp regstorage.cpp \
 	topscores.cpp opensave.cpp descr.cpp options.cpp messages.cpp \
 	formatter.cpp i18n.cpp tokenizer.cpp sound.cpp
-OBJECTS=puzgen.o main.o screen.o resources.o utils.o game.o \
-	widgets.o iconset.o puzzle.o rules.o verthints.o random.o \
-	horhints.o menu.o font.o storage.o options.o \
-	tablestorage.o regstorage.o topscores.o opensave.o descr.o \
-	messages.o formatter.o i18n.o tokenizer.o sound.o
-HEADERS=screen.h main.h resources.h utils.h \
-	widgets.h iconset.h puzzle.h verthints.h random.h horhints.h \
-	font.h storage.h tablestorage.h regstorage.h \
-	topscores.h opensave.h game.h descr.h options.h messages.h \
-	formatter.h visitor.h i18n.h tokenizer.h sound.h
+HEADERS=$(SOURCES:.cpp=.h)
+OBJECTS=$(SOURCES:.cpp=.o)
 
 SHARE_SOURCES = unicode.cpp streams.cpp table.cpp buffer.cpp convert.cpp lexal.cpp
-SHARE_HEADERS = unicode.h exceptions.h streams.h table.h buffer.h convert.h lexal.h
-SHARE_OBJECTS = unicode.o streams.o table.o buffer.o convert.o lexal.o
+SHARE_HEADERS=$(SHARE_SOURCES:.cpp=.h)
+SHARE_OBJECTS=$(SHARE_SOURCES:.cpp=.o)
 
 RES_SOURCES=mkres.cpp compressor.cpp format.cpp msgwriter.cpp msgformatter.cpp
-RES_HEADERS=compressor.h format.h msgwriter.h msgformatter.h
-RES_OBJECTS=mkres.o compressor.o format.o msgwriter.o msgformatter.o
+RES_HEADERS=$(RES_SOURCES:.cpp=.h)
+RES_OBJECTS=$(RES_SOURCES:.cpp=.o)
 
 ALL_SOURCES=$(RES_SOURCES) $(SHARE_SOURCES) $(SOURCES)
 ALL_HEADERS=$(RES_HEADERS) $(SHARE_HEADERS) $(HEADERS)
