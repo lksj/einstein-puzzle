@@ -95,7 +95,7 @@ void ResourceCompressor::openStream(const std::string &outputFile)
         s->open(outputFile.c_str(), std::ios::out | std::ios::binary);
         if (stream->fail()) {
             delete stream;
-            throw std::string("Can't open output file");
+            throw std::runtime_error("Can't open output file");
         }
     } else {
         dontDeleteStream = true;
@@ -182,11 +182,11 @@ static int pack(char *in, int inSize, char *out, int maxOutSize, int level)
         zs.avail_out = maxOutSize;
 
         if (deflateInit(&zs, level) != Z_OK)
-            throw std::string("Can't init compressor");
+            throw std::runtime_error("Can't init compressor");
         if (deflate(&zs, Z_FINISH) != Z_STREAM_END)
-            throw std::string("Error compressing data");
+            throw std::runtime_error("Error compressing data");
         if (deflateEnd(&zs) != Z_OK)
-            throw std::string("Error finishing compressor");
+            throw std::runtime_error("Error finishing compressor");
 
         return zs.total_out;
     }
