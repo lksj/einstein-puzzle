@@ -487,7 +487,7 @@ void Area::run()
     draw();
     screen.showMouse();
     
-    bool runTimer = timer ? true : false;
+    bool runTimer = timer;
     while (! terminate) {
         bool dispetchEvent = true;
         if (! timer) {
