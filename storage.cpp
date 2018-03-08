@@ -56,8 +56,7 @@ StorageHolder::StorageHolder()
 
 StorageHolder::~StorageHolder() 
 { 
-    if (storage) 
-        delete storage; 
+    delete storage; 
 }
 
 

@@ -89,10 +89,8 @@ Formatter::~Formatter()
     for (int i = 0; i < commandsCnt; i++)
         if (TEXT_COMMAND == commands[i].type)
             delete (std::wstring*)(commands[i].data);
-    if (commands)
-        delete[] commands;
-    if (args)
-        delete[] args;
+    delete[] commands;
+    delete[] args;
 }
 
 std::wstring Formatter::getMessage() const
