@@ -24,8 +24,8 @@
 #include <string.h>
 
 ResourceCompressor::ResourceCompressor() 
-{ 
-    priority = 1000;
+    : priority(1000), stream(nullptr), dontDeleteStream(true)
+{
 }
 
 ResourceCompressor::~ResourceCompressor()

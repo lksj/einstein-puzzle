@@ -24,9 +24,8 @@
 
 
 Buffer::Buffer(int sz, int alloc)
+    : size(sz), allocated(alloc), data(nullptr), currentPos(0)
 {
-    allocated = alloc;
-    size = sz;
     if (size > allocated)
         allocated = size;
     if (allocated < 1024)

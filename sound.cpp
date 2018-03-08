@@ -28,6 +28,7 @@ Sound *sound;
 
 
 Sound::Sound()
+    : enableFx(false), volume(0)
 {
     int audio_rate = 22050;
     Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */

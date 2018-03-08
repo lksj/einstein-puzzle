@@ -33,11 +33,10 @@
 #define FIELD_TILE_HEIGHT 48
 
 
-Puzzle::Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p):
-                        iconSet(is), solved(s)
+Puzzle::Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p)
+    : possib(p), iconSet(is), valid(true), win(false), solved(s),
+        hCol(-1), hRow(-1), subHNo(-1), winCommand(nullptr), failCommand(nullptr)
 {
-    possib = p;
- 
     reset();
 }
 

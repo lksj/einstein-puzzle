@@ -39,7 +39,7 @@ class Puzzle: public Widget
         Command *winCommand, *failCommand;
         
     public:
-        Puzzle(IconSet &is, SolvedPuzzle &solved, Possibilities *possib);
+        Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p);
         virtual ~Puzzle();
 
     public:

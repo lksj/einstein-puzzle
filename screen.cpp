@@ -36,14 +36,11 @@ int DESKTOP_WIDTH = 0;
 int DESKTOP_HEIGHT = 0;
 
 Screen::Screen()
+    : screen(nullptr), scale(1.0), fullScreen(false), screenSize(0),
+        mouseImage(nullptr), mouseSave(nullptr), mouseVisible(false),
+        regionsList(nullptr), maxRegionsList(0), saveX(0), saveY(0),
+        niceCursor(false), cursor(nullptr), emptyCursor(nullptr)
 {
-    screen = NULL;
-    mouseImage = NULL;
-    mouseSave = NULL;
-    mouseVisible = false;
-    regionsList = NULL;
-    maxRegionsList = 0;
-    scale = 1;
 }
 
 Screen::~Screen()
