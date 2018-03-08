@@ -507,7 +507,7 @@ void Game::genPuzzle()
     
     int horRules, verRules;
     do {
-        if (rules.size() > 0)
+        if (!rules.empty())
             deleteRules();
         ::genPuzzle(solvedPuzzle, rules);
         getHintsQty(rules, verRules, horRules);

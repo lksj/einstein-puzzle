@@ -50,7 +50,7 @@ TopScores::~TopScores()
 
 int TopScores::add(const std::wstring &name, int score)
 {
-    if (score >= getMaxScore() || (scores.size() < 1)) {
+    if (score >= getMaxScore() || (scores.empty())) {
         if (! isFull()) {
             Entry e = { name, score };
             scores.push_back(e);
@@ -106,7 +106,7 @@ TopScores::ScoresList& TopScores::getScores()
 
 int TopScores::getMaxScore()
 {
-    if (scores.size() < 1)
+    if (scores.empty())
         return -1;
     ScoresList::iterator i = scores.end();
     --i;

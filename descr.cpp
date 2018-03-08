@@ -56,7 +56,7 @@ class TextPage
         Widget* getWidget(int no) { return widgets[no]; };
         size_t getWidgetsCount() const { return widgets.size(); };
         void add(Widget *widget) { widgets.push_back(widget); };
-        bool isEmpty() const { return ! widgets.size(); };
+        bool isEmpty() const { return widgets.empty(); };
 };
 
 
@@ -369,7 +369,7 @@ void TextParser::parseNextPage()
                     }
                 } else {
                     lineWidth += width;
-                    if (line.size()) {
+                    if (!line.empty()) {
                         line += L' ';
                         lineWidth += spaceWidth;
                     }

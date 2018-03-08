@@ -59,7 +59,7 @@ bool Tokenizer::skipSpaces(bool notSearch)
 
 Token Tokenizer::getNextToken()
 {
-    if (0 < stack.size()) {
+    if (!stack.empty()) {
         Token t(*stack.begin());
         stack.pop_front();
         return t;
@@ -84,7 +84,7 @@ void Tokenizer::unget(const Token &token)
 
 bool Tokenizer::isFinished()
 {
-    if (0 < stack.size())
+    if (!stack.empty())
         return false;
     return currentPos >= (int)text.length();
 }

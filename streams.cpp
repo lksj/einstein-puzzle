@@ -36,7 +36,7 @@ wchar_t UtfStreamReader::getNextChar()
 {
     unsigned char buf[10];
 
-    if (0 < backBuf.size()) {
+    if (!backBuf.empty()) {
         wchar_t wc = backBuf.front();
         backBuf.pop_front();
         return wc;

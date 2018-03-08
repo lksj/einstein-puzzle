@@ -398,7 +398,7 @@ class ResVariantMoreThen
 void Resource::addVariant(ResourceFile *file, int i18nScore,
         const ResourceFile::DirectoryEntry &entry)
 {
-    if (! variants.size()) {
+    if (variants.empty()) {
         variants.push_back(new ResVariant(file, i18nScore, entry));
         return;
     }

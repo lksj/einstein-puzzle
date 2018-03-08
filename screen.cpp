@@ -210,7 +210,7 @@ void Screen::updateMouse()
 
 void Screen::flush()
 {
-    if (! regions.size()) return;
+    if (regions.empty()) return;
     
     if (! regionsList) {
         regionsList = (SDL_Rect*)malloc(sizeof(SDL_Rect) * regions.size());
