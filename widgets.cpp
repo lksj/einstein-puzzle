@@ -616,7 +616,7 @@ bool AnyKeyAccel::onMouseButtonDown(int button, int x, int y)
 
 
 Window::Window(int x, int y, int w, int h, const std::wstring &bg, 
-                bool frameWidth, bool raised):
+                int frameWidth, bool raised):
     TileWidget(x, y, w, h)
 {
     image = makeSWSurface(width, height);

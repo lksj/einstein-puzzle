@@ -251,7 +251,7 @@ class Window: public TileWidget
 {
     public:
         Window(int x, int y, int w, int h, const std::wstring &background, 
-                bool frameWidth=4, bool raised=true);
+                int frameWidth=4, bool raised=true);
 };
 
 
