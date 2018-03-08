@@ -143,6 +143,8 @@ class ResourceFile
         /// be placed
         /// \param outSize size of unpacked data
         void unpack(char *in, int inSize, char *out, int outSize);
+        // prevent generation by compiler
+        ResourceFile(const ResourceFile&);
 };
 
 

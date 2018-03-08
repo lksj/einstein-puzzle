@@ -73,6 +73,8 @@ class Formatter
 
     private:
         std::wstring format(std::vector<ArgValue*> &argValues) const;
+       // prevent generation by compiler
+        Formatter(const Formatter&);
 };
 
 

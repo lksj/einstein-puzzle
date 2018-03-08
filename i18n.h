@@ -35,6 +35,8 @@ class Locale
         std::wstring language;
         std::wstring country;
         std::wstring encoding;
+        // prevent generation by compiler
+        Locale& operator=(const Locale&);
     
     public:
         /// Load locale

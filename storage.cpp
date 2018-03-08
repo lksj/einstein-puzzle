@@ -37,6 +37,10 @@ class StorageHolder
 
     public:
         Storage* getStorage() { return storage; };
+
+    private:
+        // prevent generation by compiler
+        StorageHolder(const StorageHolder&);
 };
 
 

@@ -71,6 +71,8 @@ class Game
         void pleaseWait();
         void genPuzzle();
         void resetVisuals();
+        // prevent generation by compiler
+        Game(const Game&);
 };
 
 #endif

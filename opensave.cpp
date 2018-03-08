@@ -43,6 +43,8 @@ class SavedGame
         std::wstring fileName;
         bool exists;
         std::wstring name;
+        // prevent generation by compiler
+        SavedGame& operator=(const SavedGame&);
 
     public:
         explicit SavedGame(const std::wstring &fileName);

@@ -91,6 +91,10 @@ class Buffer
         /// Grow buffer if needed.
         /// \param value value to add.
         size_t putByte(unsigned char value);
+
+    private:
+        // prevent generation by compiler
+        Buffer(const Buffer&);
 };
 
 
