@@ -49,6 +49,8 @@ POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 TARGET=einstein
 
+BUILD_DIR=./build/
+
 SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 	widgets.cpp iconset.cpp puzzle.cpp rules.cpp \
 	verthints.cpp random.cpp horhints.cpp menu.cpp font.cpp \
@@ -56,37 +58,40 @@ SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 	topscores.cpp opensave.cpp descr.cpp options.cpp messages.cpp \
 	formatter.cpp i18n.cpp tokenizer.cpp sound.cpp
 HEADERS=$(SOURCES:.cpp=.h)
-OBJECTS=$(SOURCES:.cpp=.o)
+OBJECTS=$(SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
 SHARE_SOURCES = unicode.cpp streams.cpp table.cpp buffer.cpp convert.cpp lexal.cpp
 SHARE_HEADERS=$(SHARE_SOURCES:.cpp=.h)
-SHARE_OBJECTS=$(SHARE_SOURCES:.cpp=.o)
+SHARE_OBJECTS=$(SHARE_SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
 RES_SOURCES=mkres.cpp compressor.cpp format.cpp msgwriter.cpp msgformatter.cpp
 RES_HEADERS=$(RES_SOURCES:.cpp=.h)
-RES_OBJECTS=$(RES_SOURCES:.cpp=.o)
+RES_OBJECTS=$(RES_SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
 ALL_SOURCES=$(RES_SOURCES) $(SHARE_SOURCES) $(SOURCES)
 ALL_HEADERS=$(RES_HEADERS) $(SHARE_HEADERS) $(HEADERS)
 ALL_OBJECTS=$(RES_OBJECTS) $(SHARE_OBJECTS) $(OBJECTS)
 ALL_FILES=$(ALL_SOURCES) $(ALL_HEADERS)
 
-%.o : %.cpp
-%.o: %.cpp $(DEPDIR)/%.d
-	$(COMPILE) $<
-	$(POSTCOMPILE)
-
 all: $(TARGET)
 
-mkres: $(RES_OBJECTS) $(SHARE_OBJECTS)
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+%.o : %.cpp
+$(BUILD_DIR)%.o: %.cpp $(DEPDIR)/%.d
+	$(COMPILE) $< -o $@
+	$(POSTCOMPILE)
+
+mkres: $(BUILD_DIR) $(RES_OBJECTS) $(SHARE_OBJECTS)
 	$(CXX) -lz $(RES_OBJECTS) $(SHARE_OBJECTS) -lz -o mkres
 
-einstein: $(OBJECTS) $(SHARE_OBJECTS) einstein.res
+einstein: $(BUILD_DIR) $(OBJECTS) $(SHARE_OBJECTS) einstein.res
 	$(CXX) $(OBJECTS) $(SHARE_OBJECTS) $(LIBS) -o einstein $(LNFLAGS)
 
 # shouldn't hurt to delete .exe even when it's not windows
 clean:
-	$(RM) $(ALL_OBJECTS) *.exe *.res core* *core $(TARGET) *~
+	$(RM) -rf $(BUILD_DIR) *.exe *.res core* *core $(TARGET) *~
 
 einstein.res: mkres
 	cd res  && ../mkres --source resources.descr --output ../einstein.res && cd ..
