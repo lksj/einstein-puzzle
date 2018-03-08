@@ -186,8 +186,8 @@ Description::~Description()
 
 void Description::deleteWidgets()
 {
-    for (WidgetsList::iterator i = widgets.begin();  i != widgets.end(); ++i)
-        remove(*i);
+    for (auto& widget : widgets)
+        remove(widget);
     widgets.clear();
 }
 
@@ -252,9 +252,8 @@ void CursorCommand::doAction()
 
 TextPage::~TextPage()
 {
-    for (std::vector<Widget*>::iterator i = widgets.begin();
-            i != widgets.end(); ++i)
-        delete *i;
+    for (auto& widget : widgets)
+        delete widget;
 }
 
 
@@ -275,12 +274,10 @@ TextParser::TextParser(const std::wstring &text, Font &font,
 
 TextParser::~TextParser()
 {
-    for (std::vector<TextPage*>::iterator i = pages.begin();
-            i != pages.end(); ++i)
-        delete *i;
-    for (std::map<std::wstring, SDL_Surface*>::iterator i = images.begin();
-            i != images.end(); ++i)
-        delete (*i).second;
+    for (auto& page : pages)
+        delete page;
+    for (auto& image : images)
+        delete image.second;
 }
 
 

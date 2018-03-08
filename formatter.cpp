@@ -197,9 +197,8 @@ std::wstring Formatter::format(va_list ap) const
  
     std::wstring s = format(argValues);
 
-    for (std::vector<ArgValue*>::iterator i = argValues.begin();
-            i != argValues.end(); i++)
-        delete *i;
+    for (auto& argValue : argValues)
+        delete argValue;
     
     return s;
 }

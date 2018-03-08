@@ -105,8 +105,9 @@ static void parseFile(const std::string &fileName)
 
     Table *res = table.getTable(L"resources");
     if (res) {
-        for (Table::Iterator i = res->begin(); i != res->end(); ++i) {
-            Value *value = (*i).second;
+        for (const auto& re : *res)
+        {
+            Value *value = re.second;
             if ((! value) || (! (Value::Table == value->getType())))
                 throw Exception(L"Invalid resource entry");
             Table *t = value->asTable();

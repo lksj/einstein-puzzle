@@ -148,8 +148,8 @@ Table::Table()
 
 Table::~Table()
 {
-    for (ValuesMap::iterator i = fields.begin(); i != fields.end(); ++i)
-        delete (*i).second;
+    for (auto& field : fields)
+        delete field.second;
 }
 
 
@@ -160,9 +160,8 @@ Table& Table::operator = (const Table &table)
 
     fields.clear();
     lastArrayIndex = table.lastArrayIndex;
-    for (ValuesMap::const_iterator i = table.fields.begin(); 
-            i != table.fields.end(); ++i)
-        fields[(*i).first] = (*i).second->clone();
+    for (const auto& field : table.fields)
+        fields[field.first] = field.second->clone();
     
     return *this;
 }
@@ -341,11 +340,10 @@ std::wstring Table::toString(bool printBraces, bool butify, int spaces) const
         res += butify ? L"{\n" : L"{";
     bool printNames = ! isArray();
 
-    for (ValuesMap::const_iterator i = fields.begin(); i != fields.end(); 
-            ++i) 
+    for (const auto& field : fields)
     {
-        const std::wstring &name = (*i).first;
-        Value *value = (*i).second;
+        const std::wstring &name = field.first;
+        Value *value = field.second;
         if (butify)
             for (int j = 0; j < spaces; j++) 
                 res += L" ";

@@ -47,10 +47,11 @@ static int writeInt(std::ostream *stream, int v)
 {
     unsigned char b[4];
 
-    for (int i = 0; i < 4; i++) {
+    for (unsigned char& i : b)
+    {
         int ib = v & 0xFF;
         v = v >> 8;
-        b[i] = ib;
+        i = ib;
     }
     
     stream->write((char*)&b, 4);
@@ -113,8 +114,8 @@ void ResourceCompressor::compress(const std::string &outputFile, bool verbose)
     openStream(outputFile);
     
     int offset = writeHeader();
-    for (Entries::iterator i = entries.begin(); i != entries.end(); ++i) {
-        Entry &e = *i;
+    for (auto& e : entries)
+    {
         compressEntry(e, offset);
         if (verbose)
             showEntryStat(e);
@@ -131,8 +132,8 @@ void ResourceCompressor::printDeps(const std::string &outputFile,
     
     int width = outputFile.length() + sourceFile.length() + 3;
     
-    for (Entries::iterator i = entries.begin(); i != entries.end(); ++i) {
-        Entry &e = *i;
+    for (auto& e : entries)
+    {
         std::cout << " ";
         int len = e.fileName.length() + 1;
         if (len + width > 77) {
@@ -151,8 +152,8 @@ void ResourceCompressor::writeFooter(int &offset)
 {
     int start = offset;
     
-    for (Entries::iterator i = entries.begin(); i != entries.end(); ++i) {
-        Entry &e = *i;
+    for (auto& e : entries)
+    {
         offset += writeString(stream, e.name);
         offset += writeInt(stream, e.realSize);
         offset += writeInt(stream, e.offset);

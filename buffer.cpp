@@ -90,10 +90,11 @@ size_t Buffer::putInteger(int v)
 {
     unsigned char b[4];
 
-    for (int i = 0; i < 4; i++) {
+    for (unsigned char& i : b)
+    {
         int ib = v & 0xFF;
         v = v >> 8;
-        b[i] = ib;
+        i = ib;
     }
 
     return putData(b, 4);

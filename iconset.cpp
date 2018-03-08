@@ -47,10 +47,11 @@ IconSet::IconSet()
 
 IconSet::~IconSet()
 {
-    for (int i = 0; i < 6; i++)
-        for (int j = 0; j < 6; j++)
-            for (int k = 0; k < 2; k++) {
-                SDL_FreeSurface(largeIcons[i][j][k]);
+    for (auto& largeIcon : largeIcons)
+        for (auto& j : largeIcon)
+            for (auto& k : j)
+            {
+                SDL_FreeSurface(k);
             }
     SDL_FreeSurface(emptyFieldIcon);
     SDL_FreeSurface(emptyHintIcon);
