@@ -936,12 +936,13 @@ Picture::Picture(int x, int y, SDL_Surface *img):
 
 Slider::Slider(int x, int y, int w, int h, float &v):
     BoundedWidget(x, y, w, h),
-    value(v),
-    background(NULL),
+    background(nullptr),
+    slider(nullptr),
+    activeSlider(nullptr),
     highlight(false),
     dragging(false),
-    dragOffsetX(0)
-    
+    dragOffsetX(0),
+    value(v)
 {
     createSlider(height);
 }
