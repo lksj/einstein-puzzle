@@ -35,12 +35,12 @@
 #include "storage.h"
 #include "main.h"
 
-#define WIDTH		600
-#define HEIGHT		500
-#define CLIENT_WIDTH	570
-#define CLIENT_HEIGHT	390
-#define START_X		115
-#define START_Y		100
+#define WIDTH          600
+#define HEIGHT         500
+#define CLIENT_WIDTH   570
+#define CLIENT_HEIGHT  390
+#define START_X        115
+#define START_Y        100
 
 
 class TextPage
@@ -106,14 +106,14 @@ class Description: public Area
         Button *btnPrev;
         Button *btnNext;
         
-        //std::vector<RulesPage *> pages;	// Spisok stranits teksta
-        size_t currentPage;	// Tekuschaja stranitsa dlja prosmotra
+        //std::vector<RulesPage *> pages;   // Spisok stranits teksta
+        size_t currentPage;                 // Tekuschaja stranitsa dlja prosmotra
 
-        Font *titleFont;		// Shrift dlja risovanija zagolovka okna
-        Font *buttonFont;		// Shrift dlja risovanija knopok v okne
-        Font *textFont;			// Shrift dlja risovanija teksta
+        Font *titleFont;                    // Shrift dlja risovanija zagolovka okna
+        Font *buttonFont;                   // Shrift dlja risovanija knopok v okne
+        Font *textFont;                     // Shrift dlja risovanija teksta
 
-        unsigned int textHeight;	// Vysota stroki teksta
+        unsigned int textHeight;            // Vysota stroki teksta
         TextParser *text;
         
     public:
@@ -122,12 +122,12 @@ class Description: public Area
 
     public:
         void run();
-        void updateInfo();	// Vyvodit informatsiju na stranitsu
+        void updateInfo();                  // Vyvodit informatsiju na stranitsu
         TextPage *getPage(unsigned int no) { return text->getPage(no); }
 
     private:
-        void printPage();		// Vyvodit tekuschuju stranitsu pravil
-        void deleteWidgets();		// Udaljaet neispol'zuemye metki i kartinki iz oblasti vyvoda informatsii (Area)
+        void printPage();                   // Vyvodit tekuschuju stranitsu pravil
+        void deleteWidgets();               // Udaljaet neispol'zuemye metki i kartinki iz oblasti vyvoda informatsii (Area)
 };
 
 
@@ -135,16 +135,16 @@ class Description: public Area
 class CursorCommand: public Command
 {
     private:
-        int step;			// Cherez skol'ko stranits listat'
-        Description &description;	// Ukazatel' na ob"ekt Description
-        size_t *value;			// Ukazatel' na tekuschij nomer stranitsy
+        int step;                           // Cherez skol'ko stranits listat'
+        Description &description;           // Ukazatel' na ob"ekt Description
+        size_t *value;                      // Ukazatel' na tekuschij nomer stranitsy
 
     public:
         CursorCommand(int step, Description &d, size_t *v);
         virtual ~CursorCommand() = default;
         
     public:
-        void doAction() override;	// Obrabatyvaet sobytija
+        void doAction() override;           // Obrabatyvaet sobytija
 };
 
 

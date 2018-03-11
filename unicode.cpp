@@ -37,38 +37,38 @@
      ((Char) < 0x200000 ? 4 :          \
       ((Char) < 0x4000000 ? 5 : 6)))))
 
-#define UTF8_COMPUTE(Char, Mask, Len)					      \
-  if (Char < 128)							      \
-    {									      \
-      Len = 1;								      \
-      Mask = 0x7f;							      \
-    }									      \
-  else if ((Char & 0xe0) == 0xc0)					      \
-    {									      \
-      Len = 2;								      \
-      Mask = 0x1f;							      \
-    }									      \
-  else if ((Char & 0xf0) == 0xe0)					      \
-    {									      \
-      Len = 3;								      \
-      Mask = 0x0f;							      \
-    }									      \
-  else if ((Char & 0xf8) == 0xf0)					      \
-    {									      \
-      Len = 4;								      \
-      Mask = 0x07;							      \
-    }									      \
-  else if ((Char & 0xfc) == 0xf8)					      \
-    {									      \
-      Len = 5;								      \
-      Mask = 0x03;							      \
-    }									      \
-  else if ((Char & 0xfe) == 0xfc)					      \
-    {									      \
-      Len = 6;								      \
-      Mask = 0x01;							      \
-    }									      \
-  else									      \
+#define UTF8_COMPUTE(Char, Mask, Len) \
+  if (Char < 128) \
+    { \
+      Len = 1; \
+      Mask = 0x7f; \
+    } \
+  else if ((Char & 0xe0) == 0xc0) \
+    { \
+      Len = 2; \
+      Mask = 0x1f; \
+    } \
+  else if ((Char & 0xf0) == 0xe0) \
+    { \
+      Len = 3; \
+      Mask = 0x0f; \
+    } \
+  else if ((Char & 0xf8) == 0xf0) \
+    { \
+      Len = 4; \
+      Mask = 0x07; \
+    } \
+  else if ((Char & 0xfc) == 0xf8) \
+    { \
+      Len = 5; \
+      Mask = 0x03; \
+    } \
+  else if ((Char & 0xfe) == 0xfc) \
+    { \
+      Len = 6; \
+      Mask = 0x01; \
+    } \
+  else \
     Len = -1;
 
 
@@ -90,25 +90,24 @@ const char * const g_utf8_skip = utf8_skip_data;
 
 #define g_utf8_next_char(p) (char *)((p) + g_utf8_skip[*(unsigned char *)(p)])
 
-#define UTF8_GET(Result, Chars, Count, Mask, Len)			      \
-  (Result) = (Chars)[0] & (Mask);					      \
-  for ((Count) = 1; (Count) < (Len); ++(Count))				      \
-    {									      \
-      if (((Chars)[(Count)] & 0xc0) != 0x80)				      \
-	{								      \
-	  (Result) = -1;						      \
-	  break;							      \
-	}								      \
-      (Result) <<= 6;							      \
-      (Result) |= ((Chars)[(Count)] & 0x3f);				      \
+#define UTF8_GET(Result, Chars, Count, Mask, Len) \
+  (Result) = (Chars)[0] & (Mask); \
+  for ((Count) = 1; (Count) < (Len); ++(Count)) \
+    { \
+      if (((Chars)[(Count)] & 0xc0) != 0x80) \
+    { \
+      (Result) = -1; \
+      break; \
+    } \
+      (Result) <<= 6; \
+      (Result) |= ((Chars)[(Count)] & 0x3f); \
     }
 
 /* Like g_utf8_get_char, but take a maximum length
  * and return (wchar_t)-2 on incomplete trailing character
  */
 static inline wchar_t
-g_utf8_get_char_extended (const  char *p,
-			  size_t max_len)  
+g_utf8_get_char_extended (const  char *p, size_t max_len)  
 {
   unsigned int i, len;
   wchar_t wc = (unsigned char) *p;
@@ -154,10 +153,10 @@ g_utf8_get_char_extended (const  char *p,
   if (len > max_len)
     {
       for (i = 1; i < max_len; i++)
-	{
-	  if ((((unsigned char *)p)[i] & 0xc0) != 0x80)
-	    return (wchar_t)-1;
-	}
+      {
+      if ((((unsigned char *)p)[i] & 0xc0) != 0x80)
+          return (wchar_t)-1;
+    }
       return (wchar_t)-2;
     }
 
@@ -166,12 +165,12 @@ g_utf8_get_char_extended (const  char *p,
       wchar_t ch = ((unsigned char *)p)[i];
       
       if ((ch & 0xc0) != 0x80)
-	{
-	  if (ch)
-	    return (wchar_t)-1;
-	  else
-	    return (wchar_t)-2;
-	}
+    {
+      if (ch)
+        return (wchar_t)-1;
+      else
+        return (wchar_t)-2;
+    }
 
       wc <<= 6;
       wc |= (ch & 0x3f);
@@ -239,10 +238,10 @@ g_utf8_get_char (const char *p)
  **/
 wchar_t *
 g_utf8_to_ucs4 (const char *str,
-		long        len,             
-		long       *items_read,      
-		long       *items_written,   
-		wchar_t **error)
+                long        len,
+                long       *items_read,
+                long       *items_written,
+                wchar_t    **error)
 {
   wchar_t *result = nullptr;
   int n_chars, i;
@@ -254,21 +253,21 @@ g_utf8_to_ucs4 (const char *str,
     {
       wchar_t wc = g_utf8_get_char_extended (in, str + len - in);
       if (wc & 0x80000000)
-	{
-	  if (wc == (wchar_t)-2)
-	    {
-	      if (items_read)
-		break;
-	      else
+    {
+      if (wc == (wchar_t)-2)
+        {
+          if (items_read)
+        break;
+          else
                 if (error)
-		  *error = L"Partial character sequence at end of input";
-	    }
-	  else
+          *error = L"Partial character sequence at end of input";
+        }
+      else
             if (error)
               *error = L"Invalid byte sequence in conversion input";
 
-	  goto err_out;
-	}
+      goto err_out;
+    }
 
       n_chars++;
 
@@ -308,7 +307,7 @@ g_utf8_to_ucs4 (const char *str,
  **/
 int
 g_unichar_to_utf8 (wchar_t c,
-		   char   *outbuf)
+                   char   *outbuf)
 {
   unsigned int len = 0;    
   int first;
@@ -347,10 +346,10 @@ g_unichar_to_utf8 (wchar_t c,
   if (outbuf)
     {
       for (int i = len - 1; i > 0; --i)
-	{
-	  outbuf[i] = (c & 0x3f) | 0x80;
-	  c >>= 6;
-	}
+    {
+      outbuf[i] = (c & 0x3f) | 0x80;
+      c >>= 6;
+    }
       outbuf[0] = c | first;
     }
 
@@ -380,10 +379,10 @@ g_unichar_to_utf8 (wchar_t c,
  **/
 char *
 g_ucs4_to_utf8 (const wchar_t *str,
-		long           len,              
-		long          *items_read,       
-		long          *items_written,    
-		wchar_t       **error)
+                long           len,
+                long          *items_read,
+                long          *items_written,
+                wchar_t       **error)
 {
   int result_length;
   char *result = nullptr;
@@ -394,16 +393,16 @@ g_ucs4_to_utf8 (const wchar_t *str,
   for (i = 0; len < 0 || i < len ; i++)
     {
       if (!str[i])
-	break;
+    break;
 
       if ((unsigned)str[i] >= 0x80000000)
-	{
-	  if (items_read)
-	    *items_read = i;
+    {
+      if (items_read)
+        *items_read = i;
           if (error)
               *error = L"Character out of range for UTF-8";
-	  goto err_out;
-	}
+      goto err_out;
+    }
       
       result_length += UTF8_LENGTH (str[i]);
     }
