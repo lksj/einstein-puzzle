@@ -23,7 +23,7 @@
 
 #include <map>
 #include <string>
-#include <stdarg.h>
+#include <cstdarg>
 
 
 class Resource;

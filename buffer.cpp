@@ -18,7 +18,7 @@
 
 
 #include "buffer.h"
-#include <string.h>
+#include <cstring>
 #include "exceptions.h"
 #include "unicode.h"
 

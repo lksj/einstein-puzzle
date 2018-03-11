@@ -21,7 +21,7 @@
 #define __FORMATTER_H__
 
 
-#include <stdarg.h>
+#include <cstdarg>
 #include <string>
 #include <vector>
 

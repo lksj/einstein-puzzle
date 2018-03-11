@@ -21,7 +21,7 @@
 #define __BUFFER_H__
 
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 
 

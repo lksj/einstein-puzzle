@@ -18,7 +18,7 @@
 
 
 #include "i18n.h"
-#include <locale.h>
+#include <clocale>
 #include "unicode.h"
 #include "convert.h"
 

@@ -19,11 +19,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <sys/time.h>
-#include <math.h>
-#include <wchar.h>
+#include <cmath>
+#include <cwchar>
 
 //#ifndef WIN32
 #include <sys/types.h>

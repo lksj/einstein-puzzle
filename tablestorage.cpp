@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include "tablestorage.h"
 #include "unicode.h"
 #include "exceptions.h"

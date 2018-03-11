@@ -19,9 +19,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <wchar.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cwchar>
+#include <cstdlib>
+#include <cstring>
 #ifdef WIN32
 #include <windows.h>
 #endif
