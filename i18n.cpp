@@ -280,7 +280,7 @@ static struct _CountryMap {
         { L"",   "" }
     };
 
-static wchar_t* mapIso3ContryToIso2(char *iso3) 
+static const wchar_t* mapIso3ContryToIso2(char *iso3)
 {
     if (! iso3) 
         return L"";
