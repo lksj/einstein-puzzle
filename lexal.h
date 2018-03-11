@@ -45,7 +45,7 @@ class Lexeme
     public:
         Lexeme() { };
         Lexeme(Type type, const std::wstring &content, int line, int pos);
-        ~Lexeme() { };
+        ~Lexeme() = default;
 
     public:
         Type getType() const { return type; };
@@ -65,7 +65,7 @@ class Lexal
         
     public:
         explicit Lexal(UtfStreamReader &reader);
-        ~Lexal() { };
+        ~Lexal() = default;
 
     public:
         Lexeme getNext();

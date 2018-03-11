@@ -49,7 +49,7 @@ class TextPage
         std::vector<Widget*> widgets;
 
     public:
-        TextPage() { };
+        TextPage() = default;
         ~TextPage();
 
     public:
@@ -141,7 +141,7 @@ class CursorCommand: public Command
 
     public:
         CursorCommand(int step, Description &d, size_t *v);
-        virtual ~CursorCommand() { };
+        virtual ~CursorCommand() = default;
         
     public:
         virtual void doAction();	// Obrabatyvaet sobytija

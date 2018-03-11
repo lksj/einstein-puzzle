@@ -222,9 +222,7 @@ int Message::save(Buffer &buffer)
 // 
 //////////////////////////////////////////////////////////////////////////
 
-MsgWriter::MsgWriter()
-{
-}
+MsgWriter::MsgWriter() = default;
 
 MsgWriter::~MsgWriter()
 {

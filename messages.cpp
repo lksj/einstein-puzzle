@@ -42,9 +42,7 @@ Messages::ScoredStr::ScoredStr(int score, Formatter* message)
 {
 }
 
-Messages::Messages()
-{
-}
+Messages::Messages() = default;
 
 Messages::~Messages()
 {

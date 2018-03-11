@@ -40,7 +40,7 @@ class Value
         };
     
     public:
-        virtual ~Value() { };
+        virtual ~Value() = default;
 
     public:
         virtual ::Table* asTable() const = 0;

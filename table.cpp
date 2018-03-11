@@ -34,7 +34,7 @@ class IntValue: public Value
     
     public:
         explicit IntValue(int val) { value = val; };
-        virtual ~IntValue() { };
+        virtual ~IntValue() = default;
 
     public:
         virtual Type getType() const { return Value::Integer; };
@@ -55,7 +55,7 @@ class DoubleValue: public Value
     
     public:
         explicit DoubleValue(double val) { value = val; };
-        virtual ~DoubleValue() { };
+        virtual ~DoubleValue() = default;
 
     public:
         virtual Type getType() const { return Value::Double; };
@@ -76,7 +76,7 @@ class StringValue: public Value
     
     public:
         explicit StringValue(const std::wstring& val): value(val) { };
-        virtual ~StringValue() { };
+        virtual ~StringValue() = default;
 
     public:
         virtual Type getType() const { return Value::String; };

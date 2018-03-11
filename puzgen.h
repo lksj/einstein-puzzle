@@ -67,7 +67,7 @@ class Rule
         } ShowOptions;
     
     public:
-        virtual ~Rule() { };
+        virtual ~Rule() = default;
 
     public:
         virtual std::wstring getAsText() = 0;

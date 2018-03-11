@@ -571,9 +571,7 @@ AnyKeyAccel::AnyKeyAccel(Command *cmd)
     command = cmd;
 }
 
-AnyKeyAccel::~AnyKeyAccel()
-{
-}
+AnyKeyAccel::~AnyKeyAccel() = default;
 
 bool AnyKeyAccel::onKeyDown(SDLKey key, unsigned char ch)
 {

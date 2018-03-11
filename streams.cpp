@@ -27,9 +27,7 @@ UtfStreamReader::UtfStreamReader(std::ifstream *s)
     stream = s;
 }
 
-UtfStreamReader::~UtfStreamReader()
-{
-}
+UtfStreamReader::~UtfStreamReader() = default;
 
 // This function is very slow because of poor fromUtf8 function design
 wchar_t UtfStreamReader::getNextChar()

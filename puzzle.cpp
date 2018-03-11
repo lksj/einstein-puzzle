@@ -41,9 +41,7 @@ Puzzle::Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p)
 }
 
 
-Puzzle::~Puzzle()
-{
-}
+Puzzle::~Puzzle() = default;
 
 void Puzzle::reset()
 {

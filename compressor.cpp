@@ -28,9 +28,7 @@ ResourceCompressor::ResourceCompressor()
 {
 }
 
-ResourceCompressor::~ResourceCompressor()
-{
-}
+ResourceCompressor::~ResourceCompressor() = default;
 
 
 void ResourceCompressor::adjustBuffers(int fileSize)

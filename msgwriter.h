@@ -32,7 +32,7 @@
 class MsgCommand 
 {
     public:
-        virtual ~MsgCommand() { };
+        virtual ~MsgCommand() = default;
 
     public:
         virtual std::wstring toString() = 0;

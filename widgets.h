@@ -33,7 +33,7 @@
 class Command
 {
     public:
-        virtual ~Command() { };
+        virtual ~Command() = default;
         virtual void doAction() = 0;
 };
 
@@ -47,7 +47,7 @@ class Widget
         Area *area;
     
     public:
-        virtual ~Widget() { };
+        virtual ~Widget() = default;
 
     public:
         virtual bool onMouseButtonDown(int button, int x, int y) { return false; };
@@ -182,7 +182,7 @@ class KeyAccel: public Widget
 class TimerHandler
 {
     public:
-        virtual ~TimerHandler() { };
+        virtual ~TimerHandler() = default;
         virtual void onTimer() = 0;
 };
 

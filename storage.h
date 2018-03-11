@@ -27,7 +27,7 @@
 class Storage
 {
     public:
-        virtual ~Storage() { };
+        virtual ~Storage() = default;
 
     public:
         virtual int get(const std::wstring &name, int dflt) = 0;

@@ -28,7 +28,7 @@
 class Formatter
 {
     public:
-        virtual ~Formatter() { };
+        virtual ~Formatter() = default;
         virtual void format(const std::wstring &fileName, Buffer &output) = 0;
 };
 

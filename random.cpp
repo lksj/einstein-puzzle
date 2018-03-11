@@ -75,9 +75,7 @@ Random::Random(int init_key[], int key_length)
 
 
 
-Random::~Random()
-{
-}
+Random::~Random() = default;
 
 /* initializes mt[RAND_N] with a seed */
 void Random::initLong(unsigned long s)

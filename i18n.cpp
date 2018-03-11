@@ -332,11 +332,7 @@ Locale::Locale()
     setlocale(LC_NUMERIC, "C");  // hack because of numbers in Lua
 }
 
-
-Locale::Locale(const Locale &locale): language(locale.language),
-    country(locale.country), encoding(locale.encoding)
-{
-}
+Locale::Locale(const Locale &locale) = default;
 
 void Locale::parseLocale(const std::wstring &name)
 {

@@ -45,7 +45,7 @@ class ResourceFile;
 class ResourceStream
 {
     public:
-        virtual ~ResourceStream() { };
+        virtual ~ResourceStream() = default;
         
         /// Get size of resource
         virtual size_t getSize() = 0;

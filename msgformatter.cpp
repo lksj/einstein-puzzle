@@ -25,9 +25,7 @@
 #include "msgwriter.h"
 
 
-MsgFormatter::MsgFormatter()
-{
-}
+MsgFormatter::MsgFormatter() = default;
 
 void MsgFormatter::format(const std::wstring &fileName, Buffer &output)
 {

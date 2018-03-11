@@ -107,7 +107,7 @@ std::wstring Formatter::getMessage() const
 class ArgValue
 {
     public:
-        virtual ~ArgValue() { };
+        virtual ~ArgValue() = default;
         virtual std::wstring format(Formatter::Command *command) = 0;
 };
 

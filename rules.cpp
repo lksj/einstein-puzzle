@@ -96,9 +96,7 @@ class HorizontalRule: public DrawableRule
 };
 
 
-HorizontalRule::HorizontalRule()
-{
-}
+HorizontalRule::HorizontalRule() = default;
 
 
 HorizontalRule::HorizontalRule(std::istream &stream, const std::wstring& ruleType):

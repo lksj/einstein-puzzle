@@ -32,7 +32,7 @@ class Exception
     
     public:
         explicit Exception(const std::wstring& msg) : message(msg) {};
-        virtual ~Exception() { };
+        virtual ~Exception() = default;
 
     public:
         const std::wstring& getMessage() const { return message; };
