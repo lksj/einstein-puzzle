@@ -60,7 +60,7 @@ class NewGameCommand: public Command
     public:
         explicit NewGameCommand(Area *a) { area = a; };
 
-        virtual void doAction() {
+        void doAction() override {
             Game game;
             game.run();
             area->updateMouse();
@@ -77,7 +77,7 @@ class LoadGameCommand: public Command
     public:
         explicit LoadGameCommand(Area *a) { area = a; };
 
-        virtual void doAction() {
+        void doAction() override {
             Game *game = loadGame(area);
             if (game) {
                 game->run();
@@ -98,7 +98,7 @@ class TopScoresCommand: public Command
     public:
         explicit TopScoresCommand(Area *a) { area = a; };
 
-        virtual void doAction() {
+        void doAction() override {
             TopScores scores;
             showScoresWindow(area, &scores);
             area->updateMouse();
@@ -115,7 +115,7 @@ class RulesCommand: public Command
     public:
         explicit RulesCommand(Area *a) { area = a; };
 
-        virtual void doAction() {
+        void doAction() override {
             showDescription(area);
             area->updateMouse();
             area->draw();
@@ -131,7 +131,7 @@ class OptionsCommand: public Command
     public:
         explicit OptionsCommand(Area *a) { area = a; };
 
-        virtual void doAction() {
+        void doAction() override {
             showOptionsWindow(area);
             area->updateMouse();
             area->draw();
@@ -147,7 +147,7 @@ class AboutCommand: public Command
     public:
         explicit AboutCommand(Area *a) { parentArea = a; };
 
-        virtual void doAction() {
+        void doAction() override {
             Area area;
             Font titleFont(L"nova.ttf", 26);
             Font font(L"laudcn2.ttf", 14);

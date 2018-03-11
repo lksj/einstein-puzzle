@@ -144,7 +144,7 @@ class CursorCommand: public Command
         virtual ~CursorCommand() = default;
         
     public:
-        virtual void doAction();	// Obrabatyvaet sobytija
+        void doAction() override;	// Obrabatyvaet sobytija
 };
 
 

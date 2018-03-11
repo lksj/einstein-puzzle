@@ -44,12 +44,12 @@ class VertHints: public Widget
         VertHints(IconSet &is, Rules &rules, std::istream &stream);
 
     public:
-        virtual void draw();
+        void draw() override;
         void drawCell(int col, bool addToUpdate=true);
-        virtual bool onMouseButtonDown(int button, int x, int y);
+        bool onMouseButtonDown(int button, int x, int y) override;
         void toggleExcluded();
         int getRuleNo(int x, int y);
-        virtual bool onMouseMove(int x, int y);
+        bool onMouseMove(int x, int y) override;
         bool isActive(int ruleNo);
         void save(std::ostream &stream);
         void reset(Rules &rules);

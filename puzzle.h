@@ -43,17 +43,17 @@ class Puzzle: public Widget
         virtual ~Puzzle();
 
     public:
-        virtual void draw();
+        void draw() override;
         void drawRow(int row, bool addToUpdate=true);
         void drawCell(int col, int row, bool addToUpdate=true);
         Possibilities* getPossibilities() { return possib; };
-        virtual bool onMouseButtonDown(int button, int x, int y);
+        bool onMouseButtonDown(int button, int x, int y) override;
         bool isValid() const { return valid; };
         bool victory() const { return win; };
         void onFail();
         void onVictory();
         bool getCellNo(int x, int y, int &col, int &row, int &subNo);
-        virtual bool onMouseMove(int x, int y);
+        bool onMouseMove(int x, int y) override;
         void setCommands(Command *winCommand, Command *failCommand);
         void reset();
 };

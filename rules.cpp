@@ -45,9 +45,9 @@ class DrawableRule: public Rule
     protected:
         DrawableRule();
         DrawableRule(std::istream &stream, const std::wstring& ruleType);
-        void save(std::ostream &stream);
+        void save(std::ostream &stream) override;
         virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted) = 0;
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
+        void draw(int x, int y, IconSet &iconSet, bool highlighted) override;
 };
 
 
@@ -92,7 +92,7 @@ class HorizontalRule: public DrawableRule
         virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
         virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) = 0;
         virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
-        virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted);
+        SDL_Surface* getImage(IconSet &iconSet, bool highlighted) override;
 };
 
 
@@ -135,16 +135,16 @@ class NearRule: public HorizontalRule
     public:
         explicit NearRule(SolvedPuzzle puzzle);
         explicit NearRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
     
     protected:
-        virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted);
+        SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
     
     private:
         bool applyToCol(Possibilities &pos, int col, int nearRow, int nearNum,
             int thisRow, int thisNum);
-        virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; };
 };
 
 
@@ -235,14 +235,14 @@ class DirectionRule: public HorizontalRule
     public:
         explicit DirectionRule(SolvedPuzzle puzzle);
         explicit DirectionRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
     
     protected:
-        virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted);
+        SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
     
     private:
-        virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; };
 };
 
 
@@ -310,12 +310,12 @@ class OpenRule: public Rule
     public:
         explicit OpenRule(SolvedPuzzle puzzle);
         explicit OpenRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
-        virtual bool applyOnStart() { return true; };
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted) { };
-        virtual ShowOptions getShowOpts() { return SHOW_NOTHING; };
-        virtual void save(std::ostream &stream);
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+        bool applyOnStart() override { return true; };
+        void draw(int x, int y, IconSet &iconSet, bool highlighted) override { };
+        ShowOptions getShowOpts() override { return SHOW_NOTHING; };
+        void save(std::ostream &stream) override;
 };
 
 
@@ -359,14 +359,14 @@ void OpenRule::save(std::ostream &stream)
 class UnderRule: public DrawableRule
 {
     protected:
-        virtual SDL_Surface* getImage(IconSet &iconSet, bool h);
+        SDL_Surface* getImage(IconSet &iconSet, bool h) override;
     
     public:
         explicit UnderRule(SolvedPuzzle puzzle);
         explicit UnderRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
-        virtual ShowOptions getShowOpts() { return SHOW_VERT; };
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+        ShowOptions getShowOpts() override { return SHOW_VERT; };
 };
 
 
@@ -438,16 +438,16 @@ class BetweenRule: public HorizontalRule
     public:
         explicit BetweenRule(SolvedPuzzle puzzle);
         explicit BetweenRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
     
     protected:
-        virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted);
-        virtual SDL_Surface* getImage(IconSet &iconSet, bool higlighted);
+        SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
+        SDL_Surface* getImage(IconSet &iconSet, bool higlighted) override;
 
     private:
-        virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
-        virtual void save(std::ostream &stream);
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; };
+        void save(std::ostream &stream) override;
 };
 
 

@@ -28,7 +28,7 @@ class MsgFormatter: public Formatter
 {
     public:
         MsgFormatter();
-        virtual void format(const std::wstring &fileName, Buffer &output);
+        void format(const std::wstring &fileName, Buffer &output) override;
 };
 
 

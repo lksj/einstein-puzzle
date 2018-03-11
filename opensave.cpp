@@ -85,7 +85,7 @@ class OkCommand: public Command
     public:
         OkCommand(Area &a, bool *o): area(a) { ok = o; };
         
-        virtual void doAction() {
+        void doAction() override {
             *ok = true;
             area.finishEventLoop();
         };
@@ -114,7 +114,7 @@ class SaveCommand: public Command
         };
         
     public:
-        virtual void doAction() {
+        void doAction() override {
             Area area;
             area.add(parentArea, false);
             area.add(new Window(170, 280, 460, 100, L"blue.bmp"));
@@ -259,7 +259,7 @@ class LoadCommand: public Command
         };
         
     public:
-        virtual void doAction() {
+        void doAction() override {
             try {
                 std::ifstream stream(toMbcs(savedGame.getFileName()).c_str(), 
                         std::ifstream::in | std::ifstream::binary);

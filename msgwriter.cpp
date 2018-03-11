@@ -35,11 +35,11 @@ class TextCommand: public MsgCommand
     public:
         explicit TextCommand(const std::wstring &s): text(s) { };
         
-        virtual std::wstring toString() {
+        std::wstring toString()  override {
             return L"text: '" + text + L"'";
         }
         
-        virtual int write(Buffer &buffer) {
+        int write(Buffer &buffer) override {
             int sz = buffer.putByte(1);
             //sz += writeInt(stream, text.length());
             sz += buffer.putUtf8(text);
@@ -62,11 +62,11 @@ class IntArgCommand: public ArgCommand
     public:
         explicit IntArgCommand(int no): ArgCommand(no) { };
        
-        virtual std::wstring toString() {
+        std::wstring toString() override {
             return L"int_arg " + ::toString(argNo);
         }
         
-        virtual int write(Buffer &buffer) {
+        int write(Buffer &buffer) override {
             int sz = buffer.putByte(2);
             sz += buffer.putInteger(4);
             sz += buffer.putInteger(argNo);
@@ -79,11 +79,11 @@ class StrArgCommand: public ArgCommand
 {
     public:
         explicit StrArgCommand(int no): ArgCommand(no) { };
-        virtual std::wstring toString() {
+        std::wstring toString() override {
             return L"str_arg " + ::toString(argNo);
         }
         
-        virtual int write(Buffer &buffer) {
+        int write(Buffer &buffer) override {
             int sz = buffer.putByte(3);
             sz += buffer.putInteger(4);
             sz += buffer.putInteger(argNo);
@@ -97,11 +97,11 @@ class FloatArgCommand: public ArgCommand
     public:
         explicit FloatArgCommand(int no): ArgCommand(no) { };
        
-        virtual std::wstring toString() {
+        std::wstring toString() override {
             return L"float_arg " + ::toString(argNo);
         }
         
-        virtual int write(Buffer &buffer) {
+        int write(Buffer &buffer) override {
             int sz = buffer.putByte(4);
             sz += buffer.putInteger(4);
             sz += buffer.putInteger(argNo);
@@ -115,11 +115,11 @@ class DoubleArgCommand: public ArgCommand
     public:
         explicit DoubleArgCommand(int no): ArgCommand(no) { };
        
-        virtual std::wstring toString() {
+        std::wstring toString() override {
             return L"float_arg " + ::toString(argNo);
         }
         
-        virtual int write(Buffer &buffer) {
+        int write(Buffer &buffer) override {
             int sz = buffer.putByte(5);
             sz += buffer.putInteger(4);
             sz += buffer.putInteger(argNo);

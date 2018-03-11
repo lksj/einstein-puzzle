@@ -61,7 +61,7 @@ class ResVisitor: public Visitor<Resource*>
     public:
         ResVisitor(Messages &m, Buffer *b): messages(m) { buffer = b; };
         
-        virtual void onVisit(Resource *&r) {
+        void onVisit(Resource *&r) override {
             messages.loadFromResource(r, buffer);
         }
 };

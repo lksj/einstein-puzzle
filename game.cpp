@@ -41,7 +41,7 @@ class GameBackground: public Area
 {
     public:
         GameBackground();
-        virtual void draw();
+        void draw() override;
 };
 
 GameBackground::GameBackground()
@@ -71,7 +71,7 @@ class ToggleHintCommand: public Command
             horHints = h;
         };
         
-        virtual void doAction() {
+        void doAction() override {
             verHints->toggleExcluded();
             horHints->toggleExcluded();
         };
@@ -93,10 +93,10 @@ class Watch: public TimerHandler, public Widget
         virtual ~Watch();
 
     public:
-        virtual void onTimer();
+        void onTimer() override;
         void stop();
         void start();
-        virtual void draw();
+        void draw() override;
         int getElapsed() { return elapsed; };
         void save(std::ostream &stream);
         void reset();
@@ -192,7 +192,7 @@ class PauseGameCommand: public Command
             background = bg;
         };
         
-        virtual void doAction() {
+        void doAction() override {
             watch->stop();
             Area area;
             area.add(background, false);
@@ -224,7 +224,7 @@ class WinCommand: public Command
             game = g;
         };
         
-        virtual void doAction() {
+        void doAction() override {
             sound->play(L"applause.wav");
             watch->stop();
             Font font(L"laudcn2.ttf", 20);
@@ -256,7 +256,7 @@ class OkDlgCommand: public Command
             area = a; 
         };
         
-        virtual void doAction() { 
+        void doAction() override {
             res = true; 
             area->finishEventLoop();
         };
@@ -271,7 +271,7 @@ class FailCommand: public Command
     public:
         FailCommand(Area *a, Game *g) { gameArea = a;  game = g; };
         
-        virtual void doAction() {
+        void doAction() override {
             sound->play(L"glasbk2.wav");
             bool restart = false;
             bool newGame = false;
@@ -318,7 +318,7 @@ class CheatAccel: public Widget
         };
 
     public:
-        virtual bool onKeyDown(SDLKey key, unsigned char ch) {
+        bool onKeyDown(SDLKey key, unsigned char ch) override {
             if ((key >= SDLK_a) && (key <= SDLK_z)) {
                 wchar_t s = L'a' + key - SDLK_a;
                 typed += s;
@@ -346,7 +346,7 @@ class CheatCommand: public Command
     public:
         explicit CheatCommand(Area *a) { gameArea = a; };
         
-        virtual void doAction() {
+        void doAction() override {
             Font font(L"nova.ttf", 30);
             showMessageWindow(gameArea, L"darkpattern.bmp", 
                     500, 100, &font, 255,255,255, 
@@ -372,7 +372,7 @@ class SaveGameCommand: public Command
             game = g;
         };
         
-        virtual void doAction() {
+        void doAction() override {
             watch->stop();
 
             Area area;
@@ -396,7 +396,7 @@ class GameOptionsCommand: public Command
             gameArea = a; 
         };
         
-        virtual void doAction() {
+        void doAction() override {
             showOptionsWindow(gameArea);
             gameArea->updateMouse();
             gameArea->draw();
@@ -418,7 +418,7 @@ class HelpCommand: public Command
             background = b;
         };
         
-        virtual void doAction() {
+        void doAction() override {
             watch->stop();
             Area area;
             area.add(background, false);

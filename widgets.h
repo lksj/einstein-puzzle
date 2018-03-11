@@ -86,7 +86,7 @@ class TileWidget: public BoundedWidget
         virtual SDL_Surface* getImage();
     
     public:
-        virtual void draw();
+        void draw() override;
         virtual void rescale();
 };
 
@@ -100,10 +100,10 @@ class HighlightableWidget: public TileWidget
     protected:
         HighlightableWidget(int left, int top, int width, int height, bool transparent = false);
         virtual ~HighlightableWidget();
-        virtual SDL_Surface* getImage();
+        SDL_Surface* getImage() override;
     
     public:
-        virtual void rescale();
+        void rescale() override;
 };
 
 
@@ -115,8 +115,8 @@ class ClickableWidget: public HighlightableWidget
     
     public:
         virtual void doClick();
-        virtual bool onMouseButtonDown(int button, int x, int y);
-        virtual bool onMouseMove(int x, int y);
+        bool onMouseButtonDown(int button, int x, int y) override;
+        bool onMouseMove(int x, int y) override;
 };
 
 class TextHighlightWidget: public ClickableWidget
@@ -136,7 +136,7 @@ class TextHighlightWidget: public ClickableWidget
         virtual std::wstring getText() = 0;
     
     public:
-        virtual void draw();
+        void draw() override;
 };
 
 
@@ -147,8 +147,8 @@ class Button: public TextHighlightWidget
         std::wstring text;
         
     protected:
-        virtual std::wstring getText();
-        virtual void handleClick();
+        std::wstring getText() override;
+        void handleClick() override;
     
     public:
         Button(int x, int y, int width, int height, Font *font, 
@@ -175,7 +175,7 @@ class KeyAccel: public Widget
 
     public:
         KeyAccel(SDLKey key, Command *command);
-        virtual bool onKeyDown(SDLKey key, unsigned char ch);
+        bool onKeyDown(SDLKey key, unsigned char ch) override;
 };
 
 
@@ -209,10 +209,10 @@ class Area: public Widget
         void handleEvent(const SDL_Event &event);
         void run();
         void finishEventLoop();
-        virtual void draw();
+        void draw() override;
         void setTimer(Uint32 interval, TimerHandler *handler);
         void updateMouse();
-        virtual bool destroyByArea() { return false; };
+        bool destroyByArea() override { return false; };
 };
 
 
@@ -224,7 +224,7 @@ class ExitCommand: public Command
     public:
         explicit ExitCommand(Area &a): area(a) { }
         
-        virtual void doAction() {
+        void doAction() override {
             area.finishEventLoop();
         };
 };
@@ -241,8 +241,8 @@ class AnyKeyAccel: public Widget
         virtual ~AnyKeyAccel();
 
     public:
-        virtual bool onKeyDown(SDLKey key, unsigned char ch);
-        virtual bool onMouseButtonDown(int button, int x, int y);
+        bool onKeyDown(SDLKey key, unsigned char ch) override;
+        bool onMouseButtonDown(int button, int x, int y) override;
 };
 
 
@@ -285,7 +285,7 @@ class Label: public BoundedWidget
                 const std::wstring &text);
 
     public:
-        virtual void draw();
+        void draw() override;
 };
 
 
@@ -317,10 +317,10 @@ class InputField: public Window, public TimerHandler
         ~InputField();
         
     public:
-        virtual void draw();
-        virtual void setParent(Area *a);
-        virtual void onTimer();
-        virtual bool onKeyDown(SDLKey key, unsigned char ch);
+        void draw() override;
+        void setParent(Area *a) override;
+        void onTimer() override;
+        bool onKeyDown(SDLKey key, unsigned char ch) override;
         virtual void onCharTyped(unsigned char ch);
 
     private:
@@ -339,8 +339,8 @@ class Checkbox: public TextHighlightWidget
                 bool &checked);
 
     protected:
-        virtual std::wstring getText();
-        virtual void handleClick();
+        std::wstring getText() override;
+        void handleClick() override;
     
     public:
         void moveTo(int x, int y) { left = x; top = y; };
@@ -369,10 +369,10 @@ class Slider: public BoundedWidget
         virtual ~Slider();
 
     public:
-        virtual void draw();
-        virtual bool onMouseButtonDown(int button, int x, int y);
-        virtual bool onMouseButtonUp(int button, int x, int y);
-        virtual bool onMouseMove(int x, int y);
+        void draw() override;
+        bool onMouseButtonDown(int button, int x, int y) override;
+        bool onMouseButtonUp(int button, int x, int y) override;
+        bool onMouseMove(int x, int y) override;
 
     protected:
         float &value;
@@ -396,8 +396,8 @@ class CycleButton: public TextHighlightWidget
         CycleButton(int x, int y, int width, int height, Font *font, int &value, const std::vector<std::wstring>& options);
     
     protected:
-        virtual std::wstring getText();
-        virtual void handleClick();
+        std::wstring getText() override;
+        void handleClick() override;
     
     public:
         void moveTo(int x, int y) { left = x; top = y; };

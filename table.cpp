@@ -37,14 +37,14 @@ class IntValue: public Value
         virtual ~IntValue() = default;
 
     public:
-        virtual Type getType() const { return Value::Integer; };
-        virtual int asInt() const { return value; };
-        virtual double asDouble() const { return value; };
-        virtual std::wstring asString() const { return toString(value); };
-        virtual ::Table* asTable() const { 
+        Type getType() const override { return Value::Integer; };
+        int asInt() const override { return value; };
+        double asDouble() const override { return value; };
+        std::wstring asString() const override { return toString(value); };
+        ::Table* asTable() const override {
             throw Exception(L"Can't convert integer to table"); 
         };
-        virtual Value* clone() const { return new IntValue(value); };
+        Value* clone() const override { return new IntValue(value); };
 };
 
 
@@ -58,14 +58,14 @@ class DoubleValue: public Value
         virtual ~DoubleValue() = default;
 
     public:
-        virtual Type getType() const { return Value::Double; };
-        virtual int asInt() const { return (int)value; };
-        virtual double asDouble() const { return value; };
-        virtual std::wstring asString() const { return toString(value); };
-        virtual ::Table* asTable() const { 
+        Type getType() const override { return Value::Double; };
+        int asInt() const override { return (int)value; };
+        double asDouble() const override { return value; };
+        std::wstring asString() const override { return toString(value); };
+        ::Table* asTable() const override {
             throw Exception(L"Can't convert double to table"); 
         };
-        virtual Value* clone() const { return new DoubleValue(value); };
+        Value* clone() const override { return new DoubleValue(value); };
 };
 
 
@@ -79,14 +79,14 @@ class StringValue: public Value
         virtual ~StringValue() = default;
 
     public:
-        virtual Type getType() const { return Value::String; };
-        virtual int asInt() const { return strToInt(value); };
-        virtual double asDouble() const { return strToDouble(value); };
-        virtual std::wstring asString() const { return value; };
-        virtual ::Table* asTable() const { 
+        Type getType() const override { return Value::String; };
+        int asInt() const override { return strToInt(value); };
+        double asDouble() const override { return strToDouble(value); };
+        std::wstring asString() const override { return value; };
+        ::Table* asTable() const override {
             throw Exception(L"Can't convert string to table"); 
         };
-        virtual Value* clone() const { return new StringValue(value); };
+        Value* clone() const override { return new StringValue(value); };
 };
 
 
@@ -100,18 +100,18 @@ class TableValue: public Value
         virtual ~TableValue() { delete value; };
 
     public:
-        virtual Type getType() const { return Value::Table; };
-        virtual int asInt() const { 
+        Type getType() const override { return Value::Table; };
+        int asInt() const override {
             throw Exception(L"Can't convert table to int"); 
         };
-        virtual double asDouble() const { 
+        double asDouble() const override {
             throw Exception(L"Can't convert table to double"); 
         };
-        virtual std::wstring asString() const { 
+        std::wstring asString() const override {
             throw Exception(L"Can't convert table to string"); 
         };
-        virtual ::Table* asTable() const { return value; };
-        virtual Value* clone() const { 
+        ::Table* asTable() const override { return value; };
+        Value* clone() const override {
             return new TableValue(new ::Table(*value)); 
         };
 };

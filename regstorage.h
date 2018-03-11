@@ -37,12 +37,11 @@ class RegistryStorage: public Storage
         virtual ~RegistryStorage();
 
     public:
-        virtual int get(const std::wstring &name, int dflt) ;
-        virtual std::wstring get(const std::wstring &name, 
-                const std::wstring &dflt);
-        virtual void set(const std::wstring &name, int value);
-        virtual void set(const std::wstring &name, const std::wstring &value);
-        virtual void flush() { };
+        int get(const std::wstring &name, int dflt) override;
+        std::wstring get(const std::wstring &name, const std::wstring &dflt) override;
+        void set(const std::wstring &name, int value) override;
+        void set(const std::wstring &name, const std::wstring &value) override;
+        void flush() override { };
 };
 
 

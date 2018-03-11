@@ -58,7 +58,7 @@ class OptionsChangedCommand: public Command
             area = a;
         };
 
-        virtual void doAction() {
+        void doAction() override {
             bool oldFullscreen = (getStorage()->get(L"fullscreen", 1) != 0);
             bool oldCursor = (getStorage()->get(L"niceCursor", 1) != 0);
             int oldSize = ((float)getStorage()->get(L"screenSize", 1));
@@ -107,7 +107,7 @@ class OptionsButton: public Button
         {
         }
         
-        void doClick()
+        void doClick() override
         {
             handleClick();
             sound->play(L"click.wav");

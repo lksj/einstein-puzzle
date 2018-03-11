@@ -55,9 +55,9 @@ class UnpackedResourceStream: public ResourceStream
                 size_t size);
 
     public:
-        virtual size_t getSize() { return size; };
-        virtual void read(char *buffer, size_t size);
-        virtual long getPos() { return pos; };
+        size_t getSize() override { return size; };
+        void read(char *buffer, size_t size) override;
+        long getPos() override { return pos; };
 };
 
 UnpackedResourceStream::UnpackedResourceStream(std::ifstream &s, 
@@ -100,9 +100,9 @@ class MemoryResourceStream: public ResourceStream
         virtual ~MemoryResourceStream();
 
     public:
-        virtual size_t getSize() { return size; };
-        virtual void read(char *buffer, size_t size);
-        virtual long getPos() { return pos; };
+        size_t getSize() override { return size; };
+        void read(char *buffer, size_t size) override;
+        long getPos() override { return pos; };
 };
 
 MemoryResourceStream::MemoryResourceStream(ResVariant *res)

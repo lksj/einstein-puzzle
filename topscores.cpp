@@ -124,7 +124,7 @@ class ScoresWindow: public Window
     public:
         ScoresWindow(int x, int y, TopScores *scores, int highlight);
         ~ScoresWindow();
-        void draw();
+        void draw() override;
 };
 
 
