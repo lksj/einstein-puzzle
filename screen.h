@@ -47,10 +47,10 @@ class VideoMode
         }
 
     public:
-        int getWidth() const { return width; };
-        int getHeight() const { return height; };
-        int getBpp() const { return bpp; };
-        bool isFullScreen() const { return fullScreen; };
+        int getWidth() const { return width; }
+        int getHeight() const { return height; }
+        int getBpp() const { return bpp; }
+        bool isFullScreen() const { return fullScreen; }
 };
 
 
@@ -86,7 +86,7 @@ class Screen
         void updateMouse();
         void flush();
         void addRegionToUpdate(int x, int y, int w, int h);
-        SDL_Surface* getSurface() { return screen; };
+        SDL_Surface* getSurface() { return screen; }
         void draw(int x, int y, SDL_Surface *surface);
         void drawScaled(int x, int y, SDL_Surface *surface);
         void setCursor(bool nice);

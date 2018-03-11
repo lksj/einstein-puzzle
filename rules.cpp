@@ -144,7 +144,7 @@ class NearRule: public HorizontalRule
     private:
         bool applyToCol(Possibilities &pos, int col, int nearRow, int nearNum,
             int thisRow, int thisNum);
-        ShowOptions getShowOpts() override { return SHOW_HORIZ; };
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; }
 };
 
 
@@ -242,7 +242,7 @@ class DirectionRule: public HorizontalRule
         SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
     
     private:
-        ShowOptions getShowOpts() override { return SHOW_HORIZ; };
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; }
 };
 
 
@@ -312,9 +312,9 @@ class OpenRule: public Rule
         explicit OpenRule(std::istream &stream);
         bool apply(Possibilities &pos) override;
         std::wstring getAsText() override;
-        bool applyOnStart() override { return true; };
-        void draw(int x, int y, IconSet &iconSet, bool highlighted) override { };
-        ShowOptions getShowOpts() override { return SHOW_NOTHING; };
+        bool applyOnStart() override { return true; }
+        void draw(int x, int y, IconSet &iconSet, bool highlighted) override { }
+        ShowOptions getShowOpts() override { return SHOW_NOTHING; }
         void save(std::ostream &stream) override;
 };
 
@@ -366,7 +366,7 @@ class UnderRule: public DrawableRule
         explicit UnderRule(std::istream &stream);
         bool apply(Possibilities &pos) override;
         std::wstring getAsText() override;
-        ShowOptions getShowOpts() override { return SHOW_VERT; };
+        ShowOptions getShowOpts() override { return SHOW_VERT; }
 };
 
 
@@ -446,7 +446,7 @@ class BetweenRule: public HorizontalRule
         SDL_Surface* getImage(IconSet &iconSet, bool higlighted) override;
 
     private:
-        ShowOptions getShowOpts() override { return SHOW_HORIZ; };
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; }
         void save(std::ostream &stream) override;
 };
 

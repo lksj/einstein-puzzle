@@ -58,14 +58,14 @@ class NewGameCommand: public Command
         Area *area;
     
     public:
-        explicit NewGameCommand(Area *a) { area = a; };
+        explicit NewGameCommand(Area *a) { area = a; }
 
         void doAction() override {
             Game game;
             game.run();
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -75,7 +75,7 @@ class LoadGameCommand: public Command
         Area *area;
     
     public:
-        explicit LoadGameCommand(Area *a) { area = a; };
+        explicit LoadGameCommand(Area *a) { area = a; }
 
         void doAction() override {
             Game *game = loadGame(area);
@@ -85,7 +85,7 @@ class LoadGameCommand: public Command
             }
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -96,14 +96,14 @@ class TopScoresCommand: public Command
         Area *area;
     
     public:
-        explicit TopScoresCommand(Area *a) { area = a; };
+        explicit TopScoresCommand(Area *a) { area = a; }
 
         void doAction() override {
             TopScores scores;
             showScoresWindow(area, &scores);
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -113,13 +113,13 @@ class RulesCommand: public Command
         Area *area;
     
     public:
-        explicit RulesCommand(Area *a) { area = a; };
+        explicit RulesCommand(Area *a) { area = a; }
 
         void doAction() override {
             showDescription(area);
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -129,13 +129,13 @@ class OptionsCommand: public Command
         Area *area;
     
     public:
-        explicit OptionsCommand(Area *a) { area = a; };
+        explicit OptionsCommand(Area *a) { area = a; }
 
         void doAction() override {
             showOptionsWindow(area);
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -145,7 +145,7 @@ class AboutCommand: public Command
         Area *parentArea;
     
     public:
-        explicit AboutCommand(Area *a) { parentArea = a; };
+        explicit AboutCommand(Area *a) { parentArea = a; }
 
         void doAction() override {
             Area area;
@@ -173,7 +173,7 @@ class AboutCommand: public Command
 
             parentArea->updateMouse();
             parentArea->draw();
-        };
+        }
 };
 
 

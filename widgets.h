@@ -50,13 +50,13 @@ class Widget
         virtual ~Widget() = default;
 
     public:
-        virtual bool onMouseButtonDown(int button, int x, int y) { return false; };
-        virtual bool onMouseButtonUp(int button, int x, int y) { return false; };
-        virtual bool onMouseMove(int x, int y) { return false; };
-        virtual void draw() { };
-        virtual void setParent(Area *a) { area = a; };
-        virtual bool onKeyDown(SDLKey key, unsigned char ch) { return false; };
-        virtual bool destroyByArea() { return true; };
+        virtual bool onMouseButtonDown(int button, int x, int y) { return false; }
+        virtual bool onMouseButtonUp(int button, int x, int y) { return false; }
+        virtual bool onMouseMove(int x, int y) { return false; }
+        virtual void draw() { }
+        virtual void setParent(Area *a) { area = a; }
+        virtual bool onKeyDown(SDLKey key, unsigned char ch) { return false; }
+        virtual bool destroyByArea() { return true; }
 };
 
 class BoundedWidget: public Widget
@@ -162,7 +162,7 @@ class Button: public TextHighlightWidget
                 const std::wstring &text, bool bevel, Command *cmd=nullptr);
 
     public:
-        void moveTo(int x, int y) { left = x; top = y; };
+        void moveTo(int x, int y) { left = x; top = y; }
 };
 
 
@@ -212,7 +212,7 @@ class Area: public Widget
         void draw() override;
         void setTimer(Uint32 interval, TimerHandler *handler);
         void updateMouse();
-        bool destroyByArea() override { return false; };
+        bool destroyByArea() override { return false; }
 };
 
 
@@ -226,7 +226,7 @@ class ExitCommand: public Command
         
         void doAction() override {
             area.finishEventLoop();
-        };
+        }
 };
 
 
@@ -343,7 +343,7 @@ class Checkbox: public TextHighlightWidget
         void handleClick() override;
     
     public:
-        void moveTo(int x, int y) { left = x; top = y; };
+        void moveTo(int x, int y) { left = x; top = y; }
 };
 
 class Picture: public TileWidget
@@ -400,7 +400,7 @@ class CycleButton: public TextHighlightWidget
         void handleClick() override;
     
     public:
-        void moveTo(int x, int y) { left = x; top = y; };
+        void moveTo(int x, int y) { left = x; top = y; }
 };
 
 #endif

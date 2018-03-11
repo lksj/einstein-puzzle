@@ -51,7 +51,7 @@ class TopScores
         void save();
         ScoresList& getScores();
         int getMaxScore();
-        bool isFull() { return scores.size() >= MAX_SCORES; };
+        bool isFull() { return scores.size() >= MAX_SCORES; }
 };
 
 

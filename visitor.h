@@ -26,7 +26,7 @@ template <typename T>
 class Visitor
 {
     public:
-        virtual ~Visitor() { };
+        virtual ~Visitor() { }
 
         /// Called at every visit
         virtual void onVisit(T &t) = 0;

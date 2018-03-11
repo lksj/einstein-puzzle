@@ -41,22 +41,22 @@ BoundedWidget::BoundedWidget(int x, int y, int w, int h, bool t):
 int BoundedWidget::getLeft()
 {
     return scaleUp(left);
-};
+}
 
 int BoundedWidget::getTop()
 {
     return scaleUp(top);
-};
+}
 
 int BoundedWidget::getWidth()
 {
     return width;
-};
+}
 
 int BoundedWidget::getHeight()
 {
     return height;
-};
+}
 
 
 //////////////////////////////////////////////////////////////////

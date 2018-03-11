@@ -33,18 +33,18 @@ class IntValue: public Value
         int value;
     
     public:
-        explicit IntValue(int val) { value = val; };
+        explicit IntValue(int val) { value = val; }
         virtual ~IntValue() = default;
 
     public:
-        Type getType() const override { return Value::Integer; };
-        int asInt() const override { return value; };
-        double asDouble() const override { return value; };
-        std::wstring asString() const override { return toString(value); };
+        Type getType() const override { return Value::Integer; }
+        int asInt() const override { return value; }
+        double asDouble() const override { return value; }
+        std::wstring asString() const override { return toString(value); }
         ::Table* asTable() const override {
             throw Exception(L"Can't convert integer to table"); 
-        };
-        Value* clone() const override { return new IntValue(value); };
+        }
+        Value* clone() const override { return new IntValue(value); }
 };
 
 
@@ -54,18 +54,18 @@ class DoubleValue: public Value
         double value;
     
     public:
-        explicit DoubleValue(double val) { value = val; };
+        explicit DoubleValue(double val) { value = val; }
         virtual ~DoubleValue() = default;
 
     public:
-        Type getType() const override { return Value::Double; };
-        int asInt() const override { return (int)value; };
-        double asDouble() const override { return value; };
-        std::wstring asString() const override { return toString(value); };
+        Type getType() const override { return Value::Double; }
+        int asInt() const override { return (int)value; }
+        double asDouble() const override { return value; }
+        std::wstring asString() const override { return toString(value); }
         ::Table* asTable() const override {
             throw Exception(L"Can't convert double to table"); 
-        };
-        Value* clone() const override { return new DoubleValue(value); };
+        }
+        Value* clone() const override { return new DoubleValue(value); }
 };
 
 
@@ -75,18 +75,18 @@ class StringValue: public Value
         std::wstring value;
     
     public:
-        explicit StringValue(const std::wstring& val): value(val) { };
+        explicit StringValue(const std::wstring& val): value(val) { }
         virtual ~StringValue() = default;
 
     public:
-        Type getType() const override { return Value::String; };
-        int asInt() const override { return strToInt(value); };
-        double asDouble() const override { return strToDouble(value); };
-        std::wstring asString() const override { return value; };
+        Type getType() const override { return Value::String; }
+        int asInt() const override { return strToInt(value); }
+        double asDouble() const override { return strToDouble(value); }
+        std::wstring asString() const override { return value; }
         ::Table* asTable() const override {
             throw Exception(L"Can't convert string to table"); 
-        };
-        Value* clone() const override { return new StringValue(value); };
+        }
+        Value* clone() const override { return new StringValue(value); }
 };
 
 
@@ -96,24 +96,24 @@ class TableValue: public Value
         ::Table *value;
     
     public:
-        explicit TableValue(::Table *val) { value = val; };
-        virtual ~TableValue() { delete value; };
+        explicit TableValue(::Table *val) { value = val; }
+        virtual ~TableValue() { delete value; }
 
     public:
-        Type getType() const override { return Value::Table; };
+        Type getType() const override { return Value::Table; }
         int asInt() const override {
             throw Exception(L"Can't convert table to int"); 
-        };
+        }
         double asDouble() const override {
             throw Exception(L"Can't convert table to double"); 
-        };
+        }
         std::wstring asString() const override {
             throw Exception(L"Can't convert table to string"); 
-        };
-        ::Table* asTable() const override { return value; };
+        }
+        ::Table* asTable() const override { return value; }
         Value* clone() const override {
             return new TableValue(new ::Table(*value)); 
-        };
+        }
 };
 
 

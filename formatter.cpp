@@ -118,10 +118,10 @@ class TemplatedArgValue: public ArgValue
         T value;
     
     public:
-        TemplatedArgValue(const T &v) { value = v; };
+        TemplatedArgValue(const T &v) { value = v; }
         std::wstring format(Formatter::Command *command) override { 
             return toString(value);
-        };
+        }
 };
 
 class StrArgValue: public ArgValue
@@ -130,10 +130,10 @@ class StrArgValue: public ArgValue
         std::wstring value;
 
     public:
-        StrArgValue(const std::wstring &v): value(v) { };
+        StrArgValue(const std::wstring &v): value(v) { }
         std::wstring format(Formatter::Command *command) override {
             return value;
-        };
+        }
 };
 
 

@@ -59,10 +59,10 @@ class ResourceStream
         virtual long getPos() = 0;
 
         /// Return true if end of resource reached
-        virtual bool isEof() { return (size_t)getPos() >= getSize(); };
+        virtual bool isEof() { return (size_t)getPos() >= getSize(); }
 
         /// Get count of bytes left
-        virtual long getAvailable() { return (long)getSize() - getPos(); };
+        virtual long getAvailable() { return (long)getSize() - getPos(); }
 };
 
 
@@ -123,13 +123,13 @@ class ResourceFile
                 int level);
 
         /// Get priority of this resource file.
-        int getPriority() const { return priority; };
+        int getPriority() const { return priority; }
         
         /// Get the name of resource file.
-        const std::wstring& getFileName() const { return name; };
+        const std::wstring& getFileName() const { return name; }
 
         /// Get file stream.
-        std::ifstream& getStream() { return stream; };
+        std::ifstream& getStream() { return stream; }
 
     private:
         /// Unpack memory buffer
@@ -169,7 +169,7 @@ class ResVariant
 
     public:
         /// Return locale compability score.
-        int getI18nScore() const { return i18nScore; };
+        int getI18nScore() const { return i18nScore; }
 
         /// Get pointer to unpacked resource data.  
         /// Must be freed after use this delRef()
@@ -185,14 +185,14 @@ class ResVariant
         void delRef(void *data);
 
         /// Return reference counter.
-        int getRefCount() const { return refCnt; };
+        int getRefCount() const { return refCnt; }
 
         /// Is data managed by this object
         /// \param data pointer to dataa
-        bool isDataOwned(void *data) const { return refCnt && data == this->data; };
+        bool isDataOwned(void *data) const { return refCnt && data == this->data; }
 
         /// returns size of data
-        long getSize() const { return unpackedSize; };
+        long getSize() const { return unpackedSize; }
 
         /// Return data in buffer
         /// \param buffer buffer to store data.
@@ -236,11 +236,11 @@ class Resource
                 const ResourceFile::DirectoryEntry &entry);
 
         /// Get number of variants.
-        int getVariantsCount() const { return variants.size(); };
+        int getVariantsCount() const { return variants.size(); }
 
         /// Geturns variant object.
         /// \param variant variant number.
-        ResVariant* getVariant(int variant=0) { return variants[variant]; };
+        ResVariant* getVariant(int variant=0) { return variants[variant]; }
 
         /// Load data from variant.
         /// Data must be freed with delRef().
@@ -259,10 +259,10 @@ class Resource
 
         /// Get size of data.
         /// \param variant variant number.
-        long getSize(int variant=0) { return variants[variant]->getSize(); };
+        long getSize(int variant=0) { return variants[variant]->getSize(); }
 
         /// Get name of this resource.
-        const std::wstring& getName() const { return name; };
+        const std::wstring& getName() const { return name; }
         
         /// Load data into buffer.
         /// \param buffer buffer for data.
@@ -376,10 +376,10 @@ class ResDataHolder
         void load(const std::wstring &name);
 
         /// Returns pointer to resource data
-        void* getData() const { return data; };
+        void* getData() const { return data; }
 
         /// Returns size of data
-        size_t getSize() const { return size; };
+        size_t getSize() const { return size; }
 };
 
 

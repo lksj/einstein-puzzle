@@ -44,14 +44,14 @@ class Token
         std::wstring content;
 
     private:
-        explicit Token(Type type) { this->type = type; };
+        explicit Token(Type type) { this->type = type; }
         Token(Type type, const std::wstring &content): content(content) {
             this->type = type;
         }
 
     public:
-        Type getType() const { return type; };
-        const std::wstring& getContent() const { return content; };
+        Type getType() const { return type; }
+        const std::wstring& getContent() const { return content; }
         std::wstring toString() const;
 };
 
@@ -64,7 +64,7 @@ class Tokenizer
         std::list<Token> stack;
 
     public:
-        explicit Tokenizer(const std::wstring &s): text(s) { currentPos = 0; };
+        explicit Tokenizer(const std::wstring &s): text(s) { currentPos = 0; }
 
     public:
         Token getNextToken();

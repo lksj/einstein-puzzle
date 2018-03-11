@@ -53,10 +53,10 @@ class TextPage
         ~TextPage();
 
     public:
-        Widget* getWidget(int no) { return widgets[no]; };
-        size_t getWidgetsCount() const { return widgets.size(); };
-        void add(Widget *widget) { widgets.push_back(widget); };
-        bool isEmpty() const { return widgets.empty(); };
+        Widget* getWidget(int no) { return widgets[no]; }
+        size_t getWidgetsCount() const { return widgets.size(); }
+        void add(Widget *widget) { widgets.push_back(widget); }
+        bool isEmpty() const { return widgets.empty(); }
 };
 
 
@@ -123,7 +123,7 @@ class Description: public Area
     public:
         void run();
         void updateInfo();	// Vyvodit informatsiju na stranitsu
-        TextPage *getPage(unsigned int no) { return text->getPage(no); };
+        TextPage *getPage(unsigned int no) { return text->getPage(no); }
 
     private:
         void printPage();		// Vyvodit tekuschuju stranitsu pravil

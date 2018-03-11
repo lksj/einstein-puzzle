@@ -69,12 +69,12 @@ class ToggleHintCommand: public Command
         ToggleHintCommand(VertHints *v, HorHints *h) {
             verHints = v;
             horHints = h;
-        };
+        }
         
         void doAction() override {
             verHints->toggleExcluded();
             horHints->toggleExcluded();
-        };
+        }
 };
 
 
@@ -97,7 +97,7 @@ class Watch: public TimerHandler, public Widget
         void stop();
         void start();
         void draw() override;
-        int getElapsed() { return elapsed; };
+        int getElapsed() { return elapsed; }
         void save(std::ostream &stream);
         void reset();
 };
@@ -190,7 +190,7 @@ class PauseGameCommand: public Command
             gameArea = a; 
             watch = w;
             background = bg;
-        };
+        }
         
         void doAction() override {
             watch->stop();
@@ -206,7 +206,7 @@ class PauseGameCommand: public Command
             gameArea->updateMouse();
             gameArea->draw();
             watch->start();
-        };
+        }
 };
 
 
@@ -222,7 +222,7 @@ class WinCommand: public Command
             gameArea = a; 
             watch = w;
             game = g;
-        };
+        }
         
         void doAction() override {
             sound->play(L"applause.wav");
@@ -242,7 +242,7 @@ class WinCommand: public Command
             }
             showScoresWindow(gameArea, &scores, pos);
             gameArea->finishEventLoop();
-        };
+        }
 };
 
 class OkDlgCommand: public Command
@@ -254,12 +254,12 @@ class OkDlgCommand: public Command
     public:
         OkDlgCommand(Area *a, bool &r): res(r) { 
             area = a; 
-        };
+        }
         
         void doAction() override {
             res = true; 
             area->finishEventLoop();
-        };
+        }
 };
 
 class FailCommand: public Command
@@ -269,7 +269,7 @@ class FailCommand: public Command
         Game *game;
 
     public:
-        FailCommand(Area *a, Game *g) { gameArea = a;  game = g; };
+        FailCommand(Area *a, Game *g) { gameArea = a;  game = g; }
         
         void doAction() override {
             sound->play(L"glasbk2.wav");
@@ -301,7 +301,7 @@ class FailCommand: public Command
                 gameArea->updateMouse();
             } else
                 gameArea->finishEventLoop();
-        };
+        }
 };
 
 
@@ -315,7 +315,7 @@ class CheatAccel: public Widget
     public:
         CheatAccel(const std::wstring& s, Command *cmd): cheat(s) {
             command = cmd;
-        };
+        }
 
     public:
         bool onKeyDown(SDLKey key, unsigned char ch) override {
@@ -344,7 +344,7 @@ class CheatCommand: public Command
         Area *gameArea;
 
     public:
-        explicit CheatCommand(Area *a) { gameArea = a; };
+        explicit CheatCommand(Area *a) { gameArea = a; }
         
         void doAction() override {
             Font font(L"nova.ttf", 30);
@@ -352,7 +352,7 @@ class CheatCommand: public Command
                     500, 100, &font, 255,255,255, 
                     msg(L"iddqd"));
             gameArea->draw();
-        };
+        }
 };
 
 
@@ -370,7 +370,7 @@ class SaveGameCommand: public Command
             watch = w;
             background = bg;
             game = g;
-        };
+        }
         
         void doAction() override {
             watch->stop();
@@ -382,7 +382,7 @@ class SaveGameCommand: public Command
             gameArea->updateMouse();
             gameArea->draw();
             watch->start();
-        };
+        }
 };
 
 
@@ -394,13 +394,13 @@ class GameOptionsCommand: public Command
     public:
         explicit GameOptionsCommand(Area *a) { 
             gameArea = a; 
-        };
+        }
         
         void doAction() override {
             showOptionsWindow(gameArea);
             gameArea->updateMouse();
             gameArea->draw();
-        };
+        }
 };
 
 
@@ -416,7 +416,7 @@ class HelpCommand: public Command
             gameArea = a;
             watch = w;
             background = b;
-        };
+        }
         
         void doAction() override {
             watch->stop();
@@ -427,7 +427,7 @@ class HelpCommand: public Command
             gameArea->updateMouse();
             gameArea->draw();
             watch->start();
-        };
+        }
 };
 
 

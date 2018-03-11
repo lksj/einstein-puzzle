@@ -41,7 +41,7 @@ class RegistryStorage: public Storage
         std::wstring get(const std::wstring &name, const std::wstring &dflt) override;
         void set(const std::wstring &name, int value) override;
         void set(const std::wstring &name, const std::wstring &value) override;
-        void flush() override { };
+        void flush() override { }
 };
 
 

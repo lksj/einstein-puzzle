@@ -47,13 +47,13 @@ class Locale
 
     public:
         /// Get current country.
-        const std::wstring& getCountry() const { return country; };
+        const std::wstring& getCountry() const { return country; }
         
         /// Get current language.
-        const std::wstring& getLanguage() const { return language; };
+        const std::wstring& getLanguage() const { return language; }
         
         /// Get current encoding.
-        const std::wstring& getEncoding() const { return encoding; };
+        const std::wstring& getEncoding() const { return encoding; }
 
     private:
         void parseLocale(const std::wstring &name);

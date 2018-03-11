@@ -43,16 +43,16 @@ class Lexeme
         std::wstring content;
     
     public:
-        Lexeme() { };
+        Lexeme() { }
         Lexeme(Type type, const std::wstring &content, int line, int pos);
         ~Lexeme() = default;
 
     public:
-        Type getType() const { return type; };
-        const std::wstring getContent() const { return content; };
+        Type getType() const { return type; }
+        const std::wstring getContent() const { return content; }
         std::wstring getPosStr() const;
-        int getLine() const { return line; };
-        int getPos() const { return pos; };
+        int getLine() const { return line; }
+        int getPos() const { return pos; }
 };
 
 

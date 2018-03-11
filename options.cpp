@@ -56,7 +56,7 @@ class OptionsChangedCommand: public Command
         OptionsChangedCommand(Area *a, bool &fs, bool &ns, int &ss, float &v): 
             fullscreen(fs), niceCursor(ns), screenSize(ss), volume(v) {
             area = a;
-        };
+        }
 
         void doAction() override {
             bool oldFullscreen = (getStorage()->get(L"fullscreen", 1) != 0);
@@ -83,7 +83,7 @@ class OptionsChangedCommand: public Command
             }
             getStorage()->flush();
             area->finishEventLoop();
-        };
+        }
 };
 
 

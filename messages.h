@@ -62,7 +62,7 @@ class Messages
         /// \param key message key
         std::wstring operator [](const std::wstring &key) const {
             return getMessage(key);
-        };
+        }
         
         /// Format message
         /// \param key message key

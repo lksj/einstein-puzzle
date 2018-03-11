@@ -55,9 +55,9 @@ class UnpackedResourceStream: public ResourceStream
                 size_t size);
 
     public:
-        size_t getSize() override { return size; };
+        size_t getSize() override { return size; }
         void read(char *buffer, size_t size) override;
-        long getPos() override { return pos; };
+        long getPos() override { return pos; }
 };
 
 UnpackedResourceStream::UnpackedResourceStream(std::ifstream &s, 
@@ -100,9 +100,9 @@ class MemoryResourceStream: public ResourceStream
         virtual ~MemoryResourceStream();
 
     public:
-        size_t getSize() override { return size; };
+        size_t getSize() override { return size; }
         void read(char *buffer, size_t size) override;
-        long getPos() override { return pos; };
+        long getPos() override { return pos; }
 };
 
 MemoryResourceStream::MemoryResourceStream(ResVariant *res)
@@ -384,7 +384,7 @@ class ScorePredicate
 
         bool operator() (const ResVariant *r) const {
             return r->getI18nScore() == score;
-        };
+        }
 };
 
 class ResVariantMoreThen
@@ -392,7 +392,7 @@ class ResVariantMoreThen
     public:
         bool operator() (const ResVariant *v1, const ResVariant *v2) const {
             return v1->getI18nScore() > v2->getI18nScore();
-        };
+        }
 };
 
 void Resource::addVariant(ResourceFile *file, int i18nScore,
@@ -460,7 +460,7 @@ class ResFileMoreThen
     public:
         bool operator() (const ResourceFile *f1, const ResourceFile *f2) const {
             return f1->getPriority() > f2->getPriority();
-        };
+        }
 };
 
 ResourcesCollection::ResourcesCollection(StringList &directories)

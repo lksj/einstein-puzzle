@@ -77,8 +77,8 @@ class Table
         void save(const std::wstring &fileName) const;
 
     public:
-        Iterator begin() const { return fields.begin(); };
-        Iterator end() const { return fields.end(); };
+        Iterator begin() const { return fields.begin(); }
+        Iterator end() const { return fields.end(); }
         bool hasKey(const std::wstring &key) const;
         Value::Type getType(const std::wstring &key) const;
         std::wstring getString(const std::wstring &key, const std::wstring &dflt = L"") const;

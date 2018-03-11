@@ -73,7 +73,7 @@ class Buffer
         /// \param length data size.
         size_t putData(const char *data, size_t length) {
             return putData((const unsigned char*)data, length);
-        };
+        }
 
         /// Add integer to buffer and advance current position by 4.
         /// Grow buffer if needed.

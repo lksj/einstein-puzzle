@@ -33,7 +33,7 @@ class TextCommand: public MsgCommand
         std::wstring text;
 
     public:
-        explicit TextCommand(const std::wstring &s): text(s) { };
+        explicit TextCommand(const std::wstring &s): text(s) { }
         
         std::wstring toString()  override {
             return L"text: '" + text + L"'";
@@ -53,14 +53,14 @@ class ArgCommand: public MsgCommand
         int argNo;
 
     public:
-        explicit ArgCommand(int no) { argNo = no; };
+        explicit ArgCommand(int no) { argNo = no; }
 };
 
 
 class IntArgCommand: public ArgCommand
 {
     public:
-        explicit IntArgCommand(int no): ArgCommand(no) { };
+        explicit IntArgCommand(int no): ArgCommand(no) { }
        
         std::wstring toString() override {
             return L"int_arg " + ::toString(argNo);
@@ -78,7 +78,7 @@ class IntArgCommand: public ArgCommand
 class StrArgCommand: public ArgCommand
 {
     public:
-        explicit StrArgCommand(int no): ArgCommand(no) { };
+        explicit StrArgCommand(int no): ArgCommand(no) { }
         std::wstring toString() override {
             return L"str_arg " + ::toString(argNo);
         }
@@ -95,7 +95,7 @@ class StrArgCommand: public ArgCommand
 class FloatArgCommand: public ArgCommand
 {
     public:
-        explicit FloatArgCommand(int no): ArgCommand(no) { };
+        explicit FloatArgCommand(int no): ArgCommand(no) { }
        
         std::wstring toString() override {
             return L"float_arg " + ::toString(argNo);
@@ -113,7 +113,7 @@ class FloatArgCommand: public ArgCommand
 class DoubleArgCommand: public ArgCommand
 {
     public:
-        explicit DoubleArgCommand(int no): ArgCommand(no) { };
+        explicit DoubleArgCommand(int no): ArgCommand(no) { }
        
         std::wstring toString() override {
             return L"float_arg " + ::toString(argNo);

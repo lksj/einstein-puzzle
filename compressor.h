@@ -50,7 +50,7 @@ class Entry
             comprLevel = level;
             offset = packedSize = realSize = 0;
             formatter = frmt;
-        };
+        }
 };
 
 
@@ -70,7 +70,7 @@ class ResourceCompressor
 
     public:
         void add(const Entry &entry) { entries.push_back(entry); }
-        void setPriority(int p) { priority = p; };
+        void setPriority(int p) { priority = p; }
         void compress(const std::string &outputFile, bool verbose);
         void printDeps(const std::string &outputFile, 
                 const std::string &sourceFile);

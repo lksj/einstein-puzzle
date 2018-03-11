@@ -31,11 +31,11 @@ class Exception
         std::wstring message;
     
     public:
-        explicit Exception(const std::wstring& msg) : message(msg) {};
+        explicit Exception(const std::wstring& msg) : message(msg) {}
         virtual ~Exception() = default;
 
     public:
-        const std::wstring& getMessage() const { return message; };
+        const std::wstring& getMessage() const { return message; }
 };
 
 

@@ -72,8 +72,8 @@ class Rule
     public:
         virtual std::wstring getAsText() = 0;
         virtual bool apply(Possibilities &pos) = 0;
-        virtual bool applyOnStart() { return false; };
-        virtual ShowOptions getShowOpts() { return SHOW_NOTHING; };
+        virtual bool applyOnStart() { return false; }
+        virtual ShowOptions getShowOpts() { return SHOW_NOTHING; }
         virtual void draw(int x, int y, IconSet &iconSet, bool highlight) = 0;
         virtual void save(std::ostream &stream) = 0;
 };

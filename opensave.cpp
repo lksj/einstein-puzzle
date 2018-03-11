@@ -50,12 +50,12 @@ class SavedGame
         explicit SavedGame(const std::wstring &fileName);
         SavedGame(const SavedGame &s): fileName(s.fileName), name(s.name) {
             exists = s.exists;
-        };
+        }
 
     public:
-        const std::wstring& getFileName() { return fileName; };
-        std::wstring getName() { return exists ? name : msg(L"empty"); };
-        bool isExists() { return exists; };
+        const std::wstring& getFileName() { return fileName; }
+        std::wstring getName() { return exists ? name : msg(L"empty"); }
+        bool isExists() { return exists; }
 };
 
 
@@ -83,12 +83,12 @@ class OkCommand: public Command
         bool *ok;
     
     public:
-        OkCommand(Area &a, bool *o): area(a) { ok = o; };
+        OkCommand(Area &a, bool *o): area(a) { ok = o; }
         
         void doAction() override {
             *ok = true;
             area.finishEventLoop();
-        };
+        }
 };
 
 
@@ -111,7 +111,7 @@ class SaveCommand: public Command
             saved = s;
             font = f;
             game = g;
-        };
+        }
         
     public:
         void doAction() override {
@@ -158,7 +158,7 @@ class SaveCommand: public Command
                 parentArea->updateMouse();
                 parentArea->draw();
             }
-        };
+        }
 };
 
 
@@ -256,7 +256,7 @@ class LoadCommand: public Command
             parentArea = area;
             font = f;
             game = g;
-        };
+        }
         
     public:
         void doAction() override {
@@ -276,7 +276,7 @@ class LoadCommand: public Command
                         255,255,255, L"Error loadng game");
             }
             parentArea->finishEventLoop();
-        };
+        }
 };
 
 

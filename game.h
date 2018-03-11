@@ -54,15 +54,15 @@ class Game
         ~Game();
 
     public:
-        SolvedPuzzle& getSolvedPuzzle() { return solvedPuzzle; };
-        Rules& getRules() { return rules; };
-        Possibilities* getPossibilities() { return possibilities; };
-        VertHints* getVerHints() { return verHints; };
-        HorHints* getHorHints() { return horHints; };
+        SolvedPuzzle& getSolvedPuzzle() { return solvedPuzzle; }
+        Rules& getRules() { return rules; }
+        Possibilities* getPossibilities() { return possibilities; }
+        VertHints* getVerHints() { return verHints; }
+        HorHints* getHorHints() { return horHints; }
         void save(std::ostream &stream);
         void run();
-        bool isHinted() { return hinted; };
-        void setHinted() { hinted = true; };
+        bool isHinted() { return hinted; }
+        void setHinted() { hinted = true; }
         void restart();
         void newGame();
 
