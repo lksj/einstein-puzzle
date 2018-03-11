@@ -130,7 +130,7 @@ static void parseFile(const std::string &fileName)
 int main(int argc, char *argv[])
 {
     int res = 0;
-    //lua_State *lua = NULL;
+    //lua_State *lua = nullptr;
     parseArgs(argc, argv);
     
     try {

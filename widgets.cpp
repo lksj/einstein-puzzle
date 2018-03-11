@@ -70,8 +70,8 @@ TileWidget::TileWidget(int x, int y, int w, int h, bool t):
     BoundedWidget(x, y, w, h, t)
 {
     scale = -1.0;
-    image = NULL;
-    sImage = NULL;
+    image = nullptr;
+    sImage = nullptr;
 }
 
 
@@ -132,8 +132,8 @@ void TileWidget::rescale()
 HighlightableWidget::HighlightableWidget(int x, int y, int w, int h, bool t):
     TileWidget(x, y, w, h, t)
 {
-    highlighted = NULL;
-    sHighlighted = NULL;
+    highlighted = nullptr;
+    sHighlighted = nullptr;
     mouseInside = false;
 }
 
@@ -287,8 +287,8 @@ Button::Button(int x, int y, int w, int h, Font *font,
     TextHighlightWidget(x, y, w, h, font, fR, fG, fB, hR, hG, hB, true),
     text(text)
 {
-    image = NULL;
-    highlighted = NULL;
+    image = nullptr;
+    highlighted = nullptr;
     
     command = cmd;
 }
@@ -380,7 +380,7 @@ bool KeyAccel::onKeyDown(SDLKey k, unsigned char ch)
 
 Area::Area():
     terminate(true),
-    timer(NULL)
+    timer(nullptr)
 {
 }
 
@@ -563,7 +563,7 @@ void Area::updateMouse()
 
 AnyKeyAccel::AnyKeyAccel()
 {
-    command = NULL;
+    command = nullptr;
 }
 
 AnyKeyAccel::AnyKeyAccel(Command *cmd)
@@ -778,7 +778,7 @@ void InputField::draw()
         SDL_FreeSurface(s);
     }
     
-    screen.setClipRect(NULL);
+    screen.setClipRect(nullptr);
 }
 
 void InputField::setParent(Area *a)

@@ -52,9 +52,9 @@ HorHints::HorHints(IconSet &is, Rules &rl, std::istream &stream): iconSet(is)
         int excluded = readInt(stream);
         if (excluded) {
             excludedRules.push_back(r);
-            rules.push_back(NULL);
+            rules.push_back(nullptr);
         } else {
-            excludedRules.push_back(NULL);
+            excludedRules.push_back(nullptr);
             rules.push_back(r);
         }
     }
@@ -78,7 +78,7 @@ void HorHints::reset(Rules &r)
     {
         if (rule->getShowOpts() == Rule::SHOW_HORIZ) {
             rules.push_back(rule);
-            excludedRules.push_back(NULL);
+            excludedRules.push_back(nullptr);
             numbersArr.push_back(no);
         }
         no++;
@@ -103,7 +103,7 @@ void HorHints::drawCell(int col, int row, bool addToUpdate)
     int x = TILE_X + col * (TILE_WIDTH*3 + TILE_GAP_X);
     int y = TILE_Y + row * (TILE_HEIGHT + TILE_GAP_Y);
 
-    Rule *r = NULL;
+    Rule *r = nullptr;
     int no = row * HINTS_COLS + col;
     if (no < (int)rules.size())
     {
@@ -146,14 +146,14 @@ bool HorHints::onMouseButtonDown(int button, int x, int y)
         if (r) {
             sound->play(L"whizz.wav");
             rules[no] = r;
-            excludedRules[no] = NULL;
+            excludedRules[no] = nullptr;
             drawCell(col, row);
         }
     } else {
         Rule *r = rules[no];
         if (r) {
             sound->play(L"whizz.wav");
-            rules[no] = NULL;
+            rules[no] = nullptr;
             excludedRules[no] = r;
             drawCell(col, row);
         }
@@ -221,7 +221,7 @@ bool HorHints::isActive(int ruleNo)
     if ((ruleNo < 0) || (ruleNo >= (int)rules.size()))
         return false;
     Rule *r = showExcluded ? excludedRules[ruleNo] : rules[ruleNo];
-    return r != NULL;
+    return r != nullptr;
 }
 
 

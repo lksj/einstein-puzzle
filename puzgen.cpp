@@ -274,7 +274,7 @@ static void genRules(SolvedPuzzle &puzzle, Rules &rules)
             for (auto& i : rules)
                 if (i->getAsText() == s) {
                     delete rule;
-                    rule = NULL;
+                    rule = nullptr;
                     break;
                 }
             if (rule) {
@@ -380,7 +380,7 @@ Rule* getRule(Rules &rules, int no)
 
 /*int main(int argc, char *argv[])
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     
     Rules rules;
     Puzzle puzzle;

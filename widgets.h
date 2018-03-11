@@ -153,13 +153,13 @@ class Button: public TextHighlightWidget
     public:
         Button(int x, int y, int width, int height, Font *font, 
                 int fR, int fG, int fB, int hR, int hG, int hB, 
-                const std::wstring &text, Command *cmd=NULL);
+                const std::wstring &text, Command *cmd=nullptr);
         Button(int x, int y, int width, int height, Font *font, 
                 int r, int g, int b, const std::wstring &background, 
-                const std::wstring &text, Command *cmd=NULL);
+                const std::wstring &text, Command *cmd=nullptr);
         Button(int x, int y, int width, int height, Font *font, 
                 int r, int g, int b, const std::wstring &background, 
-                const std::wstring &text, bool bevel, Command *cmd=NULL);
+                const std::wstring &text, bool bevel, Command *cmd=nullptr);
 
     public:
         void moveTo(int x, int y) { left = x; top = y; };

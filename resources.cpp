@@ -32,7 +32,7 @@
 #include "utils.h"
 
 
-ResourcesCollection *resources = NULL;
+ResourcesCollection *resources = nullptr;
 
 
 ///////////////////////////////////////////////////////////////////
@@ -228,7 +228,7 @@ void ResourceFile::unpack(char *in, int inSize, char *out, int outSize)
 void ResourceFile::load(char *buf, long offset, long packedSize, 
         long unpackedSize, int level)
 {
-    char *inBuf=NULL;
+    char *inBuf = nullptr;
     
     try {
         if (! level) {
@@ -254,7 +254,7 @@ void ResourceFile::load(char *buf, long offset, long packedSize,
 void* ResourceFile::load(long offset, long packedSize, long unpackedSize,
         int level)
 {
-    char *outBuf=NULL;
+    char *outBuf = nullptr;
     
     try {
         outBuf = (char*)malloc(unpackedSize);
@@ -290,7 +290,7 @@ ResVariant::ResVariant(ResourceFile *f, int score,
     packedSize = e.packedSize;
     level = e.level;
     refCnt = 0;
-    data = NULL;
+    data = nullptr;
 }
 
 
@@ -331,7 +331,7 @@ void ResVariant::delRef(void *dta)
     refCnt--;
     if (! refCnt) {
         free((char*)data - sizeof(ResVariant*));
-        data = NULL;
+        data = nullptr;
     }
 }
 
@@ -588,7 +588,7 @@ void ResourcesCollection::forEachInGroup(const std::wstring &name,
 
 ResDataHolder::ResDataHolder()
 {
-    data = NULL;
+    data = nullptr;
     size = 0;
 }
 

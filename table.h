@@ -83,7 +83,7 @@ class Table
         Value::Type getType(const std::wstring &key) const;
         std::wstring getString(const std::wstring &key, const std::wstring &dflt = L"") const;
         int getInt(const std::wstring &key, int dflt=0) const;
-        Table* getTable(const std::wstring &key, Table *dflt=NULL) const;
+        Table* getTable(const std::wstring &key, Table *dflt=nullptr) const;
         void setString(const std::wstring &key, const std::wstring &value);
         void setInt(const std::wstring &key, int value);
         

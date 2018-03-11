@@ -178,7 +178,7 @@ class AboutCommand: public Command
 
 
 static Button* menuButton(int y, Font *font, const std::wstring &text, 
-        Command *cmd=NULL)
+        Command *cmd=nullptr)
 {
     return new Button(550, y, 220, 30, font, 0,240,240, 30,255,255, text, cmd);
 }

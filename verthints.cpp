@@ -51,9 +51,9 @@ VertHints::VertHints(IconSet &is, Rules &rl, std::istream &stream): iconSet(is)
         int excluded = readInt(stream);
         if (excluded) {
             excludedRules.push_back(r);
-            rules.push_back(NULL);
+            rules.push_back(nullptr);
         } else {
-            excludedRules.push_back(NULL);
+            excludedRules.push_back(nullptr);
             rules.push_back(r);
         }
     }
@@ -76,7 +76,7 @@ void VertHints::reset(Rules &r)
     {
         if (rule->getShowOpts() == Rule::SHOW_VERT) {
             rules.push_back(rule);
-            excludedRules.push_back(NULL);
+            excludedRules.push_back(nullptr);
             numbersArr.push_back(no);
         }
         no++;
@@ -101,7 +101,7 @@ void VertHints::drawCell(int col, bool addToUpdate)
     int x = TILE_X + col * (TILE_WIDTH + TILE_GAP);
     int y = TILE_Y;
 
-    Rule *r = NULL;
+    Rule *r = nullptr;
     if (col < (int)rules.size()) {
         if (showExcluded)
             r = excludedRules[col];
@@ -139,14 +139,14 @@ bool VertHints::onMouseButtonDown(int button, int x, int y)
             if (r) {
                 sound->play(L"whizz.wav");
                 rules[no] = r;
-                excludedRules[no] = NULL;
+                excludedRules[no] = nullptr;
                 drawCell(no);
             }
         } else {
             Rule *r = rules[no];
             if (r) {
                 sound->play(L"whizz.wav");
-                rules[no] = NULL;
+                rules[no] = nullptr;
                 excludedRules[no] = r;
                 drawCell(no);
             }
@@ -202,7 +202,7 @@ bool VertHints::isActive(int ruleNo)
     if ((ruleNo < 0) || (ruleNo >= (int)rules.size()))
         return false;
     Rule *r = showExcluded ? excludedRules[ruleNo] : rules[ruleNo];
-    return r != NULL;
+    return r != nullptr;
 }
 
 

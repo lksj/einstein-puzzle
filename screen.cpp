@@ -129,11 +129,11 @@ void Screen::setMouseImage(SDL_Surface *image)
 {
     if (mouseImage) {
         SDL_FreeSurface(mouseImage);
-        mouseImage = NULL;
+        mouseImage = nullptr;
     }
     if (mouseSave) {
         SDL_FreeSurface(mouseSave);
-        mouseSave = NULL;
+        mouseSave = nullptr;
     }
 
     if (! image) return;

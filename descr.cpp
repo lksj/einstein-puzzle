@@ -388,7 +388,7 @@ void TextParser::parseNextPage()
 TextPage* TextParser::getPage(unsigned int no)
 {
     if (pages.size() <= no)
-        return NULL;
+        return nullptr;
     else
         return pages[no];
 }

@@ -52,7 +52,7 @@ static void initScreen()
     SDL_SetColorKey(mouse, SDL_SRCCOLORKEY, SDL_MapRGB(mouse->format, 0, 0, 0));
     screen.setMouseImage(mouse);
     SDL_FreeSurface(mouse);
-    SDL_WM_SetCaption("Einstein", NULL);
+    SDL_WM_SetCaption("Einstein", nullptr);
 
 #ifdef __APPLE__
     screen.setCursor(false);
@@ -98,7 +98,7 @@ static void loadResources(const std::wstring &selfPath)
 
 /*static void checkBetaExpire()
 {
-    if (1124832535L + 60L*60L*24L*40L < time(NULL)) {
+    if (1124832535L + 60L*60L*24L*40L < time(nullptr)) {
         Font font(L"laudcn2.ttf", 16);
         Area area;
         showMessageWindow(&area, L"darkpattern.bmp", 

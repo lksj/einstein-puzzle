@@ -169,7 +169,7 @@ static std::wstring getSavesPath()
             std::wstring(L"/.einstein/save"));
 #else
     TCHAR szPath[MAX_PATH];
-    SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, SHGFP_TYPE_CURRENT, szPath);
+    SHGetFolderPath(nullptr, CSIDL_LOCAL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, szPath);
     std::wstring path(&szPath[0]);
     if (path.length() > 0)
         path += L"\\";
@@ -288,7 +288,7 @@ Game* loadGame(Area *parentArea)
     area.add(parentArea, false);
     Font font(L"laudcn2.ttf", 14);
     
-    Game *newGame = NULL;
+    Game *newGame = nullptr;
     
     SavesList list;
     Command **commands = new Command*[MAX_SLOTS];
@@ -299,7 +299,7 @@ Game* loadGame(Area *parentArea)
             commands[i] = new LoadCommand(*(--(list.end())), &font, &area, 
                     &newGame);
         else
-            commands[i] = NULL;
+            commands[i] = nullptr;
     }
     
     showListWindow(list, commands, msg(L"loadGame"), area, &font);

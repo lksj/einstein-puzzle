@@ -25,7 +25,7 @@
 #include "unicode.h"
 
 
-static Uint16 *convBuf = NULL;
+static Uint16 *convBuf = nullptr;
 static size_t bufSize = 0;
 
 
@@ -69,7 +69,7 @@ Font::Font(const std::wstring &name, int ptsize):
         throw Exception(name + L" not found");
     
     scale = -1.0;
-    font = NULL;
+    font = nullptr;
     rescale();
 }
 

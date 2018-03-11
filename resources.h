@@ -97,7 +97,7 @@ class ResourceFile
         /// \param fileName the name of resource file.
         /// \param buffer buffer for temporary data.
         /// Can be shared with other resource files.
-        ResourceFile(const std::wstring &fileName, Buffer *buffer=NULL);
+        ResourceFile(const std::wstring &fileName, Buffer *buffer=nullptr);
         virtual ~ResourceFile();
 
     public:

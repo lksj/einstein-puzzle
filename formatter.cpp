@@ -35,8 +35,8 @@ Formatter::Formatter(unsigned char *data, int offset)
     int cnt = readInt(data + offset);
     if (! cnt) {
         commandsCnt = argsCnt = 0;
-        commands = NULL;
-        args = NULL;
+        commands = nullptr;
+        args = nullptr;
     }
     
     offset += 4;
@@ -68,7 +68,7 @@ Formatter::Formatter(unsigned char *data, int offset)
 
     argsCnt = maxArg;
     if (! argsCnt)
-        args = NULL;
+        args = nullptr;
     else {
         args = new CmdType[argsCnt];
         memset(args, 0, sizeof(CmdType) * argsCnt);

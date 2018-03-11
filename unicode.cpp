@@ -216,15 +216,15 @@ g_utf8_get_char (const char *p)
  * @str: a UTF-8 encoded string
  * @len: the maximum length of @str to use. If @len < 0, then
  *       the string is nul-terminated.
- * @items_read: location to store number of bytes read, or %NULL.
- *              If %NULL, then %G_CONVERT_ERROR_PARTIAL_INPUT will be
+ * @items_read: location to store number of bytes read, or %nullptr.
+ *              If %nullptr, then %G_CONVERT_ERROR_PARTIAL_INPUT will be
  *              returned in case @str contains a trailing partial
  *              character. If an error occurs then the index of the
  *              invalid input is stored here.
- * @items_written: location to store number of characters written or %NULL.
+ * @items_written: location to store number of characters written or %nullptr.
  *                 The value here stored does not include the trailing 0
  *                 character. 
- * @error: location to store the error occuring, or %NULL to ignore
+ * @error: location to store the error occuring, or %nullptr to ignore
  *         errors. Any of the errors in #GConvertError other than
  *         %G_CONVERT_ERROR_NO_CONVERSION may occur.
  *
@@ -234,7 +234,7 @@ g_utf8_get_char (const char *p)
  * 
  * Return value: a pointer to a newly allocated UCS-4 string.
  *               This value must be freed with g_free(). If an
- *               error occurs, %NULL will be returned and
+ *               error occurs, %nullptr will be returned and
  *               @error set.
  **/
 wchar_t *
@@ -244,7 +244,7 @@ g_utf8_to_ucs4 (const char *str,
 		long       *items_written,   
 		wchar_t **error)
 {
-  wchar_t *result = NULL;
+  wchar_t *result = nullptr;
   int n_chars, i;
   const char *in;
   
@@ -299,7 +299,7 @@ g_utf8_to_ucs4 (const char *str,
  * g_unichar_to_utf8:
  * @c: a ISO10646 character code
  * @outbuf: output buffer, must have at least 6 bytes of space.
- *       If %NULL, the length will be computed and returned
+ *       If %nullptr, the length will be computed and returned
  *       and nothing will be written to @outbuf.
  * 
  * Converts a single character to UTF-8.
@@ -362,11 +362,11 @@ g_unichar_to_utf8 (wchar_t c,
  * @str: a UCS-4 encoded string
  * @len: the maximum length of @str to use. If @len < 0, then
  *       the string is terminated with a 0 character.
- * @items_read: location to store number of characters read read, or %NULL.
- * @items_written: location to store number of bytes written or %NULL.
+ * @items_read: location to store number of characters read read, or %nullptr.
+ * @items_written: location to store number of bytes written or %nullptr.
  *                 The value here stored does not include the trailing 0
  *                 byte. 
- * @error: location to store the error occuring, or %NULL to ignore
+ * @error: location to store the error occuring, or %nullptr to ignore
  *         errors. Any of the errors in #GConvertError other than
  *         %G_CONVERT_ERROR_NO_CONVERSION may occur.
  *
@@ -375,7 +375,7 @@ g_unichar_to_utf8 (wchar_t c,
  * 
  * Return value: a pointer to a newly allocated UTF-8 string.
  *               This value must be freed with g_free(). If an
- *               error occurs, %NULL will be returned and
+ *               error occurs, %nullptr will be returned and
  *               @error set.
  **/
 char *
@@ -386,7 +386,7 @@ g_ucs4_to_utf8 (const wchar_t *str,
 		wchar_t       **error)
 {
   int result_length;
-  char *result = NULL;
+  char *result = nullptr;
   char *p;
   int i;
 
@@ -430,7 +430,7 @@ g_ucs4_to_utf8 (const wchar_t *str,
 std::string toUtf8(const std::wstring &str)
 {
     long readed, writed;
-    wchar_t *errMsg = NULL;
+    wchar_t *errMsg = nullptr;
     
     char *res = g_ucs4_to_utf8(str.c_str(), str.length(), &readed,
             &writed, &errMsg);
@@ -450,7 +450,7 @@ std::string toUtf8(const std::wstring &str)
 std::wstring fromUtf8(const std::string &str)
 {
     long readed, writed;
-    wchar_t *errMsg = NULL;
+    wchar_t *errMsg = nullptr;
     
     wchar_t *res = g_utf8_to_ucs4(str.c_str(), str.length(), &readed,
             &writed, &errMsg);
@@ -481,7 +481,7 @@ std::string toUtf8(const std::wstring &str)
     int bufSize = (len + 1) * 6 + 1;
     char buf[bufSize];
     int res = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), len + 1,
-           buf, bufSize, NULL, NULL);
+           buf, bufSize, nullptr, nullptr);
 
     if (! res)
         throw Exception(L"Error converting UCS-2 to UTF-8");
@@ -513,7 +513,7 @@ std::string toOem(const std::wstring &str)
     int bufSize = (len + 1) * 6 + 1;
     char buf[bufSize];
     int res = WideCharToMultiByte(CP_OEMCP, 0, str.c_str(), len + 1,
-           buf, bufSize, NULL, NULL);
+           buf, bufSize, nullptr, nullptr);
 
     if (! res)
         throw Exception(L"Error converting UCS-2 to OEM");

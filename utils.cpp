@@ -165,7 +165,7 @@ int gettimeofday(struct timeval* tp, int* /*tz*/)
 
 int gettimeofday(struct timeval* tp, struct timezone* /*tz*/) 
 {
-    return gettimeofday(tp, (int*)NULL);
+    return gettimeofday(tp, (int*)nullptr);
 }
 #endif
 
@@ -174,7 +174,7 @@ int gettimeofday(struct timeval* tp, struct timezone* /*tz*/)
 int gettimeofday(struct timeval* tp)
 {
 #ifdef WIN32
-    return gettimeofday(tp, (int*)NULL);
+    return gettimeofday(tp, (int*)nullptr);
 #else
     struct timezone tz;
     return gettimeofday(tp, &tz);

@@ -55,7 +55,7 @@ void Sound::play(const std::wstring &name)
     if (disabled || (! enableFx))
         return;
     
-    Mix_Chunk *chunk = NULL;
+    Mix_Chunk *chunk = nullptr;
     
     ChunkMap::iterator i = chunkCache.find(name);
     if (i != chunkCache.end())

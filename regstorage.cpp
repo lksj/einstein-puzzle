@@ -27,16 +27,16 @@ RegistryStorage::RegistryStorage()
     if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, 
                 "SOFTWARE\\Flowix Games\\Einstein\\2.0",
                 0, KEY_READ, &globalKey))
-        globalKey = NULL;
+        globalKey = nullptr;
     if (RegOpenKeyEx(HKEY_CURRENT_USER, 
                 "SOFTWARE\\Flowix Games\\Einstein\\2.0",
                 0, KEY_READ | KEY_WRITE, &userKey))
     {
         if (RegCreateKeyEx(HKEY_CURRENT_USER, 
-                    "SOFTWARE\\Flowix Games\\Einstein\\2.0", 0, NULL, 
+                    "SOFTWARE\\Flowix Games\\Einstein\\2.0", 0, nullptr,
                     REG_OPTION_NON_VOLATILE, KEY_READ | KEY_WRITE,
-                    NULL, &userKey, NULL))
-            userKey = NULL;
+                    nullptr, &userKey, nullptr))
+            userKey = nullptr;
     }
 }
 
@@ -56,7 +56,7 @@ int RegistryStorage::get(const std::wstring &name, int dflt)
         DWORD data;
         DWORD size = sizeof(data);
         DWORD type;
-        if (! RegQueryValueEx(globalKey, uname.c_str(), NULL, &type,
+        if (! RegQueryValueEx(globalKey, uname.c_str(), nullptr, &type,
                     (BYTE*)&data, &size))
             if (type == REG_DWORD)
                 return data;
@@ -66,7 +66,7 @@ int RegistryStorage::get(const std::wstring &name, int dflt)
         DWORD data;
         DWORD size = sizeof(data);
         DWORD type;
-        if (! RegQueryValueEx(userKey, uname.c_str(), NULL, &type,
+        if (! RegQueryValueEx(userKey, uname.c_str(), nullptr, &type,
                     (BYTE*)&data, &size))
             if (type == REG_DWORD)
                 return data;
@@ -82,12 +82,12 @@ std::wstring RegistryStorage::get(const std::wstring &name, const std::wstring &
     if (globalKey) {
         DWORD size = 0;
         DWORD type;
-        if (! RegQueryValueEx(globalKey, uname.c_str(), NULL, &type,
-                    NULL, &size)) 
+        if (! RegQueryValueEx(globalKey, uname.c_str(), nullptr, &type,
+                    nullptr, &size))
         {
             if ((type == REG_SZ) && (size > 0)) {
                 char *data = new char[size + 1];
-                if (! RegQueryValueEx(globalKey, uname.c_str(), NULL, &type,
+                if (! RegQueryValueEx(globalKey, uname.c_str(), nullptr, &type,
                             (BYTE*)data, &size)) 
                 {
                     std::wstring s(fromUtf8(data));
@@ -103,12 +103,12 @@ std::wstring RegistryStorage::get(const std::wstring &name, const std::wstring &
     if (userKey) {
         DWORD size = 0;
         DWORD type;
-        if (! RegQueryValueEx(userKey, uname.c_str(), NULL, &type,
-                    NULL, &size)) 
+        if (! RegQueryValueEx(userKey, uname.c_str(), nullptr, &type,
+                    nullptr, &size))
         {
             if ((type == REG_SZ) && (size > 0)) {
                 char *data = new char[size];
-                if (! RegQueryValueEx(userKey, uname.c_str(), NULL, &type,
+                if (! RegQueryValueEx(userKey, uname.c_str(), nullptr, &type,
                             (BYTE*)data, &size)) 
                 {
                     std::wstring s(fromUtf8(data));
