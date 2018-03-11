@@ -129,9 +129,7 @@ int getCornerPixel(SDL_Surface *surface)
 SDL_Surface* loadImage(const std::wstring &name, bool transparent)
 {
     int size;
-    void *bmp;
-
-    bmp = resources->getRef(name, size);
+    void *bmp = resources->getRef(name, size);
     if (! bmp)
         throw Exception(name + L" is not found");
     SDL_RWops *op = SDL_RWFromMem(bmp, size);
@@ -444,12 +442,11 @@ int readInt(std::istream &stream)
 std::wstring readString(std::istream &stream)
 {
     std::string str;
-    char c;
-
+    
     if (stream.fail())
         throw Exception(L"Error reading string");
     
-    c = stream.get();
+    char c = stream.get();
     while (c && (! stream.fail())) {
         str += c;
         c = stream.get();

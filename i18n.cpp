@@ -306,8 +306,7 @@ Locale::Locale()
     setlocale(LC_ALL, "");
 
     char buf[100];
-    int len;
-    len = GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, buf, 99);
+    int len = GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, buf, 99);
     if (len > 0)
         country = mapIso3ContryToIso2(buf);
     

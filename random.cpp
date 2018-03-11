@@ -50,10 +50,10 @@ Random::Random(int init_key[], int key_length)
 {
     mti = RAND_N+1; /* mti==RAND_N+1 means mt[RAND_N] is not initialized */
     
-    int i, j, k;
     initLong(19650218UL);
-    i=1; j=0;
-    k = (RAND_N>key_length ? RAND_N : key_length);
+    int i = 1;
+    int j = 0;
+    int k = (RAND_N>key_length ? RAND_N : key_length);
     for (; k; k--) {
         mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1664525UL))
           + init_key[j] + j; /* non linear */

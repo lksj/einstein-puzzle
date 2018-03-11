@@ -67,10 +67,9 @@ std::wstring numToStr(unsigned int num)
 
 int strToInt(const std::wstring &str)
 {
-    int n;
     wchar_t *endptr;
 
-    n = wcstol(str.c_str(), &endptr, 10);
+    int n = wcstol(str.c_str(), &endptr, 10);
     if ((! str.c_str()[0]) || (endptr[0])) 
         throw Exception(L"Invalid integer '" + str + L"'");
     return n;
@@ -78,10 +77,9 @@ int strToInt(const std::wstring &str)
 
 double strToDouble(const std::wstring &str)
 {
-    double n;
     wchar_t *endptr;
 
-    n = wcstod(str.c_str(), &endptr);
+    double n = wcstod(str.c_str(), &endptr);
     if ((! str.c_str()[0]) || (endptr[0])) 
         throw Exception(L"Invalid double '" + str + L"'");
     return n;

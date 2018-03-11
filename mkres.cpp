@@ -56,12 +56,10 @@ static void printVersion(int terminate)
 
 static void parseArgs(int argc, char *argv[])
 {
-    int i;
-    
     if (argc == 1)
         printHelp(0);
 
-    for (i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         if (! argv[i])
             continue;
         if ((! strcmp(argv[i], "--source")) && (i < argc - 1))
