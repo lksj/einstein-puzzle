@@ -21,9 +21,9 @@
 #define __MESSAGES_H__
 
 
+#include <cstdarg>
 #include <map>
 #include <string>
-#include <cstdarg>
 
 
 class Resource;

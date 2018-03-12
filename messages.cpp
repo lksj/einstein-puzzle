@@ -17,15 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <cstdarg>
-
 #include "messages.h"
+
+#include "buffer.h"
+#include "exceptions.h"
 #include "formatter.h"
 #include "resources.h"
-#include "exceptions.h"
-#include "buffer.h"
-#include "utils.h"
 #include "unicode.h"
+#include "utils.h"
+
+#include <cstdarg>
 
 
 Messages msg;

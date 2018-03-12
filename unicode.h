@@ -27,7 +27,6 @@
 /// Definition of UNICODE handling rotinues.
 
 
-#include <cstring>
 #include <iostream>
 
 

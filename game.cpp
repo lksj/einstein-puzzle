@@ -19,22 +19,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include "main.h"
-#include "utils.h"
-#include "widgets.h"
-#include "puzzle.h"
-#include "verthints.h"
-#include "horhints.h"
-#include "widgets.h"
+#include "game.h"
+
+#include "descr.h"
 #include "font.h"
-#include "topscores.h"
+#include "horhints.h"
+#include "main.h"
+#include "messages.h"
 #include "opensave.h"
 #include "options.h"
-#include "game.h"
-#include "messages.h"
+#include "puzzle.h"
 #include "sound.h"
-#include "descr.h"
-
+#include "topscores.h"
+#include "utils.h"
+#include "verthints.h"
+#include "widgets.h"
 
 
 class GameBackground: public Area

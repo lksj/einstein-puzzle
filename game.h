@@ -21,12 +21,9 @@
 #define __GAME_H__
 
 
-#include <iostream>
-#include "puzgen.h"
-#include "verthints.h"
 #include "horhints.h"
 #include "puzzle.h"
-
+#include "verthints.h"
 
 
 class Watch;

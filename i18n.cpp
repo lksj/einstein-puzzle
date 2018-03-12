@@ -18,13 +18,13 @@
 
 
 #include "i18n.h"
-#include <clocale>
-#include "unicode.h"
-#include "convert.h"
 
+#include "convert.h"
+#include "unicode.h"
+
+#include <clocale>
 #ifdef WIN32
 #include <windows.h>
-//#include <winnls.h>
 #endif
 
 

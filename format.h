@@ -21,8 +21,9 @@
 #define __FORMAT_H__
 
 
-#include <map>
 #include "buffer.h"
+
+#include <map>
 
 
 class Formatter

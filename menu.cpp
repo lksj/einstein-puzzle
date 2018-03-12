@@ -19,17 +19,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <vector>
+#include "descr.h"
+#include "game.h"
 #include "main.h"
+#include "messages.h"
+#include "opensave.h"
+#include "options.h"
+#include "topscores.h"
 #include "utils.h"
 #include "widgets.h"
-#include "topscores.h"
-#include "opensave.h"
-#include "game.h"
-#include "descr.h"
-#include "options.h"
-#include "messages.h"
-
 
 
 class MenuBackground: public Area

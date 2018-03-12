@@ -21,7 +21,6 @@
 #define __SOUND_H__
 
 
-#include <string>
 #include <map>
 #include <SDL/SDL_mixer.h>
 

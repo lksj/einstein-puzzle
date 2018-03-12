@@ -20,9 +20,10 @@
 
 
 #include "widgets.h"
+
 #include "main.h"
-#include "utils.h"
 #include "sound.h"
+#include "utils.h"
 
 
 //////////////////////////////////////////////////////////////////

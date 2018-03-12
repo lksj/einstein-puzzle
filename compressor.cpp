@@ -18,10 +18,11 @@
 
 
 #include "compressor.h"
-#include <zlib.h>
+
 #include "convert.h"
 #include "exceptions.h"
-#include <string.h>
+#include <cstring>
+#include <zlib.h>
 
 ResourceCompressor::ResourceCompressor() 
     : priority(1000), stream(nullptr), dontDeleteStream(true)

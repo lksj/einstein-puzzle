@@ -21,10 +21,11 @@
 #define __PUZGEN_H__
 
 
-#include <string>
-#include <list>
-#include <iostream>
 #include "iconset.h"
+
+#include <iostream>
+#include <list>
+#include <string>
 
 
 #define PUZZLE_SIZE 6

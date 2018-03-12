@@ -20,11 +20,12 @@
 
 
 #include "topscores.h"
+
+#include "convert.h"
+#include "font.h"
+#include "messages.h"
 #include "storage.h"
 #include "utils.h"
-#include "font.h"
-#include "convert.h"
-#include "messages.h"
 #include "widgets.h"
 
 TopScores::TopScores()

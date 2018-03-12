@@ -22,14 +22,15 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <SDL/SDL.h>
+#include "widgets.h"
+
+#include <iostream>
 #include <string>
 #ifdef WIN32
 #include <sys/time.h>
 #endif
-#include <iostream>
-#include "resources.h"
-#include "widgets.h"
+#include <SDL/SDL.h>
+
 
 
 int scaleUp(int i);

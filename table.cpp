@@ -19,12 +19,13 @@
 
 #include "table.h"
 
-#include <fstream>
 #include "convert.h"
-#include "unicode.h"
+#include "exceptions.h"
 #include "streams.h"
 #include "lexal.h"
-#include "exceptions.h"
+#include "unicode.h"
+
+#include <fstream>
 
 
 class IntValue: public Value

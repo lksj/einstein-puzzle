@@ -19,9 +19,10 @@
 
 #include "sound.h"
 
+#include "resources.h"
+
 #include <iostream>
 #include <SDL/SDL_events.h>
-#include "resources.h"
 
 
 Sound *sound;

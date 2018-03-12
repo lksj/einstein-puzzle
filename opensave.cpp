@@ -19,20 +19,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+#include "opensave.h"
+
+#include "convert.h"
+#include "exceptions.h"
+#include "messages.h"
+#include "unicode.h"
+#include "utils.h"
+#include "widgets.h"
+
 #include <ctime>
 #include <fstream>
 #ifdef WIN32
 #define UNICODE
 #include <shlobj.h>
 #endif
-#include "exceptions.h"
-#include "utils.h"
-#include "widgets.h"
-#include "storage.h"
-#include "opensave.h"
-#include "unicode.h"
-#include "convert.h"
-#include "messages.h"
+
 
 #define MAX_SLOTS 10
 

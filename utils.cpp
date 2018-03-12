@@ -19,25 +19,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <cstdio>
-#include <cstdlib>
-#include <sys/time.h>
+#include "utils.h"
+
+#include "exceptions.h"
+#include "main.h"
+#include "resources.h"
+#include "sound.h"
+#include "unicode.h"
+
 #include <cmath>
+#include <cstdio>
 #include <cwchar>
+#include <fstream>
+#include <sys/time.h>
 
 //#ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 //#endif
-
-#include <fstream>
-
-#include "utils.h"
-#include "main.h"
-#include "unicode.h"
-#include "sound.h"
-
 
 
 int scaleUp(int i)

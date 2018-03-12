@@ -19,14 +19,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <cwchar>
+#include "unicode.h"
+
+#include "exceptions.h"
+
 #include <cstdlib>
 #include <cstring>
+#include <cwchar>
 #ifdef WIN32
 #include <windows.h>
 #endif
-#include "unicode.h"
-#include "exceptions.h"
 
 
 /// Returns length of wide character in utf-8

@@ -24,7 +24,6 @@
 #include "widgets.h"
 
 
-
 void showOptionsWindow(Area *area);
 
 

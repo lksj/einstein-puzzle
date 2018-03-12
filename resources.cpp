@@ -19,17 +19,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#include <algorithm>
-#include <sys/types.h>
-#include <dirent.h>
-#include <zlib.h>
-
 #include "resources.h"
-#include "exceptions.h"
-#include "unicode.h"
+
 #include "convert.h"
+#include "exceptions.h"
 #include "i18n.h"
+#include "unicode.h"
 #include "utils.h"
+
+#include <algorithm>
+
+#include <dirent.h>
+#include <sys/types.h>
+#include <zlib.h>
 
 
 ResourcesCollection *resources = nullptr;

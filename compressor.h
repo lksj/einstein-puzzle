@@ -21,12 +21,11 @@
 #define __COMPRESSOR_H__
 
 
-#include <string>
-#include <iostream>
-#include <list>
-#include <fstream>
 #include "format.h"
 
+#include <fstream>
+#include <list>
+#include <string>
 
 
 class Entry

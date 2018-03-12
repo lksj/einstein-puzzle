@@ -21,7 +21,6 @@
 #define __RANDOM_H__
 
 
-
 class Random
 {
     private:

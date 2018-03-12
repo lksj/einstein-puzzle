@@ -21,11 +21,11 @@
 #define __HORHINTS_H__
 
 
-#include <vector>
 #include "iconset.h"
 #include "puzgen.h"
 #include "widgets.h"
 
+#include <vector>
 
 
 class HorHints: public Widget

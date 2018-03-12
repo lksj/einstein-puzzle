@@ -19,11 +19,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+#include "convert.h"
+#include "main.h"
 #include "puzgen.h"
 #include "utils.h"
-#include "main.h"
-#include "convert.h"
-#include "unicode.h"
 
 
 static std::wstring getThingName(int row, int thing)

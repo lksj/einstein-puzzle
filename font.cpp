@@ -20,7 +20,10 @@
 
 
 #include "font.h"
+
+#include "exceptions.h"
 #include "main.h"
+#include "resources.h"
 #include "utils.h"
 #include "unicode.h"
 

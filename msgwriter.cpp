@@ -21,10 +21,11 @@
 
 #include "msgwriter.h"
 
-#include <iostream>
-#include <sstream>
 #include "convert.h"
 #include "unicode.h"
+
+#include <iostream>
+#include <sstream>
 
 
 class TextCommand: public MsgCommand

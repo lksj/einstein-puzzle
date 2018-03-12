@@ -17,15 +17,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+#include "puzgen.h"
+
+#include "exceptions.h"
+#include "widgets.h"
+#include "utils.h"
+
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <list>
-#include "puzgen.h"
-#include "exceptions.h"
-#include "utils.h"
-
 
 
 Possibilities::Possibilities()

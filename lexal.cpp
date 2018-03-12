@@ -20,9 +20,10 @@
 
 
 #include "lexal.h"
+
 #include "convert.h"
 
-        
+
 Lexeme::Lexeme(Type t, const std::wstring &cont, int line, int pos)
     :  line(line), pos(pos), type(t), content(cont)
 {

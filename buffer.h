@@ -21,7 +21,6 @@
 #define __BUFFER_H__
 
 
-#include <cstdlib>
 #include <string>
 
 

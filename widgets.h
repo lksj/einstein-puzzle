@@ -22,13 +22,13 @@
 #ifndef __WIDGETS_H__
 #define __WIDGETS_H__
 
-#include <string>
-#include <list>
-#include <set>
 #include <SDL/SDL.h>
 #include "font.h"
-#include <vector>
 
+#include <set>
+#include <list>
+#include <string>
+#include <vector>
 
 class Command
 {

@@ -26,14 +26,16 @@
  * Classes for resources loading and unloading.
  */
 
-#include <string>
+
+#include "buffer.h"
+#include "visitor.h"
+
 #include <fstream>
 #include <list>
 #include <map>
+#include <string>
 #include <vector>
 
-#include "visitor.h"
-#include "buffer.h"
 
 typedef std::list<std::wstring> StringList;
 

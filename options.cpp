@@ -20,10 +20,11 @@
 
 
 #include "options.h"
-#include "storage.h"
+
 #include "main.h"
 #include "messages.h"
 #include "sound.h"
+#include "storage.h"
 #include "utils.h"
 
 class CancelCommand : public ExitCommand

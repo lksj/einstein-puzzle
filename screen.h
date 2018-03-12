@@ -23,10 +23,10 @@
 #define __SCREEN_H__
 
 
-#include "SDL/SDL.h"
-#include <vector>
 #include <list>
 #include <string>
+#include <vector>
+#include <SDL/SDL.h>
 
 
 class VideoMode

@@ -20,10 +20,9 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-#include "exceptions.h"
-#include "screen.h"
-#include "resources.h"
+
 #include "random.h"
+#include "screen.h"
 
 
 extern Screen screen;

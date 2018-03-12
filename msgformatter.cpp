@@ -20,9 +20,10 @@
 
 
 #include "msgformatter.h"
+
+#include "msgwriter.h"
 #include "table.h"
 #include "unicode.h"
-#include "msgwriter.h"
 
 
 MsgFormatter::MsgFormatter() = default;

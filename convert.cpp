@@ -19,6 +19,7 @@
 
 #include "convert.h"
 
+
 std::wstring toLowerCase(const std::wstring &s)
 {
     std::wstring res;

@@ -19,11 +19,12 @@
 
 #ifndef __REGSTORAGE_H__
 #define __REGSTORAGE_H__
-#ifdef WIN32                    // Win32 only
 
+
+#ifdef WIN32                    // Win32 only
+#include "storage.h"
 
 #include <windows.h>
-#include "storage.h"
 
 
 class RegistryStorage: public Storage

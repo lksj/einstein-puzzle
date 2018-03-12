@@ -21,8 +21,8 @@
 #define __TOKENIZER_H__
 
 
-#include <string>
 #include <list>
+#include <string>
 
 
 class Tokenizer;

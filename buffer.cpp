@@ -18,9 +18,11 @@
 
 
 #include "buffer.h"
-#include <cstring>
+
 #include "exceptions.h"
 #include "unicode.h"
+
+#include <cstring>
 
 
 Buffer::Buffer(int sz, int alloc)

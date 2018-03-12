@@ -21,9 +21,11 @@
 
 #include <SDL/SDL.h>
 #include "screen.h"
+
 #include "exceptions.h"
 #include "unicode.h"
 #include "utils.h"
+
 #include <sstream>
 
 #define UNSCALED_WIDTH      800

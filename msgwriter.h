@@ -23,10 +23,11 @@
 #define __MSGWRITER_H__
 
 
+#include "buffer.h"
+
 #include <list>
 #include <map>
 #include <string>
-#include "buffer.h"
 
 
 class MsgCommand 

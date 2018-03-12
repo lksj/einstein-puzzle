@@ -18,18 +18,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "main.h"
 
-#include <cstdlib>
+#include "exceptions.h"
+#include "messages.h"
+#include "resources.h"
+#include "sound.h"
+#include "storage.h"
+#include "unicode.h"
+#include "utils.h"
+
 #include <iostream>
 #include <SDL/SDL.h>
 #include <SDL/SDL_main.h>
 #include <SDL/SDL_ttf.h>
-#include "main.h"
-#include "utils.h"
-#include "storage.h"
-#include "unicode.h"
-#include "messages.h"
-#include "sound.h"
 
 
 Screen screen;

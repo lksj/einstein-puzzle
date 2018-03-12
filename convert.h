@@ -23,13 +23,11 @@
 #define __CONVERT_H__
 
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <typeinfo>
-
 #include "exceptions.h"
 #include "unicode.h"
+
+#include <sstream>
+#include <string>
 
 
 /// Convert value to string

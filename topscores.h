@@ -21,9 +21,10 @@
 #define __TOPSCORES_H__
 
 
+#include "widgets.h"
+
 #include <list>
 #include <string>
-#include "widgets.h"
 
 
 #define MAX_SCORES 10

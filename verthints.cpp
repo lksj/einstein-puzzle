@@ -20,10 +20,11 @@
 
 
 #include "verthints.h"
+
 #include "main.h"
-#include "utils.h"
 #include "puzgen.h"
 #include "sound.h"
+#include "utils.h"
 
 
 #define TILE_NUM     15

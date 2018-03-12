@@ -21,11 +21,15 @@
 
 #include "descr.h"
 
+#include "convert.h"
+#include "messages.h"
+#include "tokenizer.h"
+#include "utils.h"
+#include "widgets.h"
+
 #include <string>
 #include <list>
-#include <vector>
 #include <map>
-
 #include "widgets.h"
 #include "unicode.h"
 #include "messages.h"

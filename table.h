@@ -21,9 +21,10 @@
 #define __TABLE_H__
 
 
-#include <string>
-#include <map>
 #include "lexal.h"
+
+#include <map>
+#include <string>
 
 
 class Table;
