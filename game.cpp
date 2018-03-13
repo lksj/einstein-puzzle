@@ -127,11 +127,11 @@ void Watch::onTimer()
     if (stoped)
         return;
     
-    Uint32 now = SDL_GetTicks();
+    const Uint32 now = SDL_GetTicks();
     elapsed += now - lastRun;
     lastRun = now;
 
-    int seconds = elapsed / 1000;
+    const int seconds = elapsed / 1000;
     if (seconds != lastUpdate)
         draw();
 }
@@ -149,11 +149,11 @@ void Watch::start()
 
 void Watch::draw()
 {
-    int time = elapsed / 1000;
-    std::wstring s = secToStr(time);
+    const int time = elapsed / 1000;
+    const std::wstring s = secToStr(time);
     
-    int x = 700;
-    int y = 24;
+    const int x = 700;
+    const int y = 24;
     int w, h;
     font->getSize(s, w, h);
     SDL_Rect rect = { scaleUp(x-2), scaleUp(y-2), w+scaleUp(4), h+scaleUp(4) };
@@ -231,11 +231,11 @@ class WinCommand: public Command
                     500, 70, &font, 255,0,0, msg(L"won"));
             gameArea->draw();
             TopScores scores;
-            int score = watch->getElapsed() / 1000;
+            const int score = watch->getElapsed() / 1000;
             int pos = -1;
             if (! game->isHinted()) {
                 if ((! scores.isFull()) || (score < scores.getMaxScore())) {
-                    std::wstring name = enterNameDialog(gameArea);
+                    const std::wstring name = enterNameDialog(gameArea);
                     pos = scores.add(name, score);
                 }
             }
@@ -319,13 +319,13 @@ class CheatAccel: public Widget
     public:
         bool onKeyDown(SDLKey key, unsigned char ch) override {
             if ((key >= SDLK_a) && (key <= SDLK_z)) {
-                wchar_t s = L'a' + key - SDLK_a;
+                const wchar_t s = L'a' + key - SDLK_a;
                 typed += s;
                 if (typed.length() == cheat.length()) {
                     if (command && (typed == cheat))
                         command->doAction();
                 } else {
-                    int pos = typed.length() - 1;
+                    const int pos = typed.length() - 1;
                     if (typed[pos] == cheat[pos])
                         return false;
                 }

@@ -33,7 +33,7 @@
 
 Formatter::Formatter(unsigned char *data, int offset)
 {
-    int cnt = readInt(data + offset);
+    const int cnt = readInt(data + offset);
     if (! cnt) {
         commandsCnt = argsCnt = 0;
         commands = nullptr;
@@ -47,9 +47,9 @@ Formatter::Formatter(unsigned char *data, int offset)
     int maxArg = 0, argNo;
     
     for (int i = 0; i < cnt; i++) {
-        int type = data[offset];
+        const int type = data[offset];
         offset++;
-        int size = readInt(data + offset);
+        const int size = readInt(data + offset);
         offset += 4;
         switch (type) {
             case 1:
@@ -78,7 +78,7 @@ Formatter::Formatter(unsigned char *data, int offset)
             if ((c.type == INT_ARG) || (c.type == STRING_ARG) ||
                     (c.type == FLOAT_ARG) || (c.type == DOUBLE_ARG))
             {
-                long no = (long)c.data;
+                const long no = (long)c.data;
                 args[no - 1] = c.type;
             }
         }

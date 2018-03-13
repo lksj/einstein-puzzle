@@ -94,7 +94,7 @@ size_t Buffer::putInteger(int v)
 
     for (unsigned char& i : b)
     {
-        int ib = v & 0xFF;
+        const int ib = v & 0xFF;
         v = v >> 8;
         i = ib;
     }

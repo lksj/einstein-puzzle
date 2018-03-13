@@ -138,7 +138,7 @@ class DoubleArgCommand: public ArgCommand
 
 Message::Message(const std::wstring &msg)
 {
-    int len = msg.length();
+    const int len = msg.length();
     std::wstring str;
     int i = 0;
     bool numbersUsed = false;
@@ -235,14 +235,14 @@ void MsgWriter::add(const std::wstring &key, const std::wstring &msg)
 {
     Message *message = new Message(msg);
     
-    MsgMap::iterator iter = messages.find(key);
+    const MsgMap::iterator iter = messages.find(key);
     if (iter != messages.end()) {
         std::cerr << L"Warning: message '" << key << L"' already exists"
             << std::endl;
         delete (*iter).second.message;
     }
     
-    MsgEntry entry = { 0, message };
+    const MsgEntry entry = { 0, message };
     messages[key] = entry;
 }
 
@@ -282,7 +282,7 @@ void MsgWriter::save(Buffer &buffer)
 {
     int offset = writeHeader(buffer);
     offset = writeMessages(buffer, offset);
-    int headerStart = offset;
+    const int headerStart = offset;
     writeDirectory(buffer);
     buffer.putInteger(headerStart);
 }

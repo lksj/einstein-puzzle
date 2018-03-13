@@ -216,7 +216,7 @@ static void showListWindow(SavesList &list, Command **commands,
 
 bool saveGame(Area *parentArea, Game *game)
 {
-    std::wstring path = getSavesPath();
+    const std::wstring path = getSavesPath();
     
     Area area;
     area.add(parentArea, false);
@@ -226,7 +226,7 @@ bool saveGame(Area *parentArea, Game *game)
     SavesList list;
     Command **commands = new Command*[MAX_SLOTS];
     for (int i = 0; i < MAX_SLOTS; i++) {
-        SavedGame sg(path + L"/" + toString(i) + L".sav");
+        const SavedGame sg(path + L"/" + toString(i) + L".sav");
         list.push_back(sg);
         commands[i] = new SaveCommand(*(--(list.end())), &font, 
                 &area, &saved, L"game " + toString(i+1), game);
@@ -284,7 +284,7 @@ class LoadCommand: public Command
 
 Game* loadGame(Area *parentArea)
 {
-    std::wstring path = getSavesPath();
+    const std::wstring path = getSavesPath();
     
     Area area;
     area.add(parentArea, false);

@@ -360,9 +360,9 @@ void Locale::parseLocale(const std::wstring &name)
 
 static bool isLowerCase(const std::wstring &s)
 {
-    int len = s.length();
+    const int len = s.length();
     for (int i = 0; i < len; i++) {
-        char ch = s[i];
+        const char ch = s[i];
         if ((ch < L'a') || (ch > L'z'))
             return false;
     }
@@ -372,9 +372,9 @@ static bool isLowerCase(const std::wstring &s)
 
 static bool isUpperCase(const std::wstring &s)
 {
-    int len = s.length();
+    const int len = s.length();
     for (int i = 0; i < len; i++) {
-        char ch = s[i];
+        const char ch = s[i];
         if ((ch < L'A') || (ch > L'Z'))
             return false;
     }
@@ -399,8 +399,8 @@ void splitFileName(const std::wstring &fileName, std::wstring &name,
         lang = L"";
         country = L"";
     } else {
-        std::wstring l = name.substr(pos + 1);
-        std::wstring s = name.substr(0, pos);
+        const std::wstring l = name.substr(pos + 1);
+        const std::wstring s = name.substr(0, pos);
         if (isUpperCase(l)) { // country
             name = s;
             country = l;

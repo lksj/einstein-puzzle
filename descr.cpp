@@ -224,7 +224,7 @@ void Description::printPage()
     TextPage *page = text->getPage(currentPage);
     if (! page)
         return;
-    int len = page->getWidgetsCount();
+    const int len = page->getWidgetsCount();
     for (int i = 0; i < len; i++) {
         Widget *w = page->getWidget(i);
         if (w) {
@@ -245,7 +245,7 @@ void CursorCommand::doAction()
 {
     if ((! *value) && (0 > step))
         return;
-    unsigned int newPageNo = *value + step;
+    const unsigned int newPageNo = *value + step;
     TextPage *page = description.getPage(newPageNo);
     if (page) {
         *value = newPageNo;
@@ -302,7 +302,7 @@ void TextParser::addLine(TextPage *page, std::wstring &line, int &curPosY,
 
 bool TextParser::isImage(const std::wstring &name)
 {
-    int len = name.length();
+    const int len = name.length();
     return (3 < len) && (L'$' == name[0]) && (L'$' == name[len - 1]);
 }
 
@@ -346,7 +346,7 @@ void TextParser::parseNextPage()
                 addLine(page, line, curPosY, lineWidth);
                 SDL_Surface *image = getImage(keywordToImage(word));
                 if ((image->h + curPosY < pageHeight) || page->isEmpty()) {
-                    int x = offsetX + (pageWidth - image->w) / 2;
+                    const int x = offsetX + (pageWidth - image->w) / 2;
                     page->add(new Picture(x, offsetY + curPosY, image));
                     curPosY += image->h;
                 } else {
@@ -354,7 +354,7 @@ void TextParser::parseNextPage()
                     break;
                 }
             } else {
-                int width = font.getWidth(word);
+                const int width = font.getWidth(word);
                 if (lineWidth + width > scaleUp(pageWidth)) {
                     if (! lineWidth) {
                         line = word;

@@ -48,7 +48,7 @@ static int writeInt(std::ostream *stream, int v)
 
     for (unsigned char& i : b)
     {
-        int ib = v & 0xFF;
+        const int ib = v & 0xFF;
         v = v >> 8;
         i = ib;
     }
@@ -62,7 +62,7 @@ static int writeInt(std::ostream *stream, int v)
 static int writeString(std::ostream *stream, const std::wstring &value)
 {
     std::string v(toUtf8(value));
-    int len = v.length() + 1;
+    const int len = v.length() + 1;
     stream->write(v.c_str(), len);
     return len;
 }
@@ -134,7 +134,7 @@ void ResourceCompressor::printDeps(const std::string &outputFile,
     for (auto& e : entries)
     {
         std::cout << " ";
-        int len = e.fileName.length() + 1;
+        const int len = e.fileName.length() + 1;
         if (len + width > 77) {
             std::cout << "\\" << std::endl << "\t";
             width = 7;
@@ -149,7 +149,7 @@ void ResourceCompressor::printDeps(const std::string &outputFile,
 
 void ResourceCompressor::writeFooter(int &offset)
 {
-    int start = offset;
+    const int start = offset;
     
     for (auto& e : entries)
     {
@@ -200,7 +200,7 @@ void ResourceCompressor::readData(const std::wstring &fileName)
         throw Exception(L"Error opening file '" + fileName + L"'");
 
     ifs.seekg(0, std::ios::end);
-    int realSize = ifs.tellg();
+    const int realSize = ifs.tellg();
     unpackedBuffer.setSize(realSize);
     ifs.seekg(0, std::ios::beg);
     if (realSize <= 0)

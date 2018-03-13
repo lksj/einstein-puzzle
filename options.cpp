@@ -38,7 +38,7 @@ class CancelCommand : public ExitCommand
         void doAction() override
         {
             // need to make sure that we revert any changes that we made
-            float volume = ((float)getStorage()->get(L"volume", 20)) / 100.0f;
+            const float volume = ((float)getStorage()->get(L"volume", 20)) / 100.0f;
             sound->setVolume(volume);
             ExitCommand::doAction();
         }
@@ -60,10 +60,10 @@ class OptionsChangedCommand: public Command
         }
 
         void doAction() override {
-            bool oldFullscreen = (getStorage()->get(L"fullscreen", 1) != 0);
-            bool oldCursor = (getStorage()->get(L"niceCursor", 1) != 0);
-            int oldSize = ((float)getStorage()->get(L"screenSize", 1));
-            float oldVolume = (float)getStorage()->get(L"volume", 20) / 100.0f;
+            const bool oldFullscreen = (getStorage()->get(L"fullscreen", 1) != 0);
+            const bool oldCursor = (getStorage()->get(L"niceCursor", 1) != 0);
+            const int oldSize = ((float)getStorage()->get(L"screenSize", 1));
+            const float oldVolume = (float)getStorage()->get(L"volume", 20) / 100.0f;
             if (fullscreen != oldFullscreen) {
                 getStorage()->set(L"fullscreen", fullscreen);
                 screen.setMode(fullscreen);

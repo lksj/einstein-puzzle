@@ -93,14 +93,14 @@ void Font::draw(SDL_Surface *s, int x, int y, int r, int g, int b,
     Uint16 *str = strToUint16(text);
     
     if (shadow) {
-        SDL_Color color = { 1, 1, 1, 1 };
+        const SDL_Color color = { 1, 1, 1, 1 };
         SDL_Surface *surface = TTF_RenderUNICODE_Blended(font, str, color);
         SDL_Rect src = { 0, 0, surface->w, surface->h };
         SDL_Rect dst = { x+1, y+1, surface->w, surface->h };
         SDL_BlitSurface(surface, &src, s, &dst);
         SDL_FreeSurface(surface);
     }
-    SDL_Color color = { r, g, b, 0 };
+    const SDL_Color color = { r, g, b, 0 };
     SDL_Surface *surface = TTF_RenderUNICODE_Blended(font, str, color);
     SDL_Rect src = { 0, 0, surface->w, surface->h };
     SDL_Rect dst = { x, y, surface->w, surface->h };

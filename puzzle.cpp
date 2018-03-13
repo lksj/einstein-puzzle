@@ -62,11 +62,11 @@ void Puzzle::draw()
     
 void Puzzle::drawCell(int col, int row, bool addToUpdate)
 {
-    int posX = FIELD_OFFSET_X + col * (FIELD_TILE_WIDTH + FIELD_GAP_X);
-    int posY = FIELD_OFFSET_Y + row * (FIELD_TILE_HEIGHT + FIELD_GAP_Y);
+    const int posX = FIELD_OFFSET_X + col * (FIELD_TILE_WIDTH + FIELD_GAP_X);
+    const int posY = FIELD_OFFSET_Y + row * (FIELD_TILE_HEIGHT + FIELD_GAP_Y);
 
     if (possib->isDefined(col, row)) {
-        int element = possib->getDefined(col, row);
+        const int element = possib->getDefined(col, row);
         if (element > 0)
         {
             screen.drawScaled(posX, posY, iconSet.getLargeIcon(row, element, (hCol == col) && (hRow == row)));
@@ -142,7 +142,7 @@ bool Puzzle::onMouseButtonDown(int button, int x, int y)
         drawRow(row);
     }
 
-    bool valid = possib->isValid(solved);
+    const bool valid = possib->isValid(solved);
     if (! valid)
         onFail();
     else

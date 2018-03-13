@@ -78,12 +78,12 @@ void Messages::loadFromResource(Resource *res, Buffer *buffer)
 {
     if (! res) return;
 
-    int cnt = res->getVariantsCount();
+    const int cnt = res->getVariantsCount();
     for (int i = 0; i < cnt; i++) {
         ResVariant *var = res->getVariant(i);
         if (var) {
             try {
-                int score = var->getI18nScore();
+                const int score = var->getI18nScore();
                 var->getData(*buffer);
                 loadBundle(score, (unsigned char*)buffer->getData(), 
                         buffer->getSize());
@@ -97,7 +97,7 @@ void Messages::loadFromResource(Resource *res, Buffer *buffer)
 
 std::wstring Messages::getMessage(const std::wstring &key) const
 {
-    StrMap::const_iterator i = messages.find(key);
+    const StrMap::const_iterator i = messages.find(key);
     if (i != messages.end())
         return (*i).second->message->getMessage();
     else
@@ -107,7 +107,7 @@ std::wstring Messages::getMessage(const std::wstring &key) const
 std::wstring Messages::format(const wchar_t *key, va_list ap) const
 {
     std::wstring s;
-    StrMap::const_iterator i = messages.find(key);
+    const StrMap::const_iterator i = messages.find(key);
     if (i != messages.end())
         s = (*i).second->message->format(ap);
     else
@@ -141,15 +141,15 @@ void Messages::loadBundle(int score, unsigned char *data, size_t size)
         throw Exception(L"Unknown version of message file");
 
     int offset = readInt(data + size - 4);
-    int cnt = readInt(data + offset);
+    const int cnt = readInt(data + offset);
     offset += 4;
 
     for (int i = 0; i < cnt; i++) {
-        int sz = readInt(data + offset);
+        const int sz = readInt(data + offset);
         offset += 4;
         if (sz > 0) {
-            std::wstring name(fromUtf8((char*)data + offset, sz));
-            int msgOffset = readInt(data + offset + sz);
+            const std::wstring name(fromUtf8((char*)data + offset, sz));
+            const int msgOffset = readInt(data + offset + sz);
             StrMap::iterator i = messages.find(name);
             if (i == messages.end()) {
                 ScoredStr* ss = new ScoredStr(score, new Formatter(data, msgOffset));

@@ -24,7 +24,7 @@ std::wstring toLowerCase(const std::wstring &s)
 {
     std::wstring res;
 
-    int len = s.length();
+    const int len = s.length();
     for (int i = 0; i < len; i++)
         res += (wchar_t)towlower(s[i]);
 
@@ -35,7 +35,7 @@ std::wstring toUpperCase(const std::wstring &s)
 {
     std::wstring res;
 
-    int len = s.length();
+    const int len = s.length();
     for (int i = 0; i < len; i++)
         res += (wchar_t)towupper(s[i]);
 
@@ -70,7 +70,7 @@ int strToInt(const std::wstring &str)
 {
     wchar_t *endptr;
 
-    int n = wcstol(str.c_str(), &endptr, 10);
+    const int n = wcstol(str.c_str(), &endptr, 10);
     if ((! str.c_str()[0]) || (endptr[0])) 
         throw Exception(L"Invalid integer '" + str + L"'");
     return n;
@@ -80,7 +80,7 @@ double strToDouble(const std::wstring &str)
 {
     wchar_t *endptr;
 
-    double n = wcstod(str.c_str(), &endptr);
+    const double n = wcstod(str.c_str(), &endptr);
     if ((! str.c_str()[0]) || (endptr[0])) 
         throw Exception(L"Invalid double '" + str + L"'");
     return n;

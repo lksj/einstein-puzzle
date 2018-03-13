@@ -83,10 +83,10 @@ Lexeme Lexal::getNext()
     if (reader.isEof())
         return Lexeme(Lexeme::Eof, L"", line, pos);
 
-    int startLine = line;
-    int startPos = pos;
+    const int startLine = line;
+    const int startPos = pos;
 
-    wchar_t ch = reader.getNextChar();
+    const wchar_t ch = reader.getNextChar();
     pos++;
 
     if (isIdentStart(ch))
@@ -108,7 +108,7 @@ Lexeme Lexal::readString(int startLine, int startPos, wchar_t quote)
     bool closed = false;
     
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if ('\n' == ch) {
             line++;
@@ -116,7 +116,7 @@ Lexeme Lexal::readString(int startLine, int startPos, wchar_t quote)
             str += ch;
         } else if ('\\' == ch) {
             if (! reader.isEof()) {
-                wchar_t nextCh = reader.getNextChar();
+                const wchar_t nextCh = reader.getNextChar();
                 if (isWhiteSpace(nextCh))
                     throw Exception(L"Invalid escape sequence at " +
                             posToStr(line, pos));
@@ -150,7 +150,7 @@ Lexeme Lexal::readNumber(int startLine, int startPos, wchar_t first)
     Lexeme::Type type = Lexeme::Integer;
     
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if (isDigit(ch))
             number += ch;
@@ -182,7 +182,7 @@ Lexeme Lexal::readIdent(int startLine, int startPos, wchar_t first)
     ident += first;
     
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         if (! isIdentCont(ch)) {
             reader.ungetChar(ch);
             break;
@@ -198,7 +198,7 @@ Lexeme Lexal::readIdent(int startLine, int startPos, wchar_t first)
 void Lexal::skipToLineEnd()
 {
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if ('\n' == ch) {
             pos = 0;
@@ -212,13 +212,13 @@ void Lexal::skipToLineEnd()
 void Lexal::skipMultilineComment(int startLine, int startPos)
 {
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if ('\n' == ch) {
             pos = 0;
             line++;
         } else if (('*' == ch) && (! reader.isEof())) {
-            wchar_t nextCh = reader.getNextChar();
+            const wchar_t nextCh = reader.getNextChar();
             if ('/' != nextCh)
                 reader.ungetChar(nextCh);
         }
@@ -231,7 +231,7 @@ void Lexal::skipMultilineComment(int startLine, int startPos)
 void Lexal::skipSpaces()
 {
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if (! isWhiteSpace(ch)) {
             if ('#' == ch)
@@ -239,7 +239,7 @@ void Lexal::skipSpaces()
             else {
                 bool finish = false;
                 if (('/' == ch) && (! reader.isEof())) {
-                    wchar_t nextCh = reader.getNextChar();
+                    const wchar_t nextCh = reader.getNextChar();
                     pos++;
                     if ('/' == nextCh)
                         skipToLineEnd();

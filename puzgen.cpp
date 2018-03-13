@@ -80,7 +80,7 @@ void Possibilities::checkSingles(int row)
     for (int col = 0; col < PUZZLE_SIZE; col++) {
         if ((cellsCnt[col] == 1) && (elsCnt[elements[col] - 1] != 1)) {
             // there is only one element in cell but it used somewhere else
-            int e = elements[col] - 1;
+            const int e = elements[col] - 1;
             for (int i = 0; i < PUZZLE_SIZE; i++)
                 if (i != col)
                     pos[i][row][e] = 0;
@@ -91,7 +91,7 @@ void Possibilities::checkSingles(int row)
     // check for single element without exclusive cell
     for (int el = 0; el < PUZZLE_SIZE; el++)
         if ((elsCnt[el] == 1) && (cellsCnt[elCells[el]] != 1)) {
-            int col = elCells[el];
+            const int col = elCells[el];
             for (int i = 0; i < PUZZLE_SIZE; i++)
                 if (i != el)
                     pos[col][row][i] = 0;
@@ -201,17 +201,17 @@ void Possibilities::save(std::ostream &stream)
 static void shuffle(short arr[PUZZLE_SIZE])
 {
     for (int i = 0; i < 30; i++) {
-        int a = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
+        const int a = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
         if ((a < 0) || (a >= PUZZLE_SIZE)) {
             std::cerr << "Index error" << std::endl;
             exit(1);
         }
-        int b = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
+        const int b = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
         if ((b < 0) || (b >= PUZZLE_SIZE)) {
             std::cerr << "Index error" << std::endl;
             exit(1);
         }
-        int c = arr[a];
+        const int c = arr[a];
         arr[a] = arr[b];
         arr[b] = c;
     }
@@ -239,7 +239,7 @@ pos.print();
         }
     } while (changed);
 
-    bool res = pos.isSolved();
+    const bool res = pos.isSolved();
     return res;
 }
 
@@ -272,7 +272,7 @@ static void genRules(SolvedPuzzle &puzzle, Rules &rules)
     do {
         Rule *rule = genRule(puzzle);
         if (rule) {
-            std::wstring s = rule->getAsText();
+            const std::wstring s = rule->getAsText();
             for (auto& i : rules)
                 if (i->getAsText() == s) {
                     delete rule;
@@ -343,7 +343,7 @@ void getHintsQty(Rules &rules, int &vert, int &horiz)
 
     for (auto& rule : rules)
     {
-        Rule::ShowOptions so = rule->getShowOpts();
+        const Rule::ShowOptions so = rule->getShowOpts();
         switch (so) {
             case Rule::SHOW_VERT: vert++; break;
             case Rule::SHOW_HORIZ: horiz++; break;

@@ -44,13 +44,13 @@ HorHints::HorHints(IconSet &is, Rules &r): iconSet(is)
 
 HorHints::HorHints(IconSet &is, Rules &rl, std::istream &stream): iconSet(is)
 {
-    int qty = readInt(stream);
+    const int qty = readInt(stream);
 
     for (int i = 0; i < qty; i++) {
         int no = readInt(stream);
         numbersArr.push_back(no);
         Rule *r = getRule(rl, no);
-        int excluded = readInt(stream);
+        const int excluded = readInt(stream);
         if (excluded) {
             excludedRules.push_back(r);
             rules.push_back(nullptr);
@@ -101,11 +101,11 @@ void HorHints::draw()
 
 void HorHints::drawCell(int col, int row, bool addToUpdate)
 {
-    int x = TILE_X + col * (TILE_WIDTH*3 + TILE_GAP_X);
-    int y = TILE_Y + row * (TILE_HEIGHT + TILE_GAP_Y);
+    const int x = TILE_X + col * (TILE_WIDTH*3 + TILE_GAP_X);
+    const int y = TILE_Y + row * (TILE_HEIGHT + TILE_GAP_Y);
 
     Rule *r = nullptr;
-    int no = row * HINTS_COLS + col;
+    const int no = row * HINTS_COLS + col;
     if (no < (int)rules.size())
     {
         if (showExcluded)
@@ -137,10 +137,10 @@ bool HorHints::onMouseButtonDown(int button, int x, int y)
     if (button != 3) 
         return false;
 
-    int no = getRuleNo(x, y);
+    const int no = getRuleNo(x, y);
     if (no < 0) return false;
-    int row = no / HINTS_COLS;
-    int col = no - row * HINTS_COLS;
+    const int row = no / HINTS_COLS;
+    const int col = no - row * HINTS_COLS;
  
     if (showExcluded) {
         Rule *r = excludedRules[no];
@@ -173,19 +173,19 @@ void HorHints::toggleExcluded()
 
 bool HorHints::onMouseMove(int x, int y)
 {
-    int no = getRuleNo(x, y);
+    const int no = getRuleNo(x, y);
 
     if (no != highlighted) {
-        int old = highlighted;
+        const int old = highlighted;
         highlighted = no;
         if (isActive(old)) {
-            int row = old / HINTS_COLS;
-            int col = old - row * HINTS_COLS;
+            const int row = old / HINTS_COLS;
+            const int col = old - row * HINTS_COLS;
             drawCell(col, row);
         }
         if (isActive(no)) {
-            int row = no / HINTS_COLS;
-            int col = no - row * HINTS_COLS;
+            const int row = no / HINTS_COLS;
+            const int col = no - row * HINTS_COLS;
             drawCell(col, row);
         }
     }
@@ -203,14 +203,14 @@ int HorHints::getRuleNo(int x, int y)
     x = scaleDown(x) - TILE_X;
     y = scaleDown(y) - TILE_Y;
 
-    int col = x / (TILE_WIDTH*3 + TILE_GAP_X);
+    const int col = x / (TILE_WIDTH*3 + TILE_GAP_X);
     if (col * (TILE_WIDTH*3 + TILE_GAP_X) + TILE_WIDTH*3 < x)
         return -1;
-    int row = y / (TILE_HEIGHT + TILE_GAP_Y);
+    const int row = y / (TILE_HEIGHT + TILE_GAP_Y);
     if (row * (TILE_HEIGHT + TILE_GAP_Y) + TILE_HEIGHT < y)
         return -1;
  
-    int no = row * HINTS_COLS + col;
+    const int no = row * HINTS_COLS + col;
     if (no >= (int)rules.size())
         return -1;
 
@@ -228,7 +228,7 @@ bool HorHints::isActive(int ruleNo)
 
 void HorHints::save(std::ostream &stream)
 {
-    int cnt = numbersArr.size();
+    const int cnt = numbersArr.size();
     writeInt(stream, cnt);
     for (int i = 0; i < cnt; i++) {
         writeInt(stream, numbersArr[i]);
