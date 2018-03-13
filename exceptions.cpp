@@ -17,21 +17,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef __EXCEPTIONS_H__
-#define __EXCEPTIONS_H__
-
+#include "exceptions.h"
 
 #include <string>
+#include <locale>
+#include <codecvt>
 #include <stdexcept>
+#include <type_traits>
 
+using convert_type = std::codecvt_utf8<wchar_t>;
+static std::wstring_convert<convert_type, wchar_t> converter;
 
-class Exception: std::runtime_error
+Exception::Exception(const char* msg) noexcept:
+    std::runtime_error(msg)
 {
-    public:
-        Exception(const char* msg) noexcept;
-        Exception(const std::wstring& msg) noexcept;
-        ~Exception() override = default;
-        const std::wstring getMessage() const noexcept;
-};
+}
 
-#endif
+Exception::Exception(const std::wstring& msg) noexcept:
+    std::runtime_error(converter.to_bytes(msg).c_str())
+{
+}
+
+const std::wstring Exception::getMessage() const noexcept
+{
+    return std::wstring(converter.from_bytes(what()));
+}
+
+static_assert(std::is_nothrow_copy_constructible<Exception>::value, "Exception must be nothrow copy constructible");

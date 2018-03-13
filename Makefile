@@ -60,7 +60,7 @@ SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 HEADERS=$(SOURCES:.cpp=.h)
 OBJECTS=$(SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
-SHARE_SOURCES = unicode.cpp streams.cpp table.cpp buffer.cpp convert.cpp lexal.cpp
+SHARE_SOURCES=exceptions.cpp unicode.cpp streams.cpp table.cpp buffer.cpp convert.cpp lexal.cpp
 SHARE_HEADERS=$(SHARE_SOURCES:.cpp=.h)
 SHARE_OBJECTS=$(SHARE_SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
