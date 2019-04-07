@@ -30,9 +30,9 @@
 
 #define UNSCALED_WIDTH      800
 #define UNSCALED_HEIGHT     600
-#define NUM_MODES           4
+#define NUM_MODES           5
 
-int modes[NUM_MODES][2]={{800,600},{1024,768},{1152,864},{1400,1050}};
+int modes[NUM_MODES][2]={{800,600},{1024,768},{1152,864},{1280,960},{1400,1050}};
 
 int DESKTOP_WIDTH = 0;
 int DESKTOP_HEIGHT = 0;
