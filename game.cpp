@@ -567,6 +567,7 @@ void Game::run()
     
     PauseGameCommand pauseGameCmd(&area, watch, background);
     BUTTON(12, 400, L"pause", &pauseGameCmd)
+    area.add(new KeyAccel(SDLK_SPACE, &pauseGameCmd));
     ToggleHintCommand toggleHintsCmd(verHints, horHints);
     BUTTON(119, 400, L"switch", &toggleHintsCmd)
     SaveGameCommand saveCmd(&area, watch, background, this);
