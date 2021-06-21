@@ -24,11 +24,25 @@
 
 #include <iostream>
 
+#ifndef WIN32
+#include <sys/stat.h>
+#endif
 
 TableStorage::TableStorage()
 {
+    std::wstring name = getFileName();
+    std::string sname(name.begin(), name.end());
+#ifndef WIN32
+    // HACK: make the config file and directory if they don't exist
+    struct stat buffer;
+    if (stat (sname.c_str(), &buffer) != 0)
+    {
+        system("mkdir ~/.einstein");
+        system("touch ~/.einstein/einsteinrc");
+    }
+#endif
     try {
-        table = Table(toMbcs(getFileName()));
+        table = Table(toMbcs(name));
     } catch (Exception &e) {
         std::cerr << e.getMessage() << std::endl;
     } catch (...) {
