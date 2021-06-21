@@ -18,6 +18,7 @@
 
 #include <cstring>
 
+#include "args.h"
 #include "compressor.h"
 #include "exceptions.h"
 #include "unicode.h"
@@ -125,10 +126,17 @@ static void parseFile(const std::string &fileName)
 }
 
 
-
+#ifdef WIN32
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
+#else
 int main(int argc, char *argv[])
+#endif
 {
-    int res = 0;
+#ifdef WIN32
+    int argc;
+    LPSTR* argv = CommandLineToArgvA(GetCommandLineA(), &argc);
+#endif //ifdef WIN32
+int res = 0;
     //lua_State *lua = nullptr;
     parseArgs(argc, argv);
     

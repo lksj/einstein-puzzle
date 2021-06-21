@@ -25,17 +25,19 @@ $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 ifeq ($(OS),Windows_NT)
-	CXXFLAGS=-Wall $(OPTIMIZE) $(DEBUG) -Ic:/mingw/include/sdl -mwindows
-	LNFLAGS=-lmingw32 -lSDLmain -mwindows
-	LIBS=-lmingw32 -lSDLmain -lSDL_ttf -lSDL -lfreetype -lz -lSDL_mixer
+	CXXFLAGS=-Wall $(OPTIMIZE) $(DEBUG) `sdl-config --cflags` -mwindows -fpermissive
+	LNFLAGS=`sdl-config --libs` -lz -lSDL_mixer -lSDL_ttf -lfreetype
+	LIBS=`sdl-config --libs`
+	EXE=.exe
 else
+	EXE=
 	UNAME_S := $(shell uname -s)
 	PREFIX=/usr/local
 	PROFILER=#-pg
 	LIBS=
 	ifeq ($(UNAME_S),Linux)
 		CXXFLAGS=-pipe -Wall $(OPTIMIZE) $(DEBUG) `sdl-config --cflags` -DPREFIX=L\"$(PREFIX)\" $(PROFILER)
-		LNFLAGS=-pipe -lSDL_ttf -lfreetype `sdl-config --libs` -lz -lSDL_mixer $(PROFILER)
+		LNFLAGS=-pipe `sdl-config --libs` -lz -lSDL_mixer -lSDL_ttf -lfreetype $(PROFILER)
 		INSTALL=install
 	endif
 	ifeq ($(UNAME_S),Darwin)
@@ -44,19 +46,21 @@ else
 	endif
 endif
 
+MKRES=mkres$(EXE)
+
 COMPILE=$(CXX) $(DEPFLAGS) $(CXXFLAGS) -c
 POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 TARGET=einstein
 
-BUILD_DIR=./build/
+BUILD_DIR=./build
 
 SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 	widgets.cpp iconset.cpp puzzle.cpp rules.cpp \
 	verthints.cpp random.cpp horhints.cpp menu.cpp font.cpp \
 	storage.cpp tablestorage.cpp regstorage.cpp \
 	topscores.cpp opensave.cpp descr.cpp options.cpp messages.cpp \
-	formatter.cpp i18n.cpp tokenizer.cpp sound.cpp
+	formatter.cpp i18n.cpp tokenizer.cpp sound.cpp args.cpp
 HEADERS=$(SOURCES:.cpp=.h)
 OBJECTS=$(SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
@@ -64,7 +68,7 @@ SHARE_SOURCES=exceptions.cpp unicode.cpp streams.cpp table.cpp buffer.cpp conver
 SHARE_HEADERS=$(SHARE_SOURCES:.cpp=.h)
 SHARE_OBJECTS=$(SHARE_SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
-RES_SOURCES=mkres.cpp compressor.cpp format.cpp msgwriter.cpp msgformatter.cpp
+RES_SOURCES=mkres.cpp compressor.cpp format.cpp msgwriter.cpp msgformatter.cpp args.cpp
 RES_HEADERS=$(RES_SOURCES:.cpp=.h)
 RES_OBJECTS=$(RES_SOURCES:%.cpp=$(BUILD_DIR)%.o)
 
@@ -83,8 +87,8 @@ $(BUILD_DIR)%.o: %.cpp $(DEPDIR)/%.d
 	$(COMPILE) $< -o $@
 	$(POSTCOMPILE)
 
-mkres: $(BUILD_DIR) $(RES_OBJECTS) $(SHARE_OBJECTS)
-	$(CXX) -lz $(RES_OBJECTS) $(SHARE_OBJECTS) -lz -o mkres
+$(MKRES): $(BUILD_DIR) $(RES_OBJECTS) $(SHARE_OBJECTS)
+	$(CXX) $(RES_OBJECTS) $(SHARE_OBJECTS) -lz -o $(MKRES) $(LNFLAGS)
 
 einstein: $(BUILD_DIR) $(OBJECTS) $(SHARE_OBJECTS) einstein.res
 	$(CXX) $(OBJECTS) $(SHARE_OBJECTS) $(LIBS) -o einstein $(LNFLAGS)
@@ -93,8 +97,8 @@ einstein: $(BUILD_DIR) $(OBJECTS) $(SHARE_OBJECTS) einstein.res
 clean:
 	$(RM) -rf $(BUILD_DIR) *.exe *.res core* *core $(TARGET) *~
 
-einstein.res: mkres
-	cd res  && ../mkres --source resources.descr --output ../einstein.res && cd ..
+einstein.res: $(MKRES)
+	cd res  && ../$(MKRES) --source resources.descr --output ../einstein.res && cd ..
 
 run: einstein
 	./einstein

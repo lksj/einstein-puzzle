@@ -20,6 +20,7 @@
 
 #include "main.h"
 
+#include "args.h"
 #include "exceptions.h"
 #include "messages.h"
 #include "resources.h"
@@ -111,9 +112,16 @@ static void loadResources(const std::wstring &selfPath)
 
 
 
+#ifdef WIN32
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
+#else
 int main(int argc, char *argv[])
+#endif
 {
-#ifndef WIN32
+#ifdef WIN32
+    int argc;
+    LPSTR* argv = CommandLineToArgvA(GetCommandLineA(), &argc);
+#else
     ensureDirExists(fromMbcs(getenv("HOME")) + std::wstring(L"/.einstein"));
 #endif
     
