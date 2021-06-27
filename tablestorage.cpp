@@ -31,8 +31,8 @@
 TableStorage::TableStorage()
 {
     std::wstring name = getFileName();
-    std::string sname(name.begin(), name.end());
 #ifndef WIN32
+    std::string sname(name.begin(), name.end());
     // HACK: make the config file and directory if they don't exist
     struct stat buffer;
     if (stat (sname.c_str(), &buffer) != 0)
