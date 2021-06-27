@@ -22,6 +22,7 @@
 
 
 #include <map>
+#include <string>
 #include <SDL/SDL_mixer.h>
 
 
