@@ -53,7 +53,7 @@ POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 
 TARGET=einstein
 
-BUILD_DIR=./build
+BUILD_DIR=./build/
 
 SOURCES=puzgen.cpp main.cpp screen.cpp resources.cpp utils.cpp game.cpp \
 	widgets.cpp iconset.cpp puzzle.cpp rules.cpp \
