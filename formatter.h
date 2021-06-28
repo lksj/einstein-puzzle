@@ -33,14 +33,14 @@ class ArgValue;
 class Formatter
 {
     public:
-        typedef enum {
+        enum CmdType {
             EMPTY_CMD = 0,
             TEXT_COMMAND,
             INT_ARG,
             STRING_ARG,
             DOUBLE_ARG,
             FLOAT_ARG
-        } CmdType;
+        };
         
         typedef struct
         {

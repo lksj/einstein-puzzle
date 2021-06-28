@@ -61,11 +61,11 @@ class Possibilities
 class Rule
 {
     public:
-        typedef enum {
+        enum ShowOptions {
             SHOW_VERT,
             SHOW_HORIZ,
             SHOW_NOTHING
-        } ShowOptions;
+        };
     
     public:
         virtual ~Rule() = default;

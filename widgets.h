@@ -257,17 +257,17 @@ class Window: public TileWidget
 class Label: public BoundedWidget
 {
     public:
-        typedef enum {
+        enum HorAlign {
             ALIGN_LEFT,
             ALIGN_CENTER,
             ALIGN_RIGHT
-        } HorAlign;
+        };
         
-        typedef enum {
+        enum VerAlign {
             ALIGN_TOP,
             ALIGN_MIDDLE,
             ALIGN_BOTTOM
-        } VerAlign;
+        };
     
     protected:
         Font *font;

@@ -33,7 +33,7 @@ class Table;
 class Value
 {
     public:
-        typedef enum Type {
+        enum Type {
             Integer,
             Double,
             String,
