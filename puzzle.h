@@ -1,3 +1,22 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #ifndef __PUZZLE_H__
 #define __PUZZLE_H__
 
@@ -20,21 +39,21 @@ class Puzzle: public Widget
         Command *winCommand, *failCommand;
         
     public:
-        Puzzle(IconSet &is, SolvedPuzzle &solved, Possibilities *possib);
+        Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p);
         virtual ~Puzzle();
 
     public:
-        virtual void draw();
+        void draw() override;
         void drawRow(int row, bool addToUpdate=true);
         void drawCell(int col, int row, bool addToUpdate=true);
-        Possibilities* getPossibilities() { return possib; };
-        virtual bool onMouseButtonDown(int button, int x, int y);
-        bool isValid() const { return valid; };
-        bool victory() const { return win; };
+        Possibilities* getPossibilities() { return possib; }
+        bool onMouseButtonDown(int button, int x, int y) override;
+        bool isValid() const { return valid; }
+        bool victory() const { return win; }
         void onFail();
         void onVictory();
         bool getCellNo(int x, int y, int &col, int &row, int &subNo);
-        virtual bool onMouseMove(int x, int y);
+        bool onMouseMove(int x, int y) override;
         void setCommands(Command *winCommand, Command *failCommand);
         void reset();
 };

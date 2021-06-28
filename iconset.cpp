@@ -1,5 +1,26 @@
-#include <string.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "iconset.h"
+
 #include "utils.h"
 
 
@@ -10,9 +31,6 @@ IconSet::IconSet()
     for (int i = 0; i < 6; i++)
         for (int j = 0; j < 6; j++) {
             buf[1] = L'1' + j;
-            buf[0] = L'a' + i;
-            smallIcons[i][j][0] = loadImage(buf);
-            smallIcons[i][j][1] = adjustBrightness(smallIcons[i][j][0], 1.5, false);
             buf[0] = L'A' + i;
             largeIcons[i][j][0] = loadImage(buf);
             largeIcons[i][j][1] = adjustBrightness(largeIcons[i][j][0], 1.5, false);
@@ -29,11 +47,11 @@ IconSet::IconSet()
 
 IconSet::~IconSet()
 {
-    for (int i = 0; i < 6; i++)
-        for (int j = 0; j < 6; j++)
-            for (int k = 0; k < 2; k++) {
-                SDL_FreeSurface(smallIcons[i][j][k]);
-                SDL_FreeSurface(largeIcons[i][j][k]);
+    for (auto& largeIcon : largeIcons)
+        for (auto& j : largeIcon)
+            for (auto& k : j)
+            {
+                SDL_FreeSurface(k);
             }
     SDL_FreeSurface(emptyFieldIcon);
     SDL_FreeSurface(emptyHintIcon);
@@ -49,9 +67,3 @@ SDL_Surface* IconSet::getLargeIcon(int row, int num, bool h)
 {
     return largeIcons[row][num-1][h ? 1 : 0];
 }
-
-SDL_Surface* IconSet::getSmallIcon(int row, int num, bool h)
-{
-    return smallIcons[row][num-1][h ? 1 : 0];
-}
-

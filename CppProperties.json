@@ -1,0 +1,69 @@
+{
+  "environments": [
+    {
+      "MINGW_PREFIX": "C:/dev/msys64/mingw32",
+      "MINGW_CHOST ": "i686-w64-mingw32",
+      "MINGW_PACKAGE_PREFIX": "mingw-w64-i686",
+      "MSYSTEM": "MINGW32",
+      "MSYSTEM_CARCH": "i686",
+      "MSYSTEM_PREFIX": "/mingw32",
+      "SHELL": "${env.MINGW_PREFIX}/../usr/bin/bash",
+      //"INCLUDE": "${env.MINGW_PREFIX}/i686-w64-mingw32/include;${env.MINGW_PREFIX}/include;${env.MINGW_PREFIX}/include/SDL;${env.MINGW_PREFIX}/include/c++;${env.MINGW_PREFIX}/include/c++/7.3.0;${env.MINGW_PREFIX}/include/c++/7.3.0/backward;${env.MINGW_PREFIX}/include/c++/7.3.0/i686-w64-mingw32;${env.MINGW_PREFIX}/include/c++/7.3.0/profile;${env.MINGW_PREFIX}/include/c++/backward;${env.MINGW_PREFIX}/include/c++/mingw32;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include-fixed;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include/c++;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include/c++/backward;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include/c++/mingw32;",
+      "INCLUDE": ".;project/lib/include;project/;${env.MINGW_PREFIX}/include/c++/7.3.0;${env.MINGW_PREFIX}/include/c++/7.3.0/i686-w64-mingw32;${env.MINGW_PREFIX}/include/c++/7.3.0/backward;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include;${env.MINGW_PREFIX}/include;${env.MINGW_PREFIX}/lib/gcc/i686-w64-mingw32/7.3.0/include-fixed;${env.MINGW_PREFIX}/i686-w64-mingw32/include;${env.MINGW_PREFIX}/include/SDL;",
+      "PATH": "${env.MINGW_PREFIX}/bin;${env.MINGW_PREFIX}/../usr/local/bin;${env.MINGW_PREFIX}/../usr/bin;${env.PATH}"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "x86-Debug",
+      "inheritEnvironments": [ ],
+      "includePath": [
+        "${env.INCLUDE}",
+        "${workspaceRoot}"
+      ],
+      "defines": [
+        "__WIN32__",
+        "__MINGWIN32__",
+        "WIN32",
+        "_DEBUG",
+        //"__MSVCRT_VERSION__=0x1500",
+        //"__cdecl=__attribute__((__cdecl__))",
+        "__GNUC__=7",
+        "__cdecl="
+      ],
+      "browse": {
+        "path": [ "${workspaceRoot}" ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      },
+      "intelliSenseMode": "windows-clang-x86"
+    },
+    {
+      "name": "x86-Release",
+      "cmakeCommandArgs": "-D CMAKE_C_COMPILER=cc.exe -D CMAKE_CXX_COMPILER=cc.exe",
+      "inheritEnvironments": [ ],
+      "includePath": [
+        "${env.INCLUDE}",
+        "${workspaceRoot}"
+      ],
+      "defines": [
+        //"__cdecl=",
+        //"WIN32",
+        //"__MSVCRT_VERSION__=0x1500",
+        //"__cdecl=__attribute__((__cdecl__))",
+        "__cdecl=",
+        "__GNUC__=7"
+      ],
+      "browse": {
+        "path": [
+          "C:/dev/msys64/mingw32/lib/gcc/i686-w64-mingw32/7.3.0/include",
+          "C:/dev/msys64/mingw32/lib/gcc/i686-w64-mingw32/7.3.0/include-fixed",
+          "C:/dev/msys64/mingw32/include/*"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      },
+      "intelliSenseMode": "windows-clang-x86"
+    }
+  ]
+}

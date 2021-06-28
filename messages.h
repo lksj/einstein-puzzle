@@ -1,10 +1,29 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #ifndef __MESSAGES_H__
 #define __MESSAGES_H__
 
 
+#include <cstdarg>
 #include <map>
 #include <string>
-#include <stdarg.h>
 
 
 class Resource;
@@ -16,11 +35,14 @@ class Buffer;
 class Messages
 {
     private:
-        typedef struct {
+        class ScoredStr {
+        public:
             int score;
             Formatter *message;
-        } ScoredStr;
-        typedef std::map<std::wstring, ScoredStr> StrMap;
+            ~ScoredStr();
+            ScoredStr(int score, Formatter* message);
+        };
+        typedef std::map<std::wstring, ScoredStr*> StrMap;
         StrMap messages;
     
     public:
@@ -40,7 +62,7 @@ class Messages
         /// \param key message key
         std::wstring operator [](const std::wstring &key) const {
             return getMessage(key);
-        };
+        }
         
         /// Format message
         /// \param key message key

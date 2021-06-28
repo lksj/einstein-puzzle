@@ -1,11 +1,30 @@
-#include "i18n.h"
-#include <locale.h>
-#include "unicode.h"
-#include "convert.h"
+// This file is part of Einstein Puzzle
 
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "i18n.h"
+
+#include "convert.h"
+#include "unicode.h"
+
+#include <clocale>
 #ifdef WIN32
 #include <windows.h>
-//#include <winnls.h>
 #endif
 
 
@@ -261,7 +280,7 @@ static struct _CountryMap {
         { L"",   "" }
     };
 
-static wchar_t* mapIso3ContryToIso2(char *iso3) 
+static const wchar_t* mapIso3ContryToIso2(char *iso3)
 {
     if (! iso3) 
         return L"";
@@ -287,8 +306,7 @@ Locale::Locale()
     setlocale(LC_ALL, "");
 
     char buf[100];
-    int len;
-    len = GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, buf, 99);
+    int len = GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, buf, 99);
     if (len > 0)
         country = mapIso3ContryToIso2(buf);
     
@@ -313,11 +331,7 @@ Locale::Locale()
     setlocale(LC_NUMERIC, "C");  // hack because of numbers in Lua
 }
 
-
-Locale::Locale(const Locale &locale): language(locale.language),
-    country(locale.country), encoding(locale.encoding)
-{
-}
+Locale::Locale(const Locale &locale) = default;
 
 void Locale::parseLocale(const std::wstring &name)
 {
@@ -346,9 +360,9 @@ void Locale::parseLocale(const std::wstring &name)
 
 static bool isLowerCase(const std::wstring &s)
 {
-    int len = s.length();
+    const int len = s.length();
     for (int i = 0; i < len; i++) {
-        char ch = s[i];
+        const char ch = s[i];
         if ((ch < L'a') || (ch > L'z'))
             return false;
     }
@@ -358,9 +372,9 @@ static bool isLowerCase(const std::wstring &s)
 
 static bool isUpperCase(const std::wstring &s)
 {
-    int len = s.length();
+    const int len = s.length();
     for (int i = 0; i < len; i++) {
-        char ch = s[i];
+        const char ch = s[i];
         if ((ch < L'A') || (ch > L'Z'))
             return false;
     }
@@ -385,8 +399,8 @@ void splitFileName(const std::wstring &fileName, std::wstring &name,
         lang = L"";
         country = L"";
     } else {
-        std::wstring l = name.substr(pos + 1);
-        std::wstring s = name.substr(0, pos);
+        const std::wstring l = name.substr(pos + 1);
+        const std::wstring s = name.substr(0, pos);
         if (isUpperCase(l)) { // country
             name = s;
             country = l;

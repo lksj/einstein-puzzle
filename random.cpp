@@ -1,4 +1,24 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "random.h"
+
 #include "utils.h"
 
 /* Period parameters */  
@@ -31,10 +51,10 @@ Random::Random(int init_key[], int key_length)
 {
     mti = RAND_N+1; /* mti==RAND_N+1 means mt[RAND_N] is not initialized */
     
-    int i, j, k;
     initLong(19650218UL);
-    i=1; j=0;
-    k = (RAND_N>key_length ? RAND_N : key_length);
+    int i = 1;
+    int j = 0;
+    int k = (RAND_N>key_length ? RAND_N : key_length);
     for (; k; k--) {
         mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1664525UL))
           + init_key[j] + j; /* non linear */
@@ -56,9 +76,7 @@ Random::Random(int init_key[], int key_length)
 
 
 
-Random::~Random()
-{
-}
+Random::~Random() = default;
 
 /* initializes mt[RAND_N] with a seed */
 void Random::initLong(unsigned long s)
@@ -66,7 +84,7 @@ void Random::initLong(unsigned long s)
     mt[0]= s & 0xffffffffUL;
     for (mti=1; mti<RAND_N; mti++) {
         mt[mti] = 
-	    (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti); 
+        (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti); 
         /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
         /* In the previous versions, MSBs of the seed affect   */
         /* only MSBs of the array mt[].                        */
@@ -81,10 +99,10 @@ void Random::initLong(unsigned long s)
 unsigned long Random::genInt32(void)
 {
     unsigned long y;
-    static unsigned long mag01[2]={0x0UL, MATRIX_A};
-    /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
     if (mti >= RAND_N) { /* generate N words at one time */
+        static unsigned long mag01[2]={0x0UL, MATRIX_A};
+        /* mag01[x] = x * MATRIX_A  for x=0,1 */
         int kk;
 
         if (mti == RAND_N+1)   /* if init_genrand() has not been called, */
@@ -115,38 +133,11 @@ unsigned long Random::genInt32(void)
     return y;
 }
 
-/* generates a random number on [0,0x7fffffff]-interval */
-long Random::genInt31()
-{
-    return (long)(genInt32()>>1);
-}
-
-/* generates a random number on [0,1]-real-interval */
-double Random::genReal1(void)
-{
-    return genInt32()*(1.0/4294967295.0); 
-    /* divided by 2^32-1 */ 
-}
-
 /* generates a random number on [0,1)-real-interval */
 double Random::genReal2()
 {
     return genInt32()*(1.0/4294967296.0);
     /* divided by 2^32 */
-}
-
-/* generates a random number on (0,1)-real-interval */
-double Random::genReal3(void)
-{
-    return (((double)genInt32()) + 0.5)*(1.0/4294967296.0); 
-    /* divided by 2^32 */
-}
-
-/* generates a random number on [0,1) with 53-bit resolution*/
-double Random::genReal53(void)
-{
-    unsigned long a=genInt32()>>5, b=genInt32()>>6; 
-    return(a*67108864.0+b)*(1.0/9007199254740992.0); 
 }
 
 /* generate integer random number on [0, range) int interval */

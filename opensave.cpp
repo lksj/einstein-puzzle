@@ -1,14 +1,39 @@
-#include <time.h>
-#include <fstream>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "opensave.h"
+
+#include "convert.h"
 #include "exceptions.h"
+#include "messages.h"
+#include "unicode.h"
 #include "utils.h"
 #include "widgets.h"
-#include "storage.h"
-#include "opensave.h"
-#include "unicode.h"
-#include "convert.h"
-#include "messages.h"
 
+#include <ctime>
+#include <fstream>
+#ifdef WIN32
+#define UNICODE
+#include <shlobj.h>
+#endif
 
 
 #define MAX_SLOTS 10
@@ -20,17 +45,19 @@ class SavedGame
         std::wstring fileName;
         bool exists;
         std::wstring name;
+        // prevent generation by compiler
+        SavedGame& operator=(const SavedGame&);
 
     public:
-        SavedGame(const std::wstring &fileName);
+        explicit SavedGame(const std::wstring &fileName);
         SavedGame(const SavedGame &s): fileName(s.fileName), name(s.name) {
             exists = s.exists;
-        };
+        }
 
     public:
-        const std::wstring& getFileName() { return fileName; };
-        std::wstring getName() { return exists ? name : msg(L"empty"); };
-        bool isExists() { return exists; };
+        const std::wstring& getFileName() { return fileName; }
+        std::wstring getName() { return exists ? name : msg(L"empty"); }
+        bool isExists() { return exists; }
 };
 
 
@@ -58,12 +85,12 @@ class OkCommand: public Command
         bool *ok;
     
     public:
-        OkCommand(Area &a, bool *o): area(a) { ok = o; };
+        OkCommand(Area &a, bool *o): area(a) { ok = o; }
         
-        virtual void doAction() {
+        void doAction() override {
             *ok = true;
             area.finishEventLoop();
-        };
+        }
 };
 
 
@@ -86,10 +113,10 @@ class SaveCommand: public Command
             saved = s;
             font = f;
             game = g;
-        };
+        }
         
     public:
-        virtual void doAction() {
+        void doAction() override {
             Area area;
             area.add(parentArea, false);
             area.add(new Window(170, 280, 460, 100, L"blue.bmp"));
@@ -133,7 +160,7 @@ class SaveCommand: public Command
                 parentArea->updateMouse();
                 parentArea->draw();
             }
-        };
+        }
 };
 
 
@@ -143,9 +170,13 @@ static std::wstring getSavesPath()
     std::wstring path(fromMbcs(getenv("HOME")) + 
             std::wstring(L"/.einstein/save"));
 #else
-    std::wstring path(getStorage()->get(L"path", L""));
+    TCHAR szPath[MAX_PATH];
+    SHGetFolderPath(nullptr, CSIDL_LOCAL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, szPath);
+    std::wstring path(&szPath[0]);
     if (path.length() > 0)
         path += L"\\";
+    path += L"Einstein\\";
+    ensureDirExists(path);
     path += L"save";
 #endif
     ensureDirExists(path);
@@ -172,8 +203,8 @@ static void showListWindow(SavesList &list, Command **commands,
 
     int pos = 150;
     int no = 0;
-    for (SavesList::iterator i = list.begin(); i != list.end(); i++) {
-        SavedGame &game = *i;
+    for (auto& game : list)
+    {
         area.add(new Button(260, pos, 280, 25, font, 255,255,255, L"blue.bmp", 
                     game.getName(), commands[no++]));
         pos += 30;
@@ -185,7 +216,7 @@ static void showListWindow(SavesList &list, Command **commands,
 
 bool saveGame(Area *parentArea, Game *game)
 {
-    std::wstring path = getSavesPath();
+    const std::wstring path = getSavesPath();
     
     Area area;
     area.add(parentArea, false);
@@ -195,7 +226,7 @@ bool saveGame(Area *parentArea, Game *game)
     SavesList list;
     Command **commands = new Command*[MAX_SLOTS];
     for (int i = 0; i < MAX_SLOTS; i++) {
-        SavedGame sg(path + L"/" + toString(i) + L".sav");
+        const SavedGame sg(path + L"/" + toString(i) + L".sav");
         list.push_back(sg);
         commands[i] = new SaveCommand(*(--(list.end())), &font, 
                 &area, &saved, L"game " + toString(i+1), game);
@@ -216,7 +247,6 @@ class LoadCommand: public Command
     private:
         SavedGame &savedGame;
         Area *parentArea;
-        bool *saved;
         Font *font;
         std::wstring defaultName;
         Game **game;
@@ -228,10 +258,10 @@ class LoadCommand: public Command
             parentArea = area;
             font = f;
             game = g;
-        };
+        }
         
     public:
-        virtual void doAction() {
+        void doAction() override {
             try {
                 std::ifstream stream(toMbcs(savedGame.getFileName()).c_str(), 
                         std::ifstream::in | std::ifstream::binary);
@@ -248,19 +278,19 @@ class LoadCommand: public Command
                         255,255,255, L"Error loadng game");
             }
             parentArea->finishEventLoop();
-        };
+        }
 };
 
 
 Game* loadGame(Area *parentArea)
 {
-    std::wstring path = getSavesPath();
+    const std::wstring path = getSavesPath();
     
     Area area;
     area.add(parentArea, false);
     Font font(L"laudcn2.ttf", 14);
     
-    Game *newGame = NULL;
+    Game *newGame = nullptr;
     
     SavesList list;
     Command **commands = new Command*[MAX_SLOTS];
@@ -271,7 +301,7 @@ Game* loadGame(Area *parentArea)
             commands[i] = new LoadCommand(*(--(list.end())), &font, &area, 
                     &newGame);
         else
-            commands[i] = NULL;
+            commands[i] = nullptr;
     }
     
     showListWindow(list, commands, msg(L"loadGame"), area, &font);

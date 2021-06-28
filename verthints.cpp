@@ -1,8 +1,30 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "verthints.h"
+
 #include "main.h"
-#include "utils.h"
 #include "puzgen.h"
 #include "sound.h"
+#include "utils.h"
 
 
 #define TILE_NUM     15
@@ -30,9 +52,9 @@ VertHints::VertHints(IconSet &is, Rules &rl, std::istream &stream): iconSet(is)
         int excluded = readInt(stream);
         if (excluded) {
             excludedRules.push_back(r);
-            rules.push_back(NULL);
+            rules.push_back(nullptr);
         } else {
-            excludedRules.push_back(NULL);
+            excludedRules.push_back(nullptr);
             rules.push_back(r);
         }
     }
@@ -51,11 +73,11 @@ void VertHints::reset(Rules &r)
     numbersArr.clear();
     
     int no = 0;
-    for (Rules::iterator i = r.begin(); i != r.end(); i++) {
-        Rule *rule = *i;
+    for (auto rule : r)
+    {
         if (rule->getShowOpts() == Rule::SHOW_VERT) {
             rules.push_back(rule);
-            excludedRules.push_back(NULL);
+            excludedRules.push_back(nullptr);
             numbersArr.push_back(no);
         }
         no++;
@@ -80,7 +102,7 @@ void VertHints::drawCell(int col, bool addToUpdate)
     int x = TILE_X + col * (TILE_WIDTH + TILE_GAP);
     int y = TILE_Y;
 
-    Rule *r = NULL;
+    Rule *r = nullptr;
     if (col < (int)rules.size()) {
         if (showExcluded)
             r = excludedRules[col];
@@ -90,8 +112,13 @@ void VertHints::drawCell(int col, bool addToUpdate)
     if (r)
         r->draw(x, y, iconSet, highlighted == col);
     else {
-        screen.draw(x, y, iconSet.getEmptyHintIcon());
-        screen.draw(x, y + TILE_HEIGHT, iconSet.getEmptyHintIcon());
+        SDL_Surface *t = iconSet.getEmptyHintIcon();
+        SDL_Surface *s = makeSWSurface(t->w, t->h * 2);
+
+        blitDraw(0, 0, t, s);
+        blitDraw(0, t->h, t, s);
+        screen.drawScaled(x, y, s);
+        SDL_FreeSurface(s);
     }
     
     if (addToUpdate)
@@ -113,14 +140,14 @@ bool VertHints::onMouseButtonDown(int button, int x, int y)
             if (r) {
                 sound->play(L"whizz.wav");
                 rules[no] = r;
-                excludedRules[no] = NULL;
+                excludedRules[no] = nullptr;
                 drawCell(no);
             }
         } else {
             Rule *r = rules[no];
             if (r) {
                 sound->play(L"whizz.wav");
-                rules[no] = NULL;
+                rules[no] = nullptr;
                 excludedRules[no] = r;
                 drawCell(no);
             }
@@ -161,8 +188,8 @@ int VertHints::getRuleNo(int x, int y)
                 TILE_HEIGHT * 2))
         return -1;
 
-    x = x - TILE_X;
-    y = y - TILE_Y;
+    x = scaleDown(x) - TILE_X;
+    y = scaleDown(y) - TILE_Y;
 
     int no = x / (TILE_WIDTH + TILE_GAP);
     if (no * (TILE_WIDTH + TILE_GAP) + TILE_WIDTH < x)
@@ -176,7 +203,7 @@ bool VertHints::isActive(int ruleNo)
     if ((ruleNo < 0) || (ruleNo >= (int)rules.size()))
         return false;
     Rule *r = showExcluded ? excludedRules[ruleNo] : rules[ruleNo];
-    return r != NULL;
+    return r != nullptr;
 }
 
 

@@ -1,23 +1,56 @@
-#include <stdarg.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 #include "messages.h"
+
+#include "buffer.h"
+#include "exceptions.h"
 #include "formatter.h"
 #include "resources.h"
-#include "exceptions.h"
-#include "buffer.h"
-#include "utils.h"
 #include "unicode.h"
+#include "utils.h"
+
+#include <cstdarg>
 
 
 Messages msg;
 
 
-Messages::Messages()
+Messages::ScoredStr::~ScoredStr()
+{
+    delete message;
+}
+
+
+Messages::ScoredStr::ScoredStr(int score, Formatter* message)
+    : score(score), message(message)
 {
 }
 
+Messages::Messages() = default;
+
 Messages::~Messages()
 {
+    for (auto kv : messages)
+    {
+        delete kv.second;
+    }
 }
 
 class ResVisitor: public Visitor<Resource*>
@@ -27,9 +60,9 @@ class ResVisitor: public Visitor<Resource*>
         Buffer *buffer;
     
     public:
-        ResVisitor(Messages &m, Buffer *b): messages(m) { buffer = b; };
+        ResVisitor(Messages &m, Buffer *b): messages(m) { buffer = b; }
         
-        virtual void onVisit(Resource *&r) {
+        void onVisit(Resource *&r) override {
             messages.loadFromResource(r, buffer);
         }
 };
@@ -45,12 +78,12 @@ void Messages::loadFromResource(Resource *res, Buffer *buffer)
 {
     if (! res) return;
 
-    int cnt = res->getVariantsCount();
+    const int cnt = res->getVariantsCount();
     for (int i = 0; i < cnt; i++) {
         ResVariant *var = res->getVariant(i);
         if (var) {
             try {
-                int score = var->getI18nScore();
+                const int score = var->getI18nScore();
                 var->getData(*buffer);
                 loadBundle(score, (unsigned char*)buffer->getData(), 
                         buffer->getSize());
@@ -64,9 +97,9 @@ void Messages::loadFromResource(Resource *res, Buffer *buffer)
 
 std::wstring Messages::getMessage(const std::wstring &key) const
 {
-    StrMap::const_iterator i = messages.find(key);
+    const StrMap::const_iterator i = messages.find(key);
     if (i != messages.end())
-        return (*i).second.message->getMessage();
+        return (*i).second->message->getMessage();
     else
         return key;
 }
@@ -74,9 +107,9 @@ std::wstring Messages::getMessage(const std::wstring &key) const
 std::wstring Messages::format(const wchar_t *key, va_list ap) const
 {
     std::wstring s;
-    StrMap::const_iterator i = messages.find(key);
+    const StrMap::const_iterator i = messages.find(key);
     if (i != messages.end())
-        s = (*i).second.message->format(ap);
+        s = (*i).second->message->format(ap);
     else
         s = key;
     return s;
@@ -108,24 +141,25 @@ void Messages::loadBundle(int score, unsigned char *data, size_t size)
         throw Exception(L"Unknown version of message file");
 
     int offset = readInt(data + size - 4);
-    int cnt = readInt(data + offset);
+    const int cnt = readInt(data + offset);
     offset += 4;
 
     for (int i = 0; i < cnt; i++) {
-        int sz = readInt(data + offset);
+        const int sz = readInt(data + offset);
         offset += 4;
         if (sz > 0) {
-            std::wstring name(fromUtf8((char*)data + offset, sz));
-            int msgOffset = readInt(data + offset + sz);
+            const std::wstring name(fromUtf8((char*)data + offset, sz));
+            const int msgOffset = readInt(data + offset + sz);
             StrMap::iterator i = messages.find(name);
             if (i == messages.end()) {
-                ScoredStr ss = { score, new Formatter(data, msgOffset) };
+                ScoredStr* ss = new ScoredStr(score, new Formatter(data, msgOffset));
                 messages[name] = ss;
             } else {
-                ScoredStr &ss = (*i).second;
-                if (ss.score <= score) {
-                    ss.score = score;
-                    ss.message = new Formatter(data, msgOffset);
+                ScoredStr* ss = (*i).second;
+                if (ss->score <= score) {
+                    ss->score = score;
+                    delete ss->message;
+                    ss->message = new Formatter(data, msgOffset);
                 }
             }
         }

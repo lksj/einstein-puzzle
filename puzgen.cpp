@@ -1,12 +1,33 @@
-#include <stdlib.h>
-#include <stdio.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "puzgen.h"
+
+#include "exceptions.h"
+#include "widgets.h"
+#include "utils.h"
+
+#include <cstdlib>
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <list>
-#include "puzgen.h"
-#include "exceptions.h"
-#include "utils.h"
-
 
 
 Possibilities::Possibilities()
@@ -17,17 +38,17 @@ Possibilities::Possibilities()
 Possibilities::Possibilities(std::istream &stream)
 {
     for (int row = 0; row < PUZZLE_SIZE; row++)
-        for (int col = 0; col < PUZZLE_SIZE; col++)
-            for (int element = 0; element < PUZZLE_SIZE; element++)
-                pos[col][row][element] = readInt(stream);
+        for (auto& po : pos)
+                for (int element = 0; element < PUZZLE_SIZE; element++)
+                po[row][element] = readInt(stream);
 }
 
 void Possibilities::reset()
 {
-    for (int i = 0; i < PUZZLE_SIZE; i++)
-        for (int j = 0; j < PUZZLE_SIZE; j++)
+    for (auto& po : pos)
+        for (auto& j : po)
             for (int k = 0; k < PUZZLE_SIZE; k++)
-                pos[i][j][k] = k + 1;
+                j[k] = k + 1;
 }
 
 void Possibilities::checkSingles(int row)
@@ -59,7 +80,7 @@ void Possibilities::checkSingles(int row)
     for (int col = 0; col < PUZZLE_SIZE; col++) {
         if ((cellsCnt[col] == 1) && (elsCnt[elements[col] - 1] != 1)) {
             // there is only one element in cell but it used somewhere else
-            int e = elements[col] - 1;
+            const int e = elements[col] - 1;
             for (int i = 0; i < PUZZLE_SIZE; i++)
                 if (i != col)
                     pos[i][row][e] = 0;
@@ -70,7 +91,7 @@ void Possibilities::checkSingles(int row)
     // check for single element without exclusive cell
     for (int el = 0; el < PUZZLE_SIZE; el++)
         if ((elsCnt[el] == 1) && (cellsCnt[elCells[el]] != 1)) {
-            int col = elCells[el];
+            const int col = elCells[el];
             for (int i = 0; i < PUZZLE_SIZE; i++)
                 if (i != el)
                     pos[col][row][i] = 0;
@@ -151,29 +172,15 @@ bool Possibilities::isValid(SolvedPuzzle &puzzle)
     return true;
 }
 
-
-int Possibilities::getPosition(int row, int element)
-{
-    int cnt = 0;
-    int lastPos = -1;
-    
-    for (int i = 0; i < PUZZLE_SIZE; i++)
-        if (pos[i][row][element - 1] == element) {
-            cnt++;
-            lastPos = i;
-        }
-
-    return cnt == 1 ? lastPos : -1;
-}
-
 void Possibilities::print()
 {
     for (int row = 0; row < PUZZLE_SIZE; row++) {
         std::cout << (char)('A' + row) << " ";
-        for (int col = 0; col < PUZZLE_SIZE; col++) {
+        for (auto& po : pos)
+        {
             for (int i = 0; i < PUZZLE_SIZE; i++)
-                if (pos[col][row][i])
-                    std::cout << pos[col][row][i];
+                if (po[row][i])
+                    std::cout << po[row][i];
                 else
                     std::cout << " ";
             std::cout << "   ";
@@ -182,36 +189,29 @@ void Possibilities::print()
     }
 }
 
-void Possibilities::makePossible(int col, int row, int element)
-{
-    pos[col][row][element-1] = element;
-}
-
 void Possibilities::save(std::ostream &stream)
 {
     for (int row = 0; row < PUZZLE_SIZE; row++)
-        for (int col = 0; col < PUZZLE_SIZE; col++)
-            for (int element = 0; element < PUZZLE_SIZE; element++)
-                writeInt(stream, pos[col][row][element]);
+        for (auto& po : pos)
+                for (int element = 0; element < PUZZLE_SIZE; element++)
+                writeInt(stream, po[row][element]);
 }
 
 
 static void shuffle(short arr[PUZZLE_SIZE])
 {
-    int a, b, c;
-    
     for (int i = 0; i < 30; i++) {
-        a = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
+        const int a = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
         if ((a < 0) || (a >= PUZZLE_SIZE)) {
             std::cerr << "Index error" << std::endl;
             exit(1);
         }
-        b = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));        
+        const int b = (int)(((double)PUZZLE_SIZE)*rand()/(RAND_MAX+1.0));
         if ((b < 0) || (b >= PUZZLE_SIZE)) {
             std::cerr << "Index error" << std::endl;
             exit(1);
         }
-        c = arr[a];
+        const int c = arr[a];
         arr[a] = arr[b];
         arr[b] = c;
     }
@@ -225,8 +225,8 @@ static bool canSolve(SolvedPuzzle &puzzle, Rules &rules)
     
     do {
         changed = false;
-        for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
-            Rule *rule = *i;
+        for (auto rule : rules)
+        {
             if (rule->apply(pos)) {
                 changed = true;
                 if (! pos.isValid(puzzle)) {
@@ -239,7 +239,7 @@ pos.print();
         }
     } while (changed);
 
-    bool res = pos.isSolved();
+    const bool res = pos.isSolved();
     return res;
 }
 
@@ -250,7 +250,7 @@ static void removeRules(SolvedPuzzle &puzzle, Rules &rules)
     
     do {
         possible = false;
-        for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+        for (Rules::iterator i = rules.begin(); i != rules.end(); ++i) {
             Rule *rule = *i;
             Rules excludedRules = rules;
             excludedRules.remove(rule);
@@ -272,12 +272,11 @@ static void genRules(SolvedPuzzle &puzzle, Rules &rules)
     do {
         Rule *rule = genRule(puzzle);
         if (rule) {
-            std::wstring s = rule->getAsText();
-            for (std::list<Rule*>::iterator i = rules.begin(); 
-                    i != rules.end(); i++) 
-                if ((*i)->getAsText() == s) {
+            const std::wstring s = rule->getAsText();
+            for (auto& i : rules)
+                if (i->getAsText() == s) {
                     delete rule;
-                    rule = NULL;
+                    rule = nullptr;
                     break;
                 }
             if (rule) {
@@ -313,12 +312,11 @@ static void printRules(Rules &rules)
 
 void genPuzzle(SolvedPuzzle &puzzle, Rules &rules)
 {
-    srand(time(NULL));
-
-    for (int i = 0; i < PUZZLE_SIZE; i++) {
-        for (int j = 0; j < PUZZLE_SIZE; j++) 
-            puzzle[i][j] = j + 1;
-        shuffle(puzzle[i]);
+    for (auto& i : puzzle)
+    {
+        for (int j = 0; j < PUZZLE_SIZE; j++)
+            i[j] = j + 1;
+        shuffle(i);
     }
 
     genRules(puzzle, rules);
@@ -330,8 +328,8 @@ void genPuzzle(SolvedPuzzle &puzzle, Rules &rules)
 
 void openInitial(Possibilities &possib, Rules &rules)
 {
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
-        Rule *r = *i;
+    for (auto r : rules)
+    {
         if (r->applyOnStart())
             r->apply(possib);
     }
@@ -343,8 +341,9 @@ void getHintsQty(Rules &rules, int &vert, int &horiz)
     vert = 0;
     horiz = 0;
 
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
-        Rule::ShowOptions so = (*i)->getShowOpts();
+    for (auto& rule : rules)
+    {
+        const Rule::ShowOptions so = rule->getShowOpts();
         switch (so) {
             case Rule::SHOW_VERT: vert++; break;
             case Rule::SHOW_HORIZ: horiz++; break;
@@ -355,25 +354,26 @@ void getHintsQty(Rules &rules, int &vert, int &horiz)
 
 void savePuzzle(SolvedPuzzle &puzzle, std::ostream &stream)
 {
-    for (int row = 0; row < PUZZLE_SIZE; row++)
-        for (int col = 0; col < PUZZLE_SIZE; col++)
-            writeInt(stream, puzzle[row][col]);
+    for (auto& row : puzzle)
+        for (short col : row)
+            writeInt(stream, col);
 }
 
 void loadPuzzle(SolvedPuzzle &puzzle, std::istream &stream)
 {
-    for (int row = 0; row < PUZZLE_SIZE; row++)
-        for (int col = 0; col < PUZZLE_SIZE; col++)
-            puzzle[row][col] = readInt(stream);
+    for (auto& row : puzzle)
+        for (short& col : row)
+            col = readInt(stream);
 }
 
 
 Rule* getRule(Rules &rules, int no)
 {
     int j = 0;
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++) {
+    for (auto& rule : rules)
+    {
         if (j == no)
-            return *i;
+            return rule;
         j++;
     }
     throw Exception(L"Rule is not found");
@@ -382,7 +382,7 @@ Rule* getRule(Rules &rules, int no)
 
 /*int main(int argc, char *argv[])
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     
     Rules rules;
     Puzzle puzzle;

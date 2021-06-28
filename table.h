@@ -1,10 +1,30 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #ifndef __TABLE_H__
 #define __TABLE_H__
 
 
-#include <string>
-#include <map>
 #include "lexal.h"
+
+#include <map>
+#include <string>
 
 
 class Table;
@@ -13,7 +33,7 @@ class Table;
 class Value
 {
     public:
-        typedef enum Type {
+        enum Type {
             Integer,
             Double,
             String,
@@ -21,7 +41,7 @@ class Value
         };
     
     public:
-        virtual ~Value() { };
+        virtual ~Value() = default;
 
     public:
         virtual ::Table* asTable() const = 0;
@@ -46,7 +66,7 @@ class Table
     public:
         Table();
         Table(const Table &table);
-        Table(const std::string &fileName);
+        explicit Table(const std::string &fileName);
         Table(Lexal &lexal, int startLine, int startPos);
         ~Table();
 
@@ -58,18 +78,15 @@ class Table
         void save(const std::wstring &fileName) const;
 
     public:
-        Iterator begin() const { return fields.begin(); };
-        Iterator end() const { return fields.end(); };
+        Iterator begin() const { return fields.begin(); }
+        Iterator end() const { return fields.end(); }
         bool hasKey(const std::wstring &key) const;
         Value::Type getType(const std::wstring &key) const;
         std::wstring getString(const std::wstring &key, const std::wstring &dflt = L"") const;
         int getInt(const std::wstring &key, int dflt=0) const;
-        double getDouble(const std::wstring &key, double dflt=0) const;
-        Table* getTable(const std::wstring &key, Table *dflt=NULL) const;
+        Table* getTable(const std::wstring &key, Table *dflt=nullptr) const;
         void setString(const std::wstring &key, const std::wstring &value);
         void setInt(const std::wstring &key, int value);
-        void setDouble(const std::wstring &key, double value);
-        void setTable(const std::wstring &key, Table *value);
         
     private:
         void parse(Lexal &lexal, bool needBracket, int startLine, int startPos);

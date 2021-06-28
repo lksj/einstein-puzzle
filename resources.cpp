@@ -1,17 +1,40 @@
-#include <algorithm>
-#include <sys/types.h>
-#include <dirent.h>
-#include <zlib.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-08-04 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 #include "resources.h"
-#include "exceptions.h"
-#include "unicode.h"
+
 #include "convert.h"
+#include "exceptions.h"
 #include "i18n.h"
+#include "unicode.h"
 #include "utils.h"
 
+#include <algorithm>
 
-ResourcesCollection *resources = NULL;
+#include <dirent.h>
+#include <sys/types.h>
+#include <zlib.h>
+
+
+ResourcesCollection *resources = nullptr;
 
 
 ///////////////////////////////////////////////////////////////////
@@ -34,10 +57,9 @@ class UnpackedResourceStream: public ResourceStream
                 size_t size);
 
     public:
-        virtual size_t getSize() { return size; };
-        virtual void seek(long offset);
-        virtual void read(char *buffer, size_t size);
-        virtual long getPos() { return pos; };
+        size_t getSize() override { return size; }
+        void read(char *buffer, size_t size) override;
+        long getPos() override { return pos; }
 };
 
 UnpackedResourceStream::UnpackedResourceStream(std::ifstream &s, 
@@ -46,13 +68,6 @@ UnpackedResourceStream::UnpackedResourceStream(std::ifstream &s,
     offset = off;
     size = sz;
     pos = 0;
-}
-
-void UnpackedResourceStream::seek(long off)
-{
-    if ((off < 0) || ((size_t)off > size))
-        throw Exception(L"Invalid seek in ResourceStream");
-    pos = off;
 }
 
 void UnpackedResourceStream::read(char *buffer, size_t sz)
@@ -83,14 +98,13 @@ class MemoryResourceStream: public ResourceStream
         long pos;
     
     public:
-        MemoryResourceStream(ResVariant *resource);
+        explicit MemoryResourceStream(ResVariant *resource);
         virtual ~MemoryResourceStream();
 
     public:
-        virtual size_t getSize() { return size; };
-        virtual void seek(long offset);
-        virtual void read(char *buffer, size_t size);
-        virtual long getPos() { return pos; };
+        size_t getSize() override { return size; }
+        void read(char *buffer, size_t size) override;
+        long getPos() override { return pos; }
 };
 
 MemoryResourceStream::MemoryResourceStream(ResVariant *res)
@@ -103,13 +117,6 @@ MemoryResourceStream::MemoryResourceStream(ResVariant *res)
 MemoryResourceStream::~MemoryResourceStream()
 {
     resource->delRef(data);
-}
-
-void MemoryResourceStream::seek(long off)
-{
-    if ((off < 0) || ((size_t)off > size))
-        throw Exception(L"Invalid seek in ResourceStream");
-    pos = off;
 }
 
 void MemoryResourceStream::read(char *buffer, size_t sz)
@@ -223,7 +230,7 @@ void ResourceFile::unpack(char *in, int inSize, char *out, int outSize)
 void ResourceFile::load(char *buf, long offset, long packedSize, 
         long unpackedSize, int level)
 {
-    char *inBuf=NULL;
+    char *inBuf = nullptr;
     
     try {
         if (! level) {
@@ -238,7 +245,7 @@ void ResourceFile::load(char *buf, long offset, long packedSize,
         unpack((char*)buffer->getData(), packedSize, buf, unpackedSize);
     } catch (Exception &e) {
         if (inBuf) free(inBuf);
-        throw e;
+        throw;
     } catch (...) {
         if (inBuf) free(inBuf);
         throw Exception(name + L": Error loading resource");
@@ -249,7 +256,7 @@ void ResourceFile::load(char *buf, long offset, long packedSize,
 void* ResourceFile::load(long offset, long packedSize, long unpackedSize,
         int level)
 {
-    char *outBuf=NULL;
+    char *outBuf = nullptr;
     
     try {
         outBuf = (char*)malloc(unpackedSize);
@@ -258,7 +265,7 @@ void* ResourceFile::load(long offset, long packedSize, long unpackedSize,
         load(outBuf, offset, packedSize, unpackedSize, level);
     } catch (Exception &e) {
         if (outBuf) free(outBuf);
-        throw e;
+        throw;
     } catch (...) {
         if (outBuf) free(outBuf);
         throw Exception(name + L": Error loading resource");
@@ -267,48 +274,6 @@ void* ResourceFile::load(long offset, long packedSize, long unpackedSize,
     return outBuf;
 }
 
-
-///////////////////////////////////////////////////////////////////
-//
-// SimpleResourceFile
-//
-///////////////////////////////////////////////////////////////////
-
-
-SimpleResourceFile::SimpleResourceFile(const std::wstring &fileName,
-        Buffer *buf): ResourceFile(fileName, buf)
-{
-    Directory entries;    
-    getDirectory(entries);
-    for (Directory::iterator i = entries.begin(); i != entries.end(); i++) {
-        DirectoryEntry &e = *i;
-        directory[e.name] = e;
-    }
-}
-
-void* SimpleResourceFile::load(const std::wstring &name, int &size)
-{
-    DirectoryMap::iterator i = directory.find(name);
-    if (i != directory.end()) {
-        DirectoryEntry &e = (*i).second;
-        size = e.unpackedSize;
-        return ResourceFile::load(e.offset, e.packedSize, e.unpackedSize,
-                e.level);
-    } else
-        throw Exception(L"Resource '" + name + L"' not found");
-}
-
-void SimpleResourceFile::load(const std::wstring &name, Buffer &outBuf)
-{
-    DirectoryMap::iterator i = directory.find(name);
-    if (i != directory.end()) {
-        DirectoryEntry &e = (*i).second;
-        outBuf.setSize(e.unpackedSize);
-        ResourceFile::load((char*)outBuf.getData(), e.offset, 
-                e.packedSize, e.unpackedSize, e.level);
-    } else
-        throw Exception(L"Resource '" + name + L"' not found");
-}
 
 ///////////////////////////////////////////////////////////////////
 //
@@ -327,7 +292,7 @@ ResVariant::ResVariant(ResourceFile *f, int score,
     packedSize = e.packedSize;
     level = e.level;
     refCnt = 0;
-    data = NULL;
+    data = nullptr;
 }
 
 
@@ -368,20 +333,7 @@ void ResVariant::delRef(void *dta)
     refCnt--;
     if (! refCnt) {
         free((char*)data - sizeof(ResVariant*));
-        data = NULL;
-    }
-}
-
-void* ResVariant::getDynData()
-{
-    if (! refCnt)
-        return file->load(offset, packedSize, unpackedSize, level);
-    else {
-        char* d = (char*)malloc(unpackedSize);
-        if (! d)
-            throw Exception(L"ResVariant::getDynData memory allocation error");
-        memcpy(d, data, unpackedSize);
-        return data;
+        data = nullptr;
     }
 }
 
@@ -421,8 +373,8 @@ Resource::Resource(ResourceFile *file, int i18nScore,
 
 Resource::~Resource()
 {
-    for (Variants::iterator i = variants.begin(); i != variants.end(); i++)
-        delete *i;
+    for (auto& variant : variants)
+        delete variant;
 }
 
 class ScorePredicate
@@ -430,11 +382,11 @@ class ScorePredicate
     public:
         int score;
         
-        ScorePredicate(int sc) { score = sc; }
+        explicit ScorePredicate(int sc) { score = sc; }
 
         bool operator() (const ResVariant *r) const {
             return r->getI18nScore() == score;
-        };
+        }
 };
 
 class ResVariantMoreThen
@@ -442,13 +394,13 @@ class ResVariantMoreThen
     public:
         bool operator() (const ResVariant *v1, const ResVariant *v2) const {
             return v1->getI18nScore() > v2->getI18nScore();
-        };
+        }
 };
 
 void Resource::addVariant(ResourceFile *file, int i18nScore,
         const ResourceFile::DirectoryEntry &entry)
 {
-    if (! variants.size()) {
+    if (variants.empty()) {
         variants.push_back(new ResVariant(file, i18nScore, entry));
         return;
     }
@@ -510,7 +462,7 @@ class ResFileMoreThen
     public:
         bool operator() (const ResourceFile *f1, const ResourceFile *f2) const {
             return f1->getPriority() > f2->getPriority();
-        };
+        }
 };
 
 ResourcesCollection::ResourcesCollection(StringList &directories)
@@ -524,19 +476,17 @@ ResourcesCollection::ResourcesCollection(StringList &directories)
 
 ResourcesCollection::~ResourcesCollection()
 {
-    for (ResourcesMap::iterator i = resources.begin(); i != resources.end(); i++)
-        delete (*i).second;
-    for (ResourceFiles::iterator i = files.begin(); i != files.end(); i++)
-        delete *i;
+    for (auto& resource : resources)
+        delete resource.second;
+    for (auto& file : files)
+        delete file;
 }
 
 
 void ResourcesCollection::loadResourceFiles(StringList &directories)
 {
-    for (StringList::iterator i = directories.begin();
-            i != directories.end(); i++)
+    for (auto& d : directories)
     {
-        const std::wstring &d = *i;
         DIR *dir = opendir(toMbcs(d).c_str());
         if (dir) {
             struct dirent *de;
@@ -556,15 +506,11 @@ void ResourcesCollection::loadResourceFiles(StringList &directories)
 void ResourcesCollection::processFiles()
 {
     ResourceFile::Directory dir;
-    for (std::vector<ResourceFile*>::iterator i = files.begin(); 
-            i != files.end(); i++) 
+    for (auto file : files)
     {
-        ResourceFile *file = *i;
         file->getDirectory(dir);
-        for (ResourceFile::Directory::iterator j = dir.begin(); 
-                j != dir.end(); j++) 
+        for (auto& de : dir)
         {
-            ResourceFile::DirectoryEntry &de = *j;
             std::wstring name, ext, language, country;
             splitFileName(de.name, name, ext, language, country);
             int score = getScore(language, country, locale);
@@ -627,17 +573,11 @@ void ResourcesCollection::forEachInGroup(const std::wstring &name,
 {
     if (groups.count(name) > 0) {
         ResourcesList &l = groups[name];
-        for (ResourcesList::iterator i = l.begin(); i != l.end(); i++) {
-            Resource *r = *i;
+        for (auto r : l)
+        {
             visitor.onVisit(r);
         }
     }
-}
-
-void ResourcesCollection::loadData(const std::wstring &name, Buffer &buffer)
-{
-    Resource *r = getResource(name);
-    r->getData(buffer);
 }
 
 
@@ -650,7 +590,7 @@ void ResourcesCollection::loadData(const std::wstring &name, Buffer &buffer)
 
 ResDataHolder::ResDataHolder()
 {
-    data = NULL;
+    data = nullptr;
     size = 0;
 }
 

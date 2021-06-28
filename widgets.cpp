@@ -1,7 +1,278 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "widgets.h"
+
 #include "main.h"
-#include "utils.h"
 #include "sound.h"
+#include "utils.h"
+
+
+//////////////////////////////////////////////////////////////////
+//
+// BoundedWidget
+//
+//////////////////////////////////////////////////////////////////
+
+
+BoundedWidget::BoundedWidget(int x, int y, int w, int h, bool t):
+    left(x), top(y), width(w), height(h), transparent(t)
+{
+}
+
+
+int BoundedWidget::getLeft()
+{
+    return scaleUp(left);
+}
+
+int BoundedWidget::getTop()
+{
+    return scaleUp(top);
+}
+
+int BoundedWidget::getWidth()
+{
+    return width;
+}
+
+int BoundedWidget::getHeight()
+{
+    return height;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// TileWidget
+//
+//////////////////////////////////////////////////////////////////
+
+
+TileWidget::TileWidget(int x, int y, int w, int h, bool t):
+    BoundedWidget(x, y, w, h, t)
+{
+    scale = -1.0;
+    image = nullptr;
+    sImage = nullptr;
+}
+
+
+TileWidget::~TileWidget()
+{
+    SDL_FreeSurface(image);
+    SDL_FreeSurface(sImage);
+}
+
+
+SDL_Surface* TileWidget::getImage()
+{
+    return sImage;
+}
+
+
+void TileWidget::draw()
+{
+    if (!sImage || screen.getScale() != scale)
+    {
+        rescale();
+    }
+    
+    SDL_Surface *s = getImage();
+    
+    if (s)
+    {
+        screen.draw(getLeft(), getTop(), s);
+        screen.addRegionToUpdate(left, top, width, height);
+    }
+}
+
+
+void TileWidget::rescale()
+{
+    SDL_FreeSurface(sImage);
+    
+    if (image)
+    {
+        scale = screen.getScale();
+        sImage = scaleUp(image);
+        
+        if (transparent)
+        {
+            SDL_SetColorKey(sImage, SDL_SRCCOLORKEY, getCornerPixel(image));
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// HighlightableWidget
+//
+//////////////////////////////////////////////////////////////////
+
+
+HighlightableWidget::HighlightableWidget(int x, int y, int w, int h, bool t):
+    TileWidget(x, y, w, h, t)
+{
+    highlighted = nullptr;
+    sHighlighted = nullptr;
+    mouseInside = false;
+}
+
+
+HighlightableWidget::~HighlightableWidget()
+{
+    SDL_FreeSurface(highlighted);
+    SDL_FreeSurface(sHighlighted);
+}
+
+
+SDL_Surface* HighlightableWidget::getImage()
+{
+    return (mouseInside ? sHighlighted : sImage);
+}
+
+
+void HighlightableWidget::rescale()
+{
+    TileWidget::rescale();
+    SDL_FreeSurface(sHighlighted);
+    
+    if (highlighted)
+    {
+        sHighlighted = scaleUp(highlighted);
+    
+        if (transparent)
+        {
+            SDL_SetColorKey(sHighlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// ClickableWidget
+//
+//////////////////////////////////////////////////////////////////
+
+
+ClickableWidget::ClickableWidget(int x, int y, int w, int h, bool t):
+    HighlightableWidget(x, y, w, h, t)
+{
+}
+
+
+void ClickableWidget::doClick()
+{
+    sound->play(L"click.wav");
+    handleClick();
+}
+
+
+bool ClickableWidget::onMouseButtonDown(int button, int x, int y)
+{
+    if (isInRect(x, y, left, top, width, height)) {
+        doClick();
+        
+        return true;
+    } else
+        return false;
+}
+
+
+bool ClickableWidget::onMouseMove(int x, int y)
+{
+    bool in = isInRect(x, y, left, top, width, height);
+    if (in != mouseInside) {
+        mouseInside = in;
+        draw();
+    }
+    return false;
+}
+
+
+//////////////////////////////////////////////////////////////////
+//
+// TextHighlightWidget
+//
+//////////////////////////////////////////////////////////////////
+
+
+TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
+        int fR, int fG, int fB, int hR, int hG, int hB, bool transparent):
+    ClickableWidget(x, y, w, h, transparent)
+{
+    font = f;
+    
+    red = fR;
+    green = fG;
+    blue = fB;
+    hRed = hR;
+    hGreen = hG;
+    hBlue = hB;
+}
+
+
+TextHighlightWidget::TextHighlightWidget(int x, int y, int w, int h, Font *f, 
+        int r, int g, int b, bool transparent):
+    ClickableWidget(x, y, w, h, transparent)
+{
+    font = f;
+    
+    red = r;
+    green = g;
+    blue = b;
+    hRed = r;
+    hGreen = g;
+    hBlue = b;
+    
+    adjustBrightness(&hRed, &hGreen, &hBlue, 1.5);
+}
+
+
+void TextHighlightWidget::draw()
+{
+    HighlightableWidget::draw();
+    
+    int r = red;
+    int g = green;
+    int b = blue;
+
+    if (mouseInside)
+    {
+        r = hRed;
+        g = hGreen;
+        b = hBlue;
+    }
+    
+    int tW, tH;
+    font->getSize(getText(), tW, tH);
+    tW = scaleDown(tW);
+    tH = scaleDown(tH);
+    font->draw(left + ((width - tW) / 2), top + ((height - tH) / 2), r, g, b, true, getText());
+    
+    screen.addRegionToUpdate(left, top, width, height);
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -11,184 +282,68 @@
 //////////////////////////////////////////////////////////////////
 
 
-Button::Button(int x, int y, const std::wstring &name, Command *cmd, 
-        bool transparent)
-{
-    image = loadImage(name, transparent);
-    highlighted = adjustBrightness(image, 1.5, transparent);
-
-    left = x;
-    top = y;
-    width = image->w;
-    height = image->h;
-
-    mouseInside = false;
-    command = cmd;
-}
-
-
 Button::Button(int x, int y, int w, int h, Font *font, 
         int fR, int fG, int fB, int hR, int hG, int hB,
-        const std::wstring &text, Command *cmd)
+        const std::wstring &text, Command *cmd):
+    TextHighlightWidget(x, y, w, h, font, fR, fG, fB, hR, hG, hB, true),
+    text(text)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-
-    SDL_Surface *s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h,
-            24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0/*0xFF000000*/);
-    SDL_Rect src = { x, y, width, height };
-    SDL_Rect dst = { 0, 0, width, height };
-    SDL_BlitSurface(screen.getSurface(), &src, s, &dst);
+    image = nullptr;
+    highlighted = nullptr;
     
-    int tW, tH;
-    font->getSize(text, tW, tH);
-    font->draw(s, (width - tW) / 2, (height - tH) / 2, fR, fG, fB, true, text);
-    image = SDL_DisplayFormat(s);
-    SDL_BlitSurface(screen.getSurface(), &src, s, &dst);
-    font->draw(s, (width - tW) / 2, (height - tH) / 2, hR, hG, hB, true, text);
-    highlighted = SDL_DisplayFormat(s);
-    SDL_FreeSurface(s);
-    
-    mouseInside = false;
     command = cmd;
 }
 
 
 Button::Button(int x, int y, int w, int h, Font *font, 
         int r, int g, int b, const std::wstring &bg, 
-        const std::wstring &text, bool bevel, Command *cmd)
-{
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-
-    SDL_Surface *s = screen.getSurface();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
-
-    SDL_Surface *tile = loadImage(bg, true);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
-
-    if (bevel) {
-        SDL_LockSurface(image);
-        drawBevel(image, 0, 0, width, height, false, 1);
-        drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-        SDL_UnlockSurface(image);
+        const std::wstring &text, bool bevel, Command *cmd):
+    TextHighlightWidget(x, y, w, h, font, r, g, b, !bevel),
+    text(text)
+{  
+    if (bevel)
+    {
+        image = makeBox(width, height, bg);
     }
-    
-    int tW, tH;
-    font->getSize(text, tW, tH);
-    font->draw(image, (width - tW) / 2, (height - tH) / 2, r, g, b, true, text);
+    else
+    {
+        image = makeSWSurface(width, height);
+        drawTiled(bg, image);
+    }
     
     highlighted = adjustBrightness(image, 1.5, false);
     SDL_SetColorKey(image, SDL_SRCCOLORKEY, getCornerPixel(image));
     SDL_SetColorKey(highlighted, SDL_SRCCOLORKEY, getCornerPixel(highlighted));
     
-    mouseInside = false;
     command = cmd;
 }
-
 
 
 Button::Button(int x, int y, int w, int h, Font *font, 
         int r, int g, int b, const std::wstring &bg, 
-        const std::wstring &text, Command *cmd)
-{
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-
-    SDL_Surface *s = screen.getSurface();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
-
-    SDL_Surface *tile = loadImage(bg);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
-
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, width, height, false, 1);
-    drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-    SDL_UnlockSurface(image);
-    
-    int tW, tH;
-    font->getSize(text, tW, tH);
-    font->draw(image, (width - tW) / 2, (height - tH) / 2, r, g, b, true, text);
-    
+        const std::wstring &text, Command *cmd):
+    TextHighlightWidget(x, y, w, h, font, r, g, b),
+    text(text)
+{  
+    image = makeBox(width, height, bg);
     highlighted = adjustBrightness(image, 1.5, false);
     
-    mouseInside = false;
     command = cmd;
 }
 
 
-Button::~Button()
+std::wstring Button::getText()
 {
-    SDL_FreeSurface(image);
-    SDL_FreeSurface(highlighted);
+    return text;
 }
 
 
-void Button::draw()
+void Button::handleClick()
 {
-    if (mouseInside)
-        screen.draw(left, top, highlighted);
-    else
-        screen.draw(left, top, image);
-    screen.addRegionToUpdate(left, top, width, height);
-}
-
-
-void Button::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
-}
-
-
-bool Button::onMouseButtonDown(int button, int x, int y)
-{
-    if (isInRect(x, y, left, top, width, height)) {
-        sound->play(L"click.wav");
-        if (command)
-            command->doAction();
-        return true;
-    } else
-        return false;
-}
-
-
-bool Button::onMouseMove(int x, int y)
-{
-    bool in = isInRect(x, y, left, top, width, height);
-    if (in != mouseInside) {
-        mouseInside = in;
-        draw();
+    if (command)
+    {
+        command->doAction();
     }
-    return false;
 }
 
 
@@ -224,15 +379,16 @@ bool KeyAccel::onKeyDown(SDLKey k, unsigned char ch)
 //////////////////////////////////////////////////////////////////
 
 
-Area::Area()
+Area::Area():
+    terminate(true),
+    timer(nullptr)
 {
-    timer = NULL;
 }
 
 Area::~Area()
 {
-    for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++) {
-        Widget *w = *i;
+    for (auto w : widgets)
+    {
         if (w && w->destroyByArea() && (! notManagedWidgets.count(w)))
             delete w;
     }
@@ -240,49 +396,80 @@ Area::~Area()
 
 void Area::add(Widget *widget, bool managed)
 {
-    widgets.push_back(widget);
+    if (!contains(widget))
+    {
+        widgets.push_back(widget);
+    }
     if (! managed)
         notManagedWidgets.insert(widget);
     widget->setParent(this);
 }
 
+bool Area::contains(Widget * widget)
+{
+    for (auto& i : widgets)
+    {
+        if (widget == i)
+        {
+            return true;
+        }
+      }
+    return false;
+}
+
 void Area::remove(Widget *widget)
 {
-    widgets.remove(widget);
+    
+    if (contains(widget))
+    {
+        widgets.remove(widget);
+    }
     notManagedWidgets.insert(widget);
+}
+
+void Area::setVisible(Widget *widget, bool visible)
+{
+    if (visible)
+    {
+        add(widget);
+    }
+    else
+    {
+        remove(widget);
+    }
 }
 
 void Area::handleEvent(const SDL_Event &event)
 {
     switch (event.type) {
         case SDL_MOUSEBUTTONDOWN:
-            for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-                if ((*i)->onMouseButtonDown(event.button.button, 
+            for (auto& widget : widgets)
+                if (widget->onMouseButtonDown(event.button.button, 
                             event.button.x, event.button.y))
                     return;
             break;
         
         case SDL_MOUSEBUTTONUP:
-            for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-                if ((*i)->onMouseButtonUp(event.button.button, 
+            for (auto& widget : widgets)
+                if (widget->onMouseButtonUp(event.button.button, 
                             event.button.x, event.button.y))
                     return;
             break;
         
         case SDL_MOUSEMOTION:
-            for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-                if ((*i)->onMouseMove(event.motion.x, event.motion.y))
+            for (auto& widget : widgets)
+                if (widget->onMouseMove(event.motion.x, event.motion.y))
                     return;
             break;
         
         case SDL_VIDEOEXPOSE:
-            for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-                (*i)->draw();
+            for (auto& widget : widgets)
+                widget->draw();
             break;
         
         case SDL_KEYDOWN:
-            for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-                if ((*i)->onKeyDown(event.key.keysym.sym, 
+            for (auto& widget : widgets)
+                if (widget->onKeyDown(event.key.keysym.sym, 
                             (unsigned char)event.key.keysym.unicode))
                     return;
             break;
@@ -301,10 +488,9 @@ void Area::run()
     draw();
     screen.showMouse();
     
-    bool runTimer = timer ? true : false;
-    bool dispetchEvent;
+    bool runTimer = timer;
     while (! terminate) {
-        dispetchEvent = true;
+        bool dispetchEvent = true;
         if (! timer) {
             SDL_WaitEvent(&event);
         } else {
@@ -344,8 +530,8 @@ void Area::finishEventLoop()
 
 void Area::draw()
 {
-    for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-        (*i)->draw();
+    for (auto& widget : widgets)
+        widget->draw();
 }
 
 
@@ -361,8 +547,8 @@ void Area::updateMouse()
     int x, y;
     SDL_GetMouseState(&x, &y);
     
-    for (WidgetsList::iterator i = widgets.begin(); i != widgets.end(); i++)
-        if ((*i)->onMouseMove(x, y))
+    for (auto& widget : widgets)
+        if (widget->onMouseMove(x, y))
                     return;
 }
 
@@ -378,7 +564,7 @@ void Area::updateMouse()
 
 AnyKeyAccel::AnyKeyAccel()
 {
-    command = NULL;
+    command = nullptr;
 }
 
 AnyKeyAccel::AnyKeyAccel(Command *cmd)
@@ -386,9 +572,7 @@ AnyKeyAccel::AnyKeyAccel(Command *cmd)
     command = cmd;
 }
 
-AnyKeyAccel::~AnyKeyAccel()
-{
-}
+AnyKeyAccel::~AnyKeyAccel() = default;
 
 bool AnyKeyAccel::onKeyDown(SDLKey key, unsigned char ch)
 {
@@ -423,30 +607,14 @@ bool AnyKeyAccel::onMouseButtonDown(int button, int x, int y)
 
 
 Window::Window(int x, int y, int w, int h, const std::wstring &bg, 
-                bool frameWidth, bool raised)
+                int frameWidth, bool raised):
+    TileWidget(x, y, w, h)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
+    image = makeSWSurface(width, height);
     
-    SDL_Surface *s = screen.getSurface();
-    SDL_Surface *win = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+    drawTiled(bg, image);
 
-    SDL_Surface *tile = loadImage(bg);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, win, &dst);
-        }
-    SDL_FreeSurface(tile);
-
-    SDL_LockSurface(win);
+    SDL_LockSurface(image);
     double k = 2.6;
     double f = 0.1;
     for (int i = 0; i < frameWidth; i++) {
@@ -457,35 +625,18 @@ Window::Window(int x, int y, int w, int h, const std::wstring &bg,
             ltK = f;  rbK = k;
         }
         for (int j = i; j < height - i - 1; j++)
-            adjustBrightness(win, i, j, ltK);
+            adjustBrightness(image, i, j, ltK);
         for (int j = i; j < width - i; j++)
-            adjustBrightness(win, j, i, ltK);
+            adjustBrightness(image, j, i, ltK);
         for (int j = i+1; j < height - i; j++)
-            adjustBrightness(win, width - i - 1, j, rbK);
+            adjustBrightness(image, width - i - 1, j, rbK);
         for (int j = i; j < width - i - 1; j++)
-            adjustBrightness(win, j, height - i - 1, rbK);
+            adjustBrightness(image, j, height - i - 1, rbK);
         k -= 0.2;
         f += 0.1;
     }
-    SDL_UnlockSurface(win);
-    
-    background = SDL_DisplayFormat(win);
-    SDL_FreeSurface(win);
+    SDL_UnlockSurface(image);
 }
-
-
-Window::~Window()
-{
-    SDL_FreeSurface(background);
-}
-
-
-void Window::draw()
-{
-    screen.draw(left, top, background);
-    screen.addRegionToUpdate(left, top, width, height);
-}
-
 
 
 //////////////////////////////////////////////////////////////////
@@ -496,12 +647,11 @@ void Window::draw()
 
 
 
-Label::Label(Font *f, int x, int y, int r, int g, int b, std::wstring s,
-        bool sh): text(s)
+Label::Label(Font *f, int x, int y, int r, int g, int b, const std::wstring& s,
+        bool sh):
+    BoundedWidget(x, y, f->getWidth(s), f->getHeight(s)), text(s)
 {
     font = f;
-    left = x;
-    top = y;
     red = r;
     green = g;
     blue = b;
@@ -513,18 +663,14 @@ Label::Label(Font *f, int x, int y, int r, int g, int b, std::wstring s,
 
 Label::Label(Font *f, int x, int y, int w, int h, HorAlign hA, VerAlign vA, 
         int r, int g, int b, const std::wstring &s): 
-                text(s)
+    BoundedWidget(x, y, w, h), text(s)
 {
     font = f;
-    left = x;
-    top = y;
     red = r;
     green = g;
     blue = b;
     hAlign = hA;
     vAlign = vA;
-    width = w;
-    height = h;
     shadow = true;
 }
 
@@ -533,6 +679,8 @@ void Label::draw()
 {
     int w, h, x, y;
     font->getSize(text, w, h);
+    w = scaleDown(w);
+    h = scaleDown(h);
 
     switch (hAlign) {
         case ALIGN_RIGHT: x = left + width - w; break;
@@ -550,6 +698,33 @@ void Label::draw()
     screen.addRegionToUpdate(x, y, w, h);
 }
 
+
+
+//////////////////////////////////////////////////////////////////
+//
+// ManagedLabel
+//
+//////////////////////////////////////////////////////////////////
+
+
+ManagedLabel::ManagedLabel(const std::wstring& fontName, int ptSize, int x, int y,
+                int r, int g, int b, const std::wstring& text, bool shadow):
+    Label(new Font(fontName, ptSize), x, y, r, g, b, text, shadow)
+{
+}
+
+
+ManagedLabel::ManagedLabel(const std::wstring& fontName, int ptSize, int x, int y, int w, int h,
+        HorAlign hA, VerAlign vA, int r, int g, int b, const std::wstring &s): 
+    Label(new Font(fontName, ptSize), x, y, w, h, hA, vA, r, g, b, s)
+{
+}
+
+
+ManagedLabel::~ManagedLabel()
+{
+    delete font;
+}
 
 
 //////////////////////////////////////////////////////////////////
@@ -581,23 +756,30 @@ InputField::~InputField()
 void InputField::draw()
 {
     Window::draw();
+    int pad = (height/4);
 
     SDL_Rect rect = { left+1, top+1, width-2, height-2 };
-    SDL_SetClipRect(screen.getSurface(), &rect);
+    screen.setClipRect(&rect);
     
-    font->draw(left+1, top+1, red,green,blue, true, text);
+    font->draw(left+pad, top+pad, red,green,blue, true, text);
 
     if (cursorVisible) {
         int pos = 0;
         if (cursorPos > 0)
+        {
             pos += font->getWidth(text.substr(0, cursorPos));
-        for (int i = 2; i < height-2; i++) {
-            screen.setPixel(left + pos, top + i, red, green, blue);
-            screen.setPixel(left + pos + 1, top + i, red, green, blue);
         }
+        SDL_Surface *s = makeSWSurface(2, height-4);
+        
+        for (int i = 0; i < s->h; i++) {
+            setPixel(s, 0, i, red, green, blue);
+            setPixel(s, 1, i, red, green, blue);
+        }
+        screen.drawScaled(left + pad + scaleDown(pos), top + 2, s);
+        SDL_FreeSurface(s);
     }
     
-    SDL_SetClipRect(screen.getSurface(), NULL);
+    screen.setClipRect(nullptr);
 }
 
 void InputField::setParent(Area *a)
@@ -671,11 +853,6 @@ bool InputField::onKeyDown(SDLKey key, unsigned char translatedChar)
     return false;
 }
 
-bool InputField::onKeyUp(SDLKey key)
-{
-    return false;
-}
-
 void InputField::onCharTyped(unsigned char ch)
 {
     if ((int)text.length() < maxLength) {
@@ -704,108 +881,27 @@ void InputField::moveCursor(int pos)
 //////////////////////////////////////////////////////////////////
 
 
-
-Checkbox::Checkbox(int x, int y, int w, int h, Font *font, 
+Checkbox::Checkbox(int x, int y, int w, int h, Font *f, 
         int r, int g, int b, const std::wstring &bg, 
-        bool &chk): checked(chk)
+        bool &chk):
+    TextHighlightWidget(x, y, w, h, f, r, g, b), 
+    checked(chk)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-    checked = chk;
-
-    SDL_Surface *s = screen.getSurface();
-    image = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
-
-    SDL_Surface *tile = loadImage(bg);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < height; j += tile->h)
-        for (int i = 0; i < width; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
-
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, width, height, false, 1);
-    drawBevel(image, 1, 1, width - 2, height - 2, true, 1);
-    SDL_UnlockSurface(image);
-    
+    image = makeBox(width, height, bg);
     highlighted = adjustBrightness(image, 1.5, false);
-    
-    checkedImage = SDL_DisplayFormat(image);
-    int tW, tH;
-    font->getSize(L"X", tW, tH);
-    tH += 2;
-    tW += 2;
-    font->draw(checkedImage, (width - tW) / 2, (height - tH) / 2, r, g, b, 
-            true, L"X");
-    checkedHighlighted = adjustBrightness(checkedImage, 1.5, false);
-    
-    mouseInside = false;
 }
 
 
-Checkbox::~Checkbox()
+std::wstring Checkbox::getText()
 {
-    SDL_FreeSurface(image);
-    SDL_FreeSurface(highlighted);
-    SDL_FreeSurface(checkedImage);
-    SDL_FreeSurface(checkedHighlighted);
+    return (checked ? L"X" : L"");
 }
 
 
-void Checkbox::draw()
+void Checkbox::handleClick()
 {
-    if (checked) {
-        if (mouseInside)
-            screen.draw(left, top, checkedHighlighted);
-        else
-            screen.draw(left, top, checkedImage);
-    } else {
-        if (mouseInside)
-            screen.draw(left, top, highlighted);
-        else
-            screen.draw(left, top, image);
-    }
-    screen.addRegionToUpdate(left, top, width, height);
-}
-
-
-void Checkbox::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
-}
-
-
-bool Checkbox::onMouseButtonDown(int button, int x, int y)
-{
-    if (isInRect(x, y, left, top, width, height)) {
-        sound->play(L"click.wav");
-        checked = ! checked;
-        draw();
-        return true;
-    } else
-        return false;
-}
-
-
-bool Checkbox::onMouseMove(int x, int y)
-{
-    bool in = isInRect(x, y, left, top, width, height);
-    if (in != mouseInside) {
-        mouseInside = in;
-        draw();
-    }
-    return false;
+    checked = ! checked;
+    draw();
 }
 
 
@@ -815,49 +911,19 @@ bool Checkbox::onMouseMove(int x, int y)
 //
 //////////////////////////////////////////////////////////////////////////////
 
-Picture::Picture(int x, int y, const std::wstring &name, bool transparent)
+Picture::Picture(int x, int y, const std::wstring &name, bool transparent):
+    TileWidget(x, y, 0, 0, false)
 {
     image = loadImage(name, transparent);
-    left = x;
-    top = y;
     width = image->w;
     height = image->h;
-    managed = true;
 }
 
-Picture::Picture(int x, int y, SDL_Surface *img)
+
+Picture::Picture(int x, int y, SDL_Surface *img):
+    TileWidget(x, y, img->w, img->h)
 {
-    image = img;
-    left = x;
-    top = y;
-    width = image->w;
-    height = image->h;
-    managed = false;
-}
-
-Picture::~Picture() 
-{ 
-    if (managed)
-        SDL_FreeSurface(image); 
-}
-
-void Picture::draw()
-{
-    screen.draw(left, top, image);
-    screen.addRegionToUpdate(left, top, width, height);
-}
-
-void Picture::moveX(const int newX) 
-{ 
-    left = newX; 
-}
-
-void Picture::getBounds(int &l, int &t, int &w, int &h)
-{
-    l = left;
-    t = top;
-    w = width;
-    h = height;
+    image = SDL_DisplayFormat(img);
 }
 
 
@@ -867,70 +933,53 @@ void Picture::getBounds(int &l, int &t, int &w, int &h)
 //
 //////////////////////////////////////////////////////////////////
 
-Slider::Slider(int x, int y, int w, int h, float &v): value(v)
+Slider::Slider(int x, int y, int w, int h, float &v):
+    BoundedWidget(x, y, w, h),
+    background(nullptr),
+    slider(nullptr),
+    activeSlider(nullptr),
+    highlight(false),
+    dragging(false),
+    dragOffsetX(0),
+    value(v)
 {
-    left = x;
-    top = y;
-    width = w;
-    height = h;
-    background = NULL;
     createSlider(height);
-    highlight = false;
-    dragging = false;
 }
 
 Slider::~Slider()
 {
-    if (background)
-        SDL_FreeSurface(background);
-    if (slider)
-        SDL_FreeSurface(slider);
-    if (activeSlider)
-        SDL_FreeSurface(activeSlider);
+    SDL_FreeSurface(background);
+    SDL_FreeSurface(slider);
+    SDL_FreeSurface(activeSlider);
 }
 
 void Slider::draw()
 {
     if (! background)
         createBackground();
-    screen.draw(left, top, background);
+    screen.draw(getLeft(), getTop(), background);
     screen.addRegionToUpdate(left, top, width, height);
-    int posX = valueToX(value);
+    int posX = scaleUp(valueToX(value));
     SDL_Surface *s = highlight ? activeSlider : slider;
-    screen.draw(left + posX, top, s);
+    screen.draw(getLeft() + posX, getTop(), s);
 }
 
 void Slider::createBackground()
 {
     background = screen.createSubimage(left, top, width, height);
-    int y = height / 2;
+    int y = background->h / 2;
     SDL_LockSurface(background);
-    drawBevel(background, 0, y - 2, width, 4, false, 1);
+    drawBevel(background, 0, y - scaleUp(2), background->w, scaleUp(4), false, 1);
     SDL_UnlockSurface(background);
 }
 
 void Slider::createSlider(int size)
 {
-    SDL_Surface *s = screen.getSurface();
-    SDL_Surface *image = SDL_CreateRGBSurface(SDL_SWSURFACE, size, size, 
-            s->format->BitsPerPixel, s->format->Rmask, s->format->Gmask,
-            s->format->Bmask, s->format->Amask);
+    SDL_Surface *image = makeBox(size, size, L"blue.bmp");
 
-    SDL_Surface *tile = loadImage(L"blue.bmp");
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int j = 0; j < size; j += tile->h)
-        for (int i = 0; i < size; i += tile->w) {
-            dst.x = i;
-            dst.y = j;
-            SDL_BlitSurface(tile, &src, image, &dst);
-        }
-    SDL_FreeSurface(tile);
-
-    SDL_LockSurface(image);
-    drawBevel(image, 0, 0, size, size, false, 1);
-    drawBevel(image, 1, 1, size - 2, size - 2, true, 1);
-    SDL_UnlockSurface(image);
+    SDL_Surface *s = scaleUp(image);
+    SDL_FreeSurface(image);
+    image = s;
     
     activeSlider = adjustBrightness(image, 1.5, false);
     slider = SDL_DisplayFormat(image);
@@ -938,6 +987,10 @@ void Slider::createSlider(int size)
     SDL_FreeSurface(image);
 }
 
+void Slider::changeValue(float v)
+{
+    value = v;
+}
 
 bool Slider::onMouseButtonDown(int button, int x, int y)
 {
@@ -947,7 +1000,16 @@ bool Slider::onMouseButtonDown(int button, int x, int y)
         bool hl = isInRect(x, y, left + sliderX, top, height, height);
         if (hl) {
             dragging = true;
-            dragOffsetX = x - left - sliderX;
+            dragOffsetX = scaleDown(x) - left - sliderX;
+        }
+        else
+        {
+            if (isInRect(x, y, left, (top + (height / 2) - 2), width, 4))
+            {
+                changeValue(xToValue(scaleDown(x) - left - (height / 2)));
+                sound->play(L"click.wav");
+                draw();
+            }
         }
     }
     return in;
@@ -957,6 +1019,7 @@ bool Slider::onMouseButtonUp(int button, int x, int y)
 {
     if (dragging) {
         dragging = false;
+        sound->play(L"click.wav");
         return true;
     } else
         return false;
@@ -987,9 +1050,9 @@ float Slider::xToValue(int pos)
 bool Slider::onMouseMove(int x, int y)
 {
     if (dragging) {
-        float val = xToValue(x - left - dragOffsetX);
+        float val = xToValue(scaleDown(x) - left - dragOffsetX);
         if (val != value) {
-            value = val;
+            changeValue(val);
             draw();
         }
         return true;
@@ -1011,3 +1074,29 @@ bool Slider::onMouseMove(int x, int y)
     return in;
 }
 
+//////////////////////////////////////////////////////////////////
+//
+// CycleButton
+//
+//////////////////////////////////////////////////////////////////
+
+CycleButton::CycleButton(int x, int y, int w, int h, Font *f, int &v,
+        const std::vector<std::wstring>& o)
+    : TextHighlightWidget(x, y, w, h, f, 255, 255, 0),
+        value(v), options(o)
+{
+    image = makeBox(width, height, L"blue.bmp");
+    highlighted = adjustBrightness(image, 1.5, false);
+}
+
+
+std::wstring CycleButton::getText()
+{
+    return options[value];
+}
+
+void CycleButton::handleClick()
+{
+    value = (value + 1) % (options.size());
+    draw();
+}

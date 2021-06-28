@@ -1,43 +1,60 @@
-#include "main.h"
-#include "utils.h"
-#include "widgets.h"
-#include "puzzle.h"
-#include "verthints.h"
-#include "horhints.h"
-#include "widgets.h"
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "game.h"
+
+#include "descr.h"
 #include "font.h"
-#include "topscores.h"
+#include "horhints.h"
+#include "main.h"
+#include "messages.h"
 #include "opensave.h"
 #include "options.h"
-#include "game.h"
-#include "messages.h"
+#include "puzzle.h"
 #include "sound.h"
-#include "descr.h"
+#include "topscores.h"
+#include "utils.h"
+#include "verthints.h"
+#include "widgets.h"
 
 
-
-class GameBackground: public Widget
+class GameBackground: public Area
 {
     public:
-        virtual void draw();
+        GameBackground();
+        void draw() override;
 };
 
+GameBackground::GameBackground()
+{
+    add(new Picture(8, 10, L"title.bmp"));
+    add(new ManagedLabel(L"nova.ttf", 28, 20, 20, 255, 255, 0, msg(L"einsteinPuzzle"), true));
+}
 
 void GameBackground::draw()
 {
     // draw background
-    drawWallpaper(L"rain.bmp");
-
-    // draw title
-    SDL_Surface *tile = loadImage(L"title.bmp");
-    screen.draw(8, 10, tile);
-    SDL_FreeSurface(tile);
+    screen.drawWallpaper(L"rain.bmp");
     
-    Font titleFont(L"nova.ttf", 28);
-    titleFont.draw(screen.getSurface(), 20, 20, 255,255,0, true, 
-            msg(L"einsteinPuzzle"));
-    
-    screen.addRegionToUpdate(0, 0, screen.getWidth(), screen.getHeight());
+    Area::draw();
 }
 
 
@@ -51,12 +68,12 @@ class ToggleHintCommand: public Command
         ToggleHintCommand(VertHints *v, HorHints *h) {
             verHints = v;
             horHints = h;
-        };
+        }
         
-        virtual void doAction() {
+        void doAction() override {
             verHints->toggleExcluded();
             horHints->toggleExcluded();
-        };
+        }
 };
 
 
@@ -71,15 +88,15 @@ class Watch: public TimerHandler, public Widget
     
     public:
         Watch();
-        Watch(std::istream &stream);
+        explicit Watch(std::istream &stream);
         virtual ~Watch();
 
     public:
-        virtual void onTimer();
+        void onTimer() override;
         void stop();
         void start();
-        virtual void draw();
-        int getElapsed() { return elapsed; };
+        void draw() override;
+        int getElapsed() { return elapsed; }
         void save(std::ostream &stream);
         void reset();
 };
@@ -110,11 +127,11 @@ void Watch::onTimer()
     if (stoped)
         return;
     
-    Uint32 now = SDL_GetTicks();
+    const Uint32 now = SDL_GetTicks();
     elapsed += now - lastRun;
     lastRun = now;
 
-    int seconds = elapsed / 1000;
+    const int seconds = elapsed / 1000;
     if (seconds != lastUpdate)
         draw();
 }
@@ -132,14 +149,14 @@ void Watch::start()
 
 void Watch::draw()
 {
-    int time = elapsed / 1000;
-    std::wstring s = secToStr(time);
+    const int time = elapsed / 1000;
+    const std::wstring s = secToStr(time);
     
-    int x = 700;
-    int y = 24;
+    const int x = 700;
+    const int y = 24;
     int w, h;
     font->getSize(s, w, h);
-    SDL_Rect rect = { x-2, y-2, w+4, h+4 };
+    SDL_Rect rect = { scaleUp(x-2), scaleUp(y-2), w+scaleUp(4), h+scaleUp(4) };
     SDL_FillRect(screen.getSurface(), &rect, 
             SDL_MapRGB(screen.getSurface()->format, 0, 0, 255));
     font->draw(x, y, 255,255,255, true, s);
@@ -172,9 +189,9 @@ class PauseGameCommand: public Command
             gameArea = a; 
             watch = w;
             background = bg;
-        };
+        }
         
-        virtual void doAction() {
+        void doAction() override {
             watch->stop();
             Area area;
             area.add(background, false);
@@ -188,7 +205,7 @@ class PauseGameCommand: public Command
             gameArea->updateMouse();
             gameArea->draw();
             watch->start();
-        };
+        }
 };
 
 
@@ -204,9 +221,9 @@ class WinCommand: public Command
             gameArea = a; 
             watch = w;
             game = g;
-        };
+        }
         
-        virtual void doAction() {
+        void doAction() override {
             sound->play(L"applause.wav");
             watch->stop();
             Font font(L"laudcn2.ttf", 20);
@@ -214,17 +231,17 @@ class WinCommand: public Command
                     500, 70, &font, 255,0,0, msg(L"won"));
             gameArea->draw();
             TopScores scores;
-            int score = watch->getElapsed() / 1000;
+            const int score = watch->getElapsed() / 1000;
             int pos = -1;
             if (! game->isHinted()) {
                 if ((! scores.isFull()) || (score < scores.getMaxScore())) {
-                    std::wstring name = enterNameDialog(gameArea);
+                    const std::wstring name = enterNameDialog(gameArea);
                     pos = scores.add(name, score);
                 }
             }
             showScoresWindow(gameArea, &scores, pos);
             gameArea->finishEventLoop();
-        };
+        }
 };
 
 class OkDlgCommand: public Command
@@ -236,12 +253,12 @@ class OkDlgCommand: public Command
     public:
         OkDlgCommand(Area *a, bool &r): res(r) { 
             area = a; 
-        };
+        }
         
-        virtual void doAction() { 
+        void doAction() override {
             res = true; 
             area->finishEventLoop();
-        };
+        }
 };
 
 class FailCommand: public Command
@@ -251,9 +268,9 @@ class FailCommand: public Command
         Game *game;
 
     public:
-        FailCommand(Area *a, Game *g) { gameArea = a;  game = g; };
+        FailCommand(Area *a, Game *g) { gameArea = a;  game = g; }
         
-        virtual void doAction() {
+        void doAction() override {
             sound->play(L"glasbk2.wav");
             bool restart = false;
             bool newGame = false;
@@ -263,7 +280,7 @@ class FailCommand: public Command
             area.add(gameArea);
             area.add(new Window(220, 240, 360, 140, L"redpattern.bmp", 6));
             area.add(new Label(&font, 250, 230, 300, 100, Label::ALIGN_CENTER,
-                        Label::ALIGN_MIDDLE, 255,255,0, msg(L"loose")));
+                        Label::ALIGN_MIDDLE, 255,255,0, msg(L"lost")));
             OkDlgCommand newGameCmd(&area, newGame);
             area.add(new Button(250, 340, 90, 25, &btnFont, 255,255,0, 
                         L"redpattern.bmp", msg(L"startNew"), &newGameCmd));
@@ -283,7 +300,7 @@ class FailCommand: public Command
                 gameArea->updateMouse();
             } else
                 gameArea->finishEventLoop();
-        };
+        }
 };
 
 
@@ -295,20 +312,20 @@ class CheatAccel: public Widget
         std::wstring cheat;
 
     public:
-        CheatAccel(const std::wstring s, Command *cmd): cheat(s) {
+        CheatAccel(const std::wstring& s, Command *cmd): cheat(s) {
             command = cmd;
-        };
+        }
 
     public:
-        virtual bool onKeyDown(SDLKey key, unsigned char ch) {
+        bool onKeyDown(SDLKey key, unsigned char ch) override {
             if ((key >= SDLK_a) && (key <= SDLK_z)) {
-                wchar_t s = L'a' + key - SDLK_a;
+                const wchar_t s = L'a' + key - SDLK_a;
                 typed += s;
                 if (typed.length() == cheat.length()) {
                     if (command && (typed == cheat))
                         command->doAction();
                 } else {
-                    int pos = typed.length() - 1;
+                    const int pos = typed.length() - 1;
                     if (typed[pos] == cheat[pos])
                         return false;
                 }
@@ -326,15 +343,15 @@ class CheatCommand: public Command
         Area *gameArea;
 
     public:
-        CheatCommand(Area *a) { gameArea = a; };
+        explicit CheatCommand(Area *a) { gameArea = a; }
         
-        virtual void doAction() {
+        void doAction() override {
             Font font(L"nova.ttf", 30);
             showMessageWindow(gameArea, L"darkpattern.bmp", 
                     500, 100, &font, 255,255,255, 
                     msg(L"iddqd"));
             gameArea->draw();
-        };
+        }
 };
 
 
@@ -352,9 +369,9 @@ class SaveGameCommand: public Command
             watch = w;
             background = bg;
             game = g;
-        };
+        }
         
-        virtual void doAction() {
+        void doAction() override {
             watch->stop();
 
             Area area;
@@ -364,7 +381,7 @@ class SaveGameCommand: public Command
             gameArea->updateMouse();
             gameArea->draw();
             watch->start();
-        };
+        }
 };
 
 
@@ -374,15 +391,15 @@ class GameOptionsCommand: public Command
         Area *gameArea;
 
     public:
-        GameOptionsCommand(Area *a) { 
+        explicit GameOptionsCommand(Area *a) { 
             gameArea = a; 
-        };
+        }
         
-        virtual void doAction() {
+        void doAction() override {
             showOptionsWindow(gameArea);
             gameArea->updateMouse();
             gameArea->draw();
-        };
+        }
 };
 
 
@@ -398,9 +415,9 @@ class HelpCommand: public Command
             gameArea = a;
             watch = w;
             background = b;
-        };
+        }
         
-        virtual void doAction() {
+        void doAction() override {
             watch->stop();
             Area area;
             area.add(background, false);
@@ -409,7 +426,7 @@ class HelpCommand: public Command
             gameArea->updateMouse();
             gameArea->draw();
             watch->start();
-        };
+        }
 };
 
 
@@ -465,14 +482,14 @@ void Game::save(std::ostream &stream)
 
 void Game::deleteRules()
 {
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++)
-        delete *i;
+    for (auto& rule : rules)
+        delete rule;
     rules.clear();
 }
 
 void Game::pleaseWait()
 {
-    drawWallpaper(L"rain.bmp");
+    screen.drawWallpaper(L"rain.bmp");
     Window window(230, 260, 340, 80, L"greenpattern.bmp", 6);
     window.draw();
     Font font(L"laudcn2.ttf", 16);
@@ -489,7 +506,7 @@ void Game::genPuzzle()
     
     int horRules, verRules;
     do {
-        if (rules.size() > 0)
+        if (!rules.empty())
             deleteRules();
         ::genPuzzle(solvedPuzzle, rules);
         getHintsQty(rules, verRules, horRules);
@@ -550,6 +567,7 @@ void Game::run()
     
     PauseGameCommand pauseGameCmd(&area, watch, background);
     BUTTON(12, 400, L"pause", &pauseGameCmd)
+    area.add(new KeyAccel(SDLK_SPACE, &pauseGameCmd));
     ToggleHintCommand toggleHintsCmd(verHints, horHints);
     BUTTON(119, 400, L"switch", &toggleHintsCmd)
     SaveGameCommand saveCmd(&area, watch, background, this);

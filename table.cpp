@@ -1,11 +1,31 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "table.h"
 
-#include <fstream>
 #include "convert.h"
-#include "unicode.h"
+#include "exceptions.h"
 #include "streams.h"
 #include "lexal.h"
-#include "exceptions.h"
+#include "unicode.h"
+
+#include <fstream>
 
 
 class IntValue: public Value
@@ -14,18 +34,18 @@ class IntValue: public Value
         int value;
     
     public:
-        IntValue(int val) { value = val; };
-        virtual ~IntValue() { };
+        explicit IntValue(int val) { value = val; }
+        virtual ~IntValue() = default;
 
     public:
-        virtual Type getType() const { return Value::Integer; };
-        virtual int asInt() const { return value; };
-        virtual double asDouble() const { return value; };
-        virtual std::wstring asString() const { return toString(value); };
-        virtual ::Table* asTable() const { 
+        Type getType() const override { return Value::Integer; }
+        int asInt() const override { return value; }
+        double asDouble() const override { return value; }
+        std::wstring asString() const override { return toString(value); }
+        ::Table* asTable() const override {
             throw Exception(L"Can't convert integer to table"); 
-        };
-        virtual Value* clone() const { return new IntValue(value); };
+        }
+        Value* clone() const override { return new IntValue(value); }
 };
 
 
@@ -35,18 +55,18 @@ class DoubleValue: public Value
         double value;
     
     public:
-        DoubleValue(double val) { value = val; };
-        virtual ~DoubleValue() { };
+        explicit DoubleValue(double val) { value = val; }
+        virtual ~DoubleValue() = default;
 
     public:
-        virtual Type getType() const { return Value::Double; };
-        virtual int asInt() const { return (int)value; };
-        virtual double asDouble() const { return value; };
-        virtual std::wstring asString() const { return toString(value); };
-        virtual ::Table* asTable() const { 
+        Type getType() const override { return Value::Double; }
+        int asInt() const override { return (int)value; }
+        double asDouble() const override { return value; }
+        std::wstring asString() const override { return toString(value); }
+        ::Table* asTable() const override {
             throw Exception(L"Can't convert double to table"); 
-        };
-        virtual Value* clone() const { return new DoubleValue(value); };
+        }
+        Value* clone() const override { return new DoubleValue(value); }
 };
 
 
@@ -56,18 +76,18 @@ class StringValue: public Value
         std::wstring value;
     
     public:
-        StringValue(const std::wstring& val): value(val) { };
-        virtual ~StringValue() { };
+        explicit StringValue(const std::wstring& val): value(val) { }
+        virtual ~StringValue() = default;
 
     public:
-        virtual Type getType() const { return Value::String; };
-        virtual int asInt() const { return strToInt(value); };
-        virtual double asDouble() const { return strToDouble(value); };
-        virtual std::wstring asString() const { return value; };
-        virtual ::Table* asTable() const { 
+        Type getType() const override { return Value::String; }
+        int asInt() const override { return strToInt(value); }
+        double asDouble() const override { return strToDouble(value); }
+        std::wstring asString() const override { return value; }
+        ::Table* asTable() const override {
             throw Exception(L"Can't convert string to table"); 
-        };
-        virtual Value* clone() const { return new StringValue(value); };
+        }
+        Value* clone() const override { return new StringValue(value); }
 };
 
 
@@ -77,24 +97,24 @@ class TableValue: public Value
         ::Table *value;
     
     public:
-        TableValue(::Table *val) { value = val; };
-        virtual ~TableValue() { delete value; };
+        explicit TableValue(::Table *val) { value = val; }
+        virtual ~TableValue() { delete value; }
 
     public:
-        virtual Type getType() const { return Value::Table; };
-        virtual int asInt() const { 
+        Type getType() const override { return Value::Table; }
+        int asInt() const override {
             throw Exception(L"Can't convert table to int"); 
-        };
-        virtual double asDouble() const { 
+        }
+        double asDouble() const override {
             throw Exception(L"Can't convert table to double"); 
-        };
-        virtual std::wstring asString() const { 
+        }
+        std::wstring asString() const override {
             throw Exception(L"Can't convert table to string"); 
-        };
-        virtual ::Table* asTable() const { return value; };
-        virtual Value* clone() const { 
+        }
+        ::Table* asTable() const override { return value; }
+        Value* clone() const override {
             return new TableValue(new ::Table(*value)); 
-        };
+        }
 };
 
 
@@ -129,8 +149,8 @@ Table::Table()
 
 Table::~Table()
 {
-    for (ValuesMap::iterator i = fields.begin(); i != fields.end(); i++)
-        delete (*i).second;
+    for (auto& field : fields)
+        delete field.second;
 }
 
 
@@ -141,9 +161,8 @@ Table& Table::operator = (const Table &table)
 
     fields.clear();
     lastArrayIndex = table.lastArrayIndex;
-    for (ValuesMap::const_iterator i = table.fields.begin(); 
-            i != table.fields.end(); i++)
-        fields[(*i).first] = (*i).second->clone();
+    for (const auto& field : table.fields)
+        fields[field.first] = field.second->clone();
     
     return *this;
 }
@@ -322,11 +341,10 @@ std::wstring Table::toString(bool printBraces, bool butify, int spaces) const
         res += butify ? L"{\n" : L"{";
     bool printNames = ! isArray();
 
-    for (ValuesMap::const_iterator i = fields.begin(); i != fields.end(); 
-            i++) 
+    for (const auto& field : fields)
     {
-        const std::wstring &name = (*i).first;
-        Value *value = (*i).second;
+        const std::wstring &name = field.first;
+        Value *value = field.second;
         if (butify)
             for (int j = 0; j < spaces; j++) 
                 res += L" ";
@@ -378,12 +396,6 @@ int Table::getInt(const std::wstring &key, int dflt) const
     return (i != fields.end()) ? ((*i).second ? (*i).second->asInt() : dflt) : dflt;
 }
 
-double Table::getDouble(const std::wstring &key, double dflt) const
-{
-    ValuesMap::const_iterator i = fields.find(key);
-    return (i != fields.end()) ? (*i).second->asDouble() : dflt;
-}
-
 Table* Table::getTable(const std::wstring &key, Table *dflt) const
 {
     ValuesMap::const_iterator i = fields.find(key);
@@ -407,17 +419,6 @@ void Table::setInt(const std::wstring &key, int value)
 {
     setValue(key, new IntValue(value));
 }
-
-void Table::setDouble(const std::wstring &key, double value)
-{
-    setValue(key, new DoubleValue(value));
-}
-
-void Table::setTable(const std::wstring &key, Table *value)
-{
-    setValue(key, new TableValue(value));
-}
-
 
 void Table::save(const std::wstring &fileName) const
 {

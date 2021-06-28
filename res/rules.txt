@@ -1,56 +1,57 @@
 rulesText = "
 
-The game goal is to open all cards in square of 6x6 cards.  When
-every card is open, field looks like this:
+The game goal is to open all cards in a 6x6 square of cards.  When
+every card is open, the field looks like this:
 
 $opensquare.bmp$
 
-Every row of square contains cards of one type only.  For example,
-first row contains arabic digits, second - letters, third - rome digits,
-fouths - dices, fifth - geometric figures, sixs - mathematic symbols.
+Every row of squares contains cards of one type only.  For example,
+the first row contains arabic digits, the second - letters, the third - roman
+digits, the fourth - dice, the fifth - geometric figures, and the sixth - 
+mathematical symbols.
 
-Use logic and open cards with method of exclusion.  If card doesn't
-opened, cell contains every possible cards.  For example,  
+Use logic, and open cards using the method of exclusion.  If a card
+isn't opened, it contains every possible card.  For example,
 
 $closed.bmp$
 
-means that this cell may contain every rome digit with exception of 
-III (because card with III image is absent).  To open card click on
-small image with left mouse button.  To exclude card click with right
-mouse button.
+means that this cell may contain every roman digit except
+III (because the III card is absent).  To open a card,
+left-click on the small image.  To exclude a card, right-click on
+it.
 
-Use tips to solve this puzzle.  There is two types of tips:
-horizontal and vertical.  Vertical tips located at screen bottom.
-For example, vertical tip
+Use the tips to solve the puzzle.  There are two types of tips:
+horizontal and vertical.  Vertical tips are located at the bottom
+of the screen.  For example, the vertical tip
 
 $verthint.bmp$
 
-means that letter 'B' and '+' sign located in the same column.
+means that the letter 'B' and the '+' sign are in the same column.
 
-Horizontal tips located at the right side of the puzzle square.
-There is few type of horizontal tips.  First type of horizontal
-tip says that two cards located at neighbour columns, but it is
-unknown, which one is at the right side and thich is at the left:
+Horizontal tips are located at the right side of the puzzle square.
+There are a few types of horizontal tips.  The first type of horizontal
+tip says that two cards are located in neighbouring columns, but it is
+unknown which one is on the right side and which is on the left:
 
 $hornearhint.bmp$
 
-Second tip type means that one cards is at the left of another.
-It says nothing about distance between that cards.  They may be
-neighbour columns or at the opposite sides of puzzle field:
+The second tip type means that one card is to the left of another.
+It says nothing about the distance between the cards.  They may be
+in neighbouring columns or at opposite sides of the puzzle field:
 
 $horposhint.bmp$
 
 The last type of tip means that one card is located between
-two another cards:
+two other cards:
 
 $horbetweenhint.bmp$
 
-All three cards must be located in neighbour columns, central
-card is always between other two, but it is unknown, which card is located
-at the right side and which at the left.
+All three cards must be located in neighbouring columns, and the central
+card is always between the other two, but it is unknown which card is located
+on the right side and which is on the left.
 
-If you no longer need some tip, remove it by right mouse button click.
-You can always see removed tips by pressing 'Switch' button.
+If you no longer need a tip, remove it by right-clicking on it.
+You can always see removed tips by pressing the 'Switch' button.
 
 
 "

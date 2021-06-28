@@ -1,8 +1,37 @@
-#include <stdio.h>
-#include <stdlib.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-04-29 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "utils.h"
+
+#include "exceptions.h"
+#include "main.h"
+#include "resources.h"
+#include "sound.h"
+#include "unicode.h"
+
+#include <cmath>
+#include <cstdio>
+#include <cwchar>
+#include <fstream>
 #include <sys/time.h>
-#include <math.h>
-#include <wchar.h>
 
 //#ifndef WIN32
 #include <sys/types.h>
@@ -10,14 +39,68 @@
 #include <unistd.h>
 //#endif
 
-#include <fstream>
 
-#include "utils.h"
-#include "main.h"
-#include "unicode.h"
-#include "sound.h"
+int scaleUp(int i)
+{
+    return (int)(i * screen.getScale());
+}
+
+int scaleDown(int i)
+{
+    return (int)(i / screen.getScale());
+}
 
 
+SDL_Surface* scaleUp(SDL_Surface* tile)
+{
+    return scaleTo(tile, scaleUp(tile->w), scaleUp(tile->h));
+}
+
+SDL_Surface* scaleDown(SDL_Surface* tile)
+{
+    return scaleTo(tile, scaleDown(tile->w), scaleDown(tile->h));
+}
+
+SDL_Surface* scaleTo(SDL_Surface* tile, int width, int height)
+{
+    SDL_Surface *s = makeSWSurface(width, height);
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, s->w, s->h };
+    SDL_SoftStretch(tile, &src, s, &dst);
+    
+    return s;
+}
+
+void blitDraw(int x, int y, SDL_Surface *src, SDL_Surface *dst)
+{
+    SDL_Rect s = { 0, 0, src->w, src->h };
+    SDL_Rect d = { x, y, src->w, src->h };
+    SDL_BlitSurface(src, &s, dst, &d);
+}
+
+void drawTiled(const std::wstring &name, SDL_Surface *s)
+{
+    SDL_Surface *tile = loadImage(name);
+    SDL_Rect src = { 0, 0, tile->w, tile->h };
+    SDL_Rect dst = { 0, 0, tile->w, tile->h };
+    for (int y = 0; y < s->h; y += tile->h)
+    {
+        for (int x = 0; x < s->w; x += tile->w) {
+            dst.x = x;
+            dst.y = y;
+            SDL_BlitSurface(tile, &src,s, &dst);
+        }
+    }
+    SDL_FreeSurface(tile);
+}
+
+SDL_Surface* makeSWSurface(int width, int height)
+{
+    SDL_PixelFormat *fmt = screen.getFormat();
+    return SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 
+                                fmt->BitsPerPixel, fmt->Rmask, fmt->Gmask,
+                                fmt->Bmask, fmt->Amask);
+}
 
 int getCornerPixel(SDL_Surface *surface)
 {
@@ -46,9 +129,7 @@ int getCornerPixel(SDL_Surface *surface)
 SDL_Surface* loadImage(const std::wstring &name, bool transparent)
 {
     int size;
-    void *bmp;
-
-    bmp = resources->getRef(name, size);
+    void *bmp = resources->getRef(name, size);
     if (! bmp)
         throw Exception(name + L" is not found");
     SDL_RWops *op = SDL_RWFromMem(bmp, size);
@@ -61,6 +142,7 @@ SDL_Surface* loadImage(const std::wstring &name, bool transparent)
     SDL_FreeSurface(s);
     if (! screenS)
         throw Exception(L"Error translating to screen format " + name);
+    
     if (transparent)
         SDL_SetColorKey(screenS, SDL_SRCCOLORKEY, getCornerPixel(screenS));
     return screenS;
@@ -69,7 +151,6 @@ SDL_Surface* loadImage(const std::wstring &name, bool transparent)
 
 #ifdef WIN32
 #include <sys/timeb.h>
-struct timezone { };
 
 int gettimeofday(struct timeval* tp, int* /*tz*/) 
 {
@@ -82,7 +163,7 @@ int gettimeofday(struct timeval* tp, int* /*tz*/)
 
 int gettimeofday(struct timeval* tp, struct timezone* /*tz*/) 
 {
-    return gettimeofday(tp, (int*)NULL);
+    return gettimeofday(tp, (int*)nullptr);
 }
 #endif
 
@@ -91,25 +172,11 @@ int gettimeofday(struct timeval* tp, struct timezone* /*tz*/)
 int gettimeofday(struct timeval* tp)
 {
 #ifdef WIN32
-    return gettimeofday(tp, (int*)NULL);
+    return gettimeofday(tp, (int*)nullptr);
 #else
     struct timezone tz;
     return gettimeofday(tp, &tz);
 #endif
-}
-
-void drawWallpaper(const std::wstring &name)
-{
-    SDL_Surface *tile = loadImage(name);
-    SDL_Rect src = { 0, 0, tile->w, tile->h };
-    SDL_Rect dst = { 0, 0, tile->w, tile->h };
-    for (int y = 0; y < screen.getHeight(); y += tile->h)
-        for (int x = 0; x < screen.getWidth(); x += tile->w) {
-            dst.x = x;
-            dst.y = y;
-            SDL_BlitSurface(tile, &src, screen.getSurface(), &dst);
-        }
-    SDL_FreeSurface(tile);
 }
 
 
@@ -173,16 +240,46 @@ static int gammaTable[256];
 static double lastGamma = -1.0;
 
 
-void adjustBrightness(SDL_Surface *image, int x, int y, double k)
+int adjustBrightness(int i, double k)
+{
+    int r = (int)(255.0 * pow((double)i / 255.0, 1.0 / k) + 0.5);
+    if (r > 255)
+    {
+        r = 255;
+    }
+    
+    return r;
+}
+
+void setGamma(double k)
 {
     if (lastGamma != k) {
         for (int i = 0; i <= 255; i++) {
-            gammaTable[i] = (int)(255.0 * pow((double)i / 255.0, 1.0 / k) + 0.5);
-            if (gammaTable[i] > 255)
-                gammaTable[i] = 255;
+            gammaTable[i] = adjustBrightness(i, k);
         }
         lastGamma = k;
     }
+}
+
+void adjustBrightness(int *r, int *g, int *b, double k)
+{
+    if (k == lastGamma)
+    {
+        *r = gammaTable[*r];
+        *g = gammaTable[*g];
+        *b = gammaTable[*b];
+    }
+    else
+    {
+        *r = adjustBrightness(*r, k);
+        *g = adjustBrightness(*g, k);
+        *b = adjustBrightness(*b, k);
+    }
+}
+
+void adjustBrightness(SDL_Surface *image, int x, int y, double k)
+{
+    setGamma(k);
     
     Uint8 r, g, b;
     getPixel(image, x, y, &r, &g, &b);
@@ -192,14 +289,7 @@ void adjustBrightness(SDL_Surface *image, int x, int y, double k)
 
 SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent)
 {
-    if (lastGamma != k) {
-        for (int i = 0; i <= 255; i++) {
-            gammaTable[i] = (int)(255.0 * pow((double)i / 255.0, 1.0 / k) + 0.5);
-            if (gammaTable[i] > 255)
-                gammaTable[i] = 255;
-        }
-        lastGamma = k;
-    }
+    setGamma(k);
     
     SDL_Surface *s = SDL_DisplayFormat(image);
     if (! s)
@@ -222,46 +312,10 @@ SDL_Surface* adjustBrightness(SDL_Surface *image, double k, bool transparent)
     return s;
 }
 
-
-class CenteredBitmap: public Widget
-{
-    private:
-        SDL_Surface *tile;
-        int x, y;
-        
-    public:
-        CenteredBitmap(const std::wstring &fileName) {
-            tile = loadImage(fileName);
-            x = (screen.getWidth() - tile->w) / 2;
-            y = (screen.getHeight() - tile->h) / 2;
-        };
-
-        virtual ~CenteredBitmap() {
-            SDL_FreeSurface(tile);
-        };
-
-        virtual void draw() {
-            screen.draw(x, y, tile);
-            screen.addRegionToUpdate(x, y, tile->w, tile->h);
-        };
-};
-
-
-void showWindow(Area *parentArea, const std::wstring &fileName)
-{
-    Area area;
-
-    area.add(parentArea);
-    area.add(new CenteredBitmap(fileName));
-    area.add(new AnyKeyAccel());
-    area.run();
-    sound->play(L"click.wav");
-}
-
-
 bool isInRect(int evX, int evY, int x, int y, int w, int h)
 {
-    return ((evX >= x) && (evX < x + w) && (evY >= y) && (evY < y + h));
+    return ((evX >= scaleUp(x)) && (evX < scaleUp(x + w)) 
+                    && (evY >= scaleUp(y)) && (evY < scaleUp(y + h)));
 }
 
 std::wstring secToStr(int time)
@@ -330,6 +384,20 @@ void drawBevel(SDL_Surface *s, int left, int top, int width, int height,
     }
 }
 
+SDL_Surface* makeBox(int width, int height, const std::wstring &bg)
+{
+    SDL_Surface *s = makeSWSurface(width, height);
+
+    drawTiled(bg, s);
+
+    SDL_LockSurface(s);
+    drawBevel(s, 0, 0, width, height, false, 1);
+    drawBevel(s, 1, 1, width - 2, height - 2, true, 1);
+    SDL_UnlockSurface(s);
+    
+    return s;
+}
+
 //#ifndef WIN32
 
 void ensureDirExists(const std::wstring &fileName)
@@ -374,12 +442,11 @@ int readInt(std::istream &stream)
 std::wstring readString(std::istream &stream)
 {
     std::string str;
-    char c;
-
+    
     if (stream.fail())
         throw Exception(L"Error reading string");
     
-    c = stream.get();
+    char c = stream.get();
     while (c && (! stream.fail())) {
         str += c;
         c = stream.get();
@@ -394,12 +461,12 @@ std::wstring readString(std::istream &stream)
 void writeInt(std::ostream &stream, int v)
 {
     unsigned char b[4];
-    int i, ib;
 
-    for (i = 0; i < 4; i++) {
-        ib = v & 0xFF;
+    for (unsigned char& i : b)
+    {
+        int ib = v & 0xFF;
         v = v >> 8;
-        b[i] = ib;
+        i = ib;
     }
     
     stream.write((char*)&b, 4);

@@ -1,3 +1,24 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-08-04 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #ifndef __RESOURCES_H__
 #define __RESOURCES_H__
 
@@ -5,14 +26,16 @@
  * Classes for resources loading and unloading.
  */
 
-#include <string>
+
+#include "buffer.h"
+#include "visitor.h"
+
 #include <fstream>
 #include <list>
 #include <map>
+#include <string>
 #include <vector>
 
-#include "visitor.h"
-#include "buffer.h"
 
 typedef std::list<std::wstring> StringList;
 
@@ -24,14 +47,10 @@ class ResourceFile;
 class ResourceStream
 {
     public:
-        virtual ~ResourceStream() { };
+        virtual ~ResourceStream() = default;
         
         /// Get size of resource
         virtual size_t getSize() = 0;
-
-        /// Seek into resource.
-        /// \param offset offset from resource start
-        virtual void seek(long offset) = 0;
 
         /// Read data from resource into buffer.
         /// \param buffer buffer of size bytes.
@@ -42,10 +61,10 @@ class ResourceStream
         virtual long getPos() = 0;
 
         /// Return true if end of resource reached
-        virtual bool isEof() { return (size_t)getPos() >= getSize(); };
+        virtual bool isEof() { return (size_t)getPos() >= getSize(); }
 
         /// Get count of bytes left
-        virtual long getAvailable() { return (long)getSize() - getPos(); };
+        virtual long getAvailable() { return (long)getSize() - getPos(); }
 };
 
 
@@ -80,7 +99,7 @@ class ResourceFile
         /// \param fileName the name of resource file.
         /// \param buffer buffer for temporary data.
         /// Can be shared with other resource files.
-        ResourceFile(const std::wstring &fileName, Buffer *buffer=NULL);
+        ResourceFile(const std::wstring &fileName, Buffer *buffer=nullptr);
         virtual ~ResourceFile();
 
     public:
@@ -106,13 +125,13 @@ class ResourceFile
                 int level);
 
         /// Get priority of this resource file.
-        int getPriority() const { return priority; };
+        int getPriority() const { return priority; }
         
         /// Get the name of resource file.
-        const std::wstring& getFileName() const { return name; };
+        const std::wstring& getFileName() const { return name; }
 
         /// Get file stream.
-        std::ifstream& getStream() { return stream; };
+        std::ifstream& getStream() { return stream; }
 
     private:
         /// Unpack memory buffer
@@ -122,36 +141,8 @@ class ResourceFile
         /// be placed
         /// \param outSize size of unpacked data
         void unpack(char *in, int inSize, char *out, int outSize);
-};
-
-
-/// Simple resource file wrapper.
-/// Used at boot time when ResourcesCollection
-/// is not available yet.
-class SimpleResourceFile: public ResourceFile
-{
-    private:
-        typedef std::map<std::wstring, DirectoryEntry> DirectoryMap;
-        DirectoryMap directory;  /// Directory map.
-        
-    public:
-        /// Open resource file.  Throws exception if file can't be opened.
-        /// \param fileName the name of resource file.
-        /// \param buffer buffer for temporary data.
-        /// Can be shared with other resource files.
-        SimpleResourceFile(const std::wstring &fileName, Buffer *buffer=NULL);
-
-    public:
-        /// Load data.  Memory returned by this method should be freed
-        /// by free() function call.
-        /// \param name name of resource
-        /// \param size returns size of resource
-        virtual void* load(const std::wstring &name, int &size);
-
-        /// Load data into the buffer.
-        /// \param name name of resource
-        /// \param buffer buffer for resource data
-        virtual void load(const std::wstring &name, Buffer &buffer);
+        // prevent generation by compiler
+        ResourceFile(const ResourceFile&);
 };
 
 
@@ -180,7 +171,7 @@ class ResVariant
 
     public:
         /// Return locale compability score.
-        int getI18nScore() const { return i18nScore; };
+        int getI18nScore() const { return i18nScore; }
 
         /// Get pointer to unpacked resource data.  
         /// Must be freed after use this delRef()
@@ -196,18 +187,14 @@ class ResVariant
         void delRef(void *data);
 
         /// Return reference counter.
-        int getRefCount() const { return refCnt; };
+        int getRefCount() const { return refCnt; }
 
         /// Is data managed by this object
         /// \param data pointer to dataa
-        bool isDataOwned(void *data) const { return refCnt && data == this->data; };
-
-        /// return data.
-        /// destroy it after use with free()
-        void* getDynData();
+        bool isDataOwned(void *data) const { return refCnt && data == this->data; }
 
         /// returns size of data
-        long getSize() const { return unpackedSize; };
+        long getSize() const { return unpackedSize; }
 
         /// Return data in buffer
         /// \param buffer buffer to store data.
@@ -251,11 +238,11 @@ class Resource
                 const ResourceFile::DirectoryEntry &entry);
 
         /// Get number of variants.
-        int getVariantsCount() const { return variants.size(); };
+        int getVariantsCount() const { return variants.size(); }
 
         /// Geturns variant object.
         /// \param variant variant number.
-        ResVariant* getVariant(int variant=0) { return variants[variant]; };
+        ResVariant* getVariant(int variant=0) { return variants[variant]; }
 
         /// Load data from variant.
         /// Data must be freed with delRef().
@@ -274,10 +261,10 @@ class Resource
 
         /// Get size of data.
         /// \param variant variant number.
-        long getSize(int variant=0) { return variants[variant]->getSize(); };
+        long getSize(int variant=0) { return variants[variant]->getSize(); }
 
         /// Get name of this resource.
-        const std::wstring& getName() const { return name; };
+        const std::wstring& getName() const { return name; }
         
         /// Load data into buffer.
         /// \param buffer buffer for data.
@@ -331,7 +318,7 @@ class ResourcesCollection
         
     public:
         /// Load resource files, make grouping and i18n optimizations.
-        ResourcesCollection(StringList &directories);
+        explicit ResourcesCollection(StringList &directories);
         ~ResourcesCollection();
 
     public:
@@ -361,12 +348,6 @@ class ResourcesCollection
         /// \param name name of resource.
         ResourceStream* createStream(const std::wstring &name);
 
-        /// Load data into buffer.
-        /// Usually you don't need this, use getRef instead.
-        /// \param name name of resource.
-        /// \param buffer buffer for data.
-        void loadData(const std::wstring &name, Buffer &buffer);
-
     private:
         /// Open resource files.
         void loadResourceFiles(StringList &directories);
@@ -388,7 +369,7 @@ class ResDataHolder
         ResDataHolder();
 
         /// Create holder and load data
-        ResDataHolder(const std::wstring &name);
+        explicit ResDataHolder(const std::wstring &name);
 
         ~ResDataHolder();
 
@@ -397,10 +378,10 @@ class ResDataHolder
         void load(const std::wstring &name);
 
         /// Returns pointer to resource data
-        void* getData() const { return data; };
+        void* getData() const { return data; }
 
         /// Returns size of data
-        size_t getSize() const { return size; };
+        size_t getSize() const { return size; }
 };
 
 

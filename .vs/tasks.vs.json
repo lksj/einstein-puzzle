@@ -1,0 +1,32 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-einstein-puzzle",
+      "appliesTo": "/",
+      "type": "launch"
+    },
+    {
+      "taskName": "makefile-build",
+      "appliesTo": "Makefile",
+      "type": "launch",
+      "contextType": "build",
+      "command": "${env.comspec}",
+      "args": [ "make" ],
+      "envVars": {
+        "VSCMD_START_DIR": "\"${workspaceRoot}\""
+      }
+    },
+    {
+      "taskName": "makefile-clean",
+      "appliesTo": "Makefile",
+      "type": "launch",
+      "contextType": "clean",
+      "command": "${env.comspec}",
+      "args": [ "make clean" ],
+      "envVars": {
+        "VSCMD_START_DIR": "\"${workspaceRoot}\""
+      }
+    }
+  ]
+}

@@ -1,14 +1,38 @@
-#include <stdlib.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-04-22 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#include "main.h"
+
+#include "args.h"
+#include "exceptions.h"
+#include "messages.h"
+#include "resources.h"
+#include "sound.h"
+#include "storage.h"
+#include "unicode.h"
+#include "utils.h"
+
 #include <iostream>
 #include <SDL/SDL.h>
 #include <SDL/SDL_main.h>
 #include <SDL/SDL_ttf.h>
-#include "main.h"
-#include "utils.h"
-#include "storage.h"
-#include "unicode.h"
-#include "messages.h"
-#include "sound.h"
 
 
 Screen screen;
@@ -23,15 +47,15 @@ static void initScreen()
     atexit(SDL_Quit);
     if (TTF_Init())
         throw Exception(L"Error initializing font engine");
-    screen.setMode(VideoMode(800, 600, 24, 
-                getStorage()->get(L"fullscreen", 1) != 0));
+    screen.setMode(getStorage()->get(L"fullscreen", 1) != 0);
+    screen.setSize(getStorage()->get(L"screenSize", 1));
     screen.initCursors();
     
     SDL_Surface *mouse = loadImage(L"cursor.bmp");
     SDL_SetColorKey(mouse, SDL_SRCCOLORKEY, SDL_MapRGB(mouse->format, 0, 0, 0));
     screen.setMouseImage(mouse);
     SDL_FreeSurface(mouse);
-    SDL_WM_SetCaption("Einstein", NULL);
+    SDL_WM_SetCaption("Einstein", nullptr);
 
 #ifdef __APPLE__
     screen.setCursor(false);
@@ -77,7 +101,7 @@ static void loadResources(const std::wstring &selfPath)
 
 /*static void checkBetaExpire()
 {
-    if (1124832535L + 60L*60L*24L*40L < time(NULL)) {
+    if (1124832535L + 60L*60L*24L*40L < time(nullptr)) {
         Font font(L"laudcn2.ttf", 16);
         Area area;
         showMessageWindow(&area, L"darkpattern.bmp", 
@@ -88,9 +112,16 @@ static void loadResources(const std::wstring &selfPath)
 
 
 
+#ifdef WIN32
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
+#else
 int main(int argc, char *argv[])
+#endif
 {
-#ifndef WIN32
+#ifdef WIN32
+    int argc;
+    LPSTR* argv = CommandLineToArgvA(GetCommandLineA(), &argc);
+#else
     ensureDirExists(fromMbcs(getenv("HOME")) + std::wstring(L"/.einstein"));
 #endif
     

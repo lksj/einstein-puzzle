@@ -1,13 +1,33 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "buffer.h"
-#include <string.h>
+
 #include "exceptions.h"
 #include "unicode.h"
 
+#include <cstring>
+
 
 Buffer::Buffer(int sz, int alloc)
+    : size(sz), allocated(alloc), data(nullptr), currentPos(0)
 {
-    allocated = alloc;
-    size = sz;
     if (size > allocated)
         allocated = size;
     if (allocated < 1024)
@@ -71,12 +91,12 @@ size_t Buffer::putData(const unsigned char *d, size_t length)
 size_t Buffer::putInteger(int v)
 {
     unsigned char b[4];
-    int i, ib;
 
-    for (i = 0; i < 4; i++) {
-        ib = v & 0xFF;
+    for (unsigned char& i : b)
+    {
+        const int ib = v & 0xFF;
         v = v >> 8;
-        b[i] = ib;
+        i = ib;
     }
 
     return putData(b, 4);

@@ -1,8 +1,28 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "convert.h"
+#include "main.h"
 #include "puzgen.h"
 #include "utils.h"
-#include "main.h"
-#include "convert.h"
-#include "unicode.h"
 
 
 static std::wstring getThingName(int row, int thing)
@@ -14,33 +34,125 @@ static std::wstring getThingName(int row, int thing)
 }
 
 
-
-class NearRule: public Rule
+class DrawableRule: public Rule
 {
-    private:
-        int thing1[2];
-        int thing2[2];
-        
-    public:
-        NearRule(SolvedPuzzle puzzle);
-        NearRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
+    protected:
+        int row1, thing1;
+        int row2, thing2;
+        std::wstring ruleType;
 
+    protected:
+        DrawableRule();
+        DrawableRule(std::istream &stream, const std::wstring& ruleType);
+        void save(std::ostream &stream) override;
+        virtual SDL_Surface* getImage(IconSet &iconSet, bool highlighted) = 0;
+        void draw(int x, int y, IconSet &iconSet, bool highlighted) override;
+};
+
+
+DrawableRule::DrawableRule()
+{
+}
+
+
+DrawableRule::DrawableRule(std::istream &stream, const std::wstring& ruleType):
+    ruleType(ruleType)
+{
+    row1 = readInt(stream);
+    thing1 = readInt(stream);
+    row2 = readInt(stream);
+    thing2 = readInt(stream);
+}
+
+
+void DrawableRule::draw(int x, int y, IconSet &iconSet, bool highlighted)
+{
+    SDL_Surface *s = getImage(iconSet, highlighted);
+    screen.drawScaled(x, y, s);
+    SDL_FreeSurface(s);
+}
+
+
+void DrawableRule::save(std::ostream &stream)
+{
+    writeString(stream, ruleType);
+    writeInt(stream, row1);
+    writeInt(stream, thing1);
+    writeInt(stream, row2);
+    writeInt(stream, thing2);
+}
+
+
+class HorizontalRule: public DrawableRule
+{
+    protected:
+        HorizontalRule();
+        HorizontalRule(std::istream &stream, const std::wstring& ruleType);
+        virtual SDL_Surface* getLeftIcon(IconSet &iconSet, bool highlighted);
+        virtual SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) = 0;
+        virtual SDL_Surface* getRightIcon(IconSet &iconSet, bool highlighted);
+        SDL_Surface* getImage(IconSet &iconSet, bool highlighted) override;
+};
+
+
+HorizontalRule::HorizontalRule() = default;
+
+
+HorizontalRule::HorizontalRule(std::istream &stream, const std::wstring& ruleType):
+    DrawableRule(stream, ruleType)
+{
+}
+
+
+SDL_Surface* HorizontalRule::getLeftIcon(IconSet &iconSet, bool h)
+{
+    return iconSet.getLargeIcon(row1, thing1, h);
+}
+
+
+SDL_Surface* HorizontalRule::getRightIcon(IconSet &iconSet, bool h)
+{
+    return iconSet.getLargeIcon(row2, thing2, h);
+}
+
+
+SDL_Surface* HorizontalRule::getImage(IconSet &iconSet, bool h)
+{
+    SDL_Surface *l = getLeftIcon(iconSet, h);
+    SDL_Surface *s = makeSWSurface(l->w * 3, l->h);
+
+    blitDraw(0, 0, l, s);
+    blitDraw(l->w, 0, getMiddleIcon(iconSet, h), s);
+    blitDraw(l->w * 2, 0, getRightIcon(iconSet, h), s);
+    
+    return s;
+}
+
+
+class NearRule: public HorizontalRule
+{
+    public:
+        explicit NearRule(SolvedPuzzle puzzle);
+        explicit NearRule(std::istream &stream);
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+    
+    protected:
+        SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
+    
     private:
         bool applyToCol(Possibilities &pos, int col, int nearRow, int nearNum,
             int thisRow, int thisNum);
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
-        virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
-        virtual void save(std::ostream &stream);
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; }
 };
 
 
 NearRule::NearRule(SolvedPuzzle puzzle)
 {
+    ruleType = L"near";
     int col1 = rndGen.genInt(PUZZLE_SIZE);
-    thing1[0] = rndGen.genInt(PUZZLE_SIZE);
-    thing1[1] = puzzle[thing1[0]][col1];
+    row1 = rndGen.genInt(PUZZLE_SIZE);
+    thing1 = puzzle[row1][col1];
 
     int col2;
     if (col1 == 0)
@@ -54,17 +166,14 @@ NearRule::NearRule(SolvedPuzzle puzzle)
             else
                 col2 = col1 - 1;
     
-    thing2[0] = rndGen.genInt(PUZZLE_SIZE);
-    thing2[1] = puzzle[thing2[0]][col2];
+    row2 = rndGen.genInt(PUZZLE_SIZE);
+    thing2 = puzzle[row2][col2];
 }
 
 
-NearRule::NearRule(std::istream &stream)
+NearRule::NearRule(std::istream &stream):
+    HorizontalRule(stream, L"near")
 {
-    thing1[0] = readInt(stream);
-    thing1[1] = readInt(stream);
-    thing2[0] = readInt(stream);
-    thing2[1] = readInt(stream);
 }
 
 
@@ -95,9 +204,9 @@ bool NearRule::apply(Possibilities &pos)
     bool changed = false;
     
     for (int i = 0; i < PUZZLE_SIZE; i++) {
-        if (applyToCol(pos, i, thing1[0], thing1[1], thing2[0], thing2[1]))
+        if (applyToCol(pos, i, row1, thing1, row2, thing2))
             changed = true;
-        if (applyToCol(pos, i, thing2[0], thing2[1], thing1[0], thing1[1]))
+        if (applyToCol(pos, i, row2, thing2, row1, thing1))
             changed = true;
     }
 
@@ -109,49 +218,36 @@ bool NearRule::apply(Possibilities &pos)
 
 std::wstring NearRule::getAsText()
 {
-    return getThingName(thing1[0], thing1[1]) + 
-        L" is near to " + getThingName(thing2[0], thing2[1]);
-}
-
-void NearRule::draw(int x, int y, IconSet &iconSet, bool h)
-{
-    SDL_Surface *icon = iconSet.getLargeIcon(thing1[0], thing1[1], h);
-    screen.draw(x, y, icon);
-    screen.draw(x + icon->h, y, iconSet.getNearHintIcon(h));
-    screen.draw(x + icon->h*2, y, iconSet.getLargeIcon(thing2[0], thing2[1], h));
-}
-
-void NearRule::save(std::ostream &stream)
-{
-    writeString(stream, L"near");
-    writeInt(stream, thing1[0]);
-    writeInt(stream, thing1[1]);
-    writeInt(stream, thing2[0]);
-    writeInt(stream, thing2[1]);
+    return getThingName(row1, thing1) + 
+        L" is near to " + getThingName(row2, thing2);
 }
 
 
-class DirectionRule: public Rule
+SDL_Surface* NearRule::getMiddleIcon(IconSet &iconSet, bool h)
 {
-    private:
-        int row1, thing1;
-        int row2, thing2;
-        
+    return iconSet.getNearHintIcon(h);
+}
+
+
+class DirectionRule: public HorizontalRule
+{
     public:
-        DirectionRule(SolvedPuzzle puzzle);
-        DirectionRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
-
+        explicit DirectionRule(SolvedPuzzle puzzle);
+        explicit DirectionRule(std::istream &stream);
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+    
+    protected:
+        SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
+    
     private:
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
-        virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
-        virtual void save(std::ostream &stream);
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; }
 };
 
 
 DirectionRule::DirectionRule(SolvedPuzzle puzzle)
 {
+    ruleType = L"direction";
     row1 = rndGen.genInt(PUZZLE_SIZE);
     row2 = rndGen.genInt(PUZZLE_SIZE);
     int col1 = rndGen.genInt(PUZZLE_SIZE - 1);
@@ -160,13 +256,12 @@ DirectionRule::DirectionRule(SolvedPuzzle puzzle)
     thing2 = puzzle[row2][col2];
 }
 
-DirectionRule::DirectionRule(std::istream &stream)
+
+DirectionRule::DirectionRule(std::istream &stream):
+    HorizontalRule(stream, L"direction")
 {
-    row1 = readInt(stream);
-    thing1 = readInt(stream);
-    row2 = readInt(stream);
-    thing2 = readInt(stream);
 }
+
 
 bool DirectionRule::apply(Possibilities &pos)
 {
@@ -199,21 +294,10 @@ std::wstring DirectionRule::getAsText()
         L" is from the left of " + getThingName(row2, thing2);
 }
 
-void DirectionRule::draw(int x, int y, IconSet &iconSet, bool h)
-{
-    SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    screen.draw(x, y, icon);
-    screen.draw(x + icon->h, y, iconSet.getSideHintIcon(h));
-    screen.draw(x + icon->h*2, y, iconSet.getLargeIcon(row2, thing2, h));
-}
 
-void DirectionRule::save(std::ostream &stream)
+SDL_Surface* DirectionRule::getMiddleIcon(IconSet &iconSet, bool h)
 {
-    writeString(stream, L"direction");
-    writeInt(stream, row1);
-    writeInt(stream, thing1);
-    writeInt(stream, row2);
-    writeInt(stream, thing2);
+    return iconSet.getSideHintIcon(h);
 }
 
 
@@ -223,14 +307,14 @@ class OpenRule: public Rule
         int col, row, thing;
         
     public:
-        OpenRule(SolvedPuzzle puzzle);
-        OpenRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
-        virtual bool applyOnStart() { return true; };
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted) { };
-        virtual ShowOptions getShowOpts() { return SHOW_NOTHING; };
-        virtual void save(std::ostream &stream);
+        explicit OpenRule(SolvedPuzzle puzzle);
+        explicit OpenRule(std::istream &stream);
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+        bool applyOnStart() override { return true; }
+        void draw(int x, int y, IconSet &iconSet, bool highlighted) override { }
+        ShowOptions getShowOpts() override { return SHOW_NOTHING; }
+        void save(std::ostream &stream) override;
 };
 
 
@@ -271,24 +355,23 @@ void OpenRule::save(std::ostream &stream)
 }
 
 
-class UnderRule: public Rule
+class UnderRule: public DrawableRule
 {
-    private:
-        int row1, thing1, row2, thing2;
-        
+    protected:
+        SDL_Surface* getImage(IconSet &iconSet, bool h) override;
+    
     public:
-        UnderRule(SolvedPuzzle puzzle);
-        UnderRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
-        virtual ShowOptions getShowOpts() { return SHOW_VERT; };
-        virtual void save(std::ostream &stream);
+        explicit UnderRule(SolvedPuzzle puzzle);
+        explicit UnderRule(std::istream &stream);
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+        ShowOptions getShowOpts() override { return SHOW_VERT; }
 };
 
 
 UnderRule::UnderRule(SolvedPuzzle puzzle)
 {
+    ruleType = L"under";
     int col = rndGen.genInt(PUZZLE_SIZE);
     row1 = rndGen.genInt(PUZZLE_SIZE);
     thing1 = puzzle[row1][col];
@@ -298,12 +381,10 @@ UnderRule::UnderRule(SolvedPuzzle puzzle)
     thing2 = puzzle[row2][col];
 }
 
-UnderRule::UnderRule(std::istream &stream)
+
+UnderRule::UnderRule(std::istream &stream):
+    DrawableRule(stream, L"under")
 {
-    row1 = readInt(stream);
-    thing1 = readInt(stream);
-    row2 = readInt(stream);
-    thing2 = readInt(stream);
 }
 
 bool UnderRule::apply(Possibilities &pos)
@@ -335,46 +416,43 @@ std::wstring UnderRule::getAsText()
         getThingName(row2, thing2);
 }
 
-void UnderRule::draw(int x, int y, IconSet &iconSet, bool h)
-{
-    SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    screen.draw(x, y, icon);
-    screen.draw(x, y + icon->h, iconSet.getLargeIcon(row2, thing2, h));
-}
 
-void UnderRule::save(std::ostream &stream)
+SDL_Surface* UnderRule::getImage(IconSet &iconSet, bool h)
 {
-    writeString(stream, L"under");
-    writeInt(stream, row1);
-    writeInt(stream, thing1);
-    writeInt(stream, row2);
-    writeInt(stream, thing2);
+    SDL_Surface *t = iconSet.getLargeIcon(row1, thing1, h);
+    SDL_Surface *s = makeSWSurface(t->w, t->h * 2);
+
+    blitDraw(0, 0, t, s);
+    blitDraw(0, t->h, iconSet.getLargeIcon(row2, thing2, h), s);
+    
+    return s;
 }
 
 
-
-class BetweenRule: public Rule
+class BetweenRule: public HorizontalRule
 {
     private:
-        int row1, thing1;
-        int row2, thing2;
         int centerRow, centerThing;
         
     public:
-        BetweenRule(SolvedPuzzle puzzle);
-        BetweenRule(std::istream &stream);
-        virtual bool apply(Possibilities &pos);
-        virtual std::wstring getAsText();
+        explicit BetweenRule(SolvedPuzzle puzzle);
+        explicit BetweenRule(std::istream &stream);
+        bool apply(Possibilities &pos) override;
+        std::wstring getAsText() override;
+    
+    protected:
+        SDL_Surface* getMiddleIcon(IconSet &iconSet, bool highlighted) override;
+        SDL_Surface* getImage(IconSet &iconSet, bool higlighted) override;
 
     private:
-        virtual void draw(int x, int y, IconSet &iconSet, bool highlighted);
-        virtual ShowOptions getShowOpts() { return SHOW_HORIZ; };
-        virtual void save(std::ostream &stream);
+        ShowOptions getShowOpts() override { return SHOW_HORIZ; }
+        void save(std::ostream &stream) override;
 };
 
 
 BetweenRule::BetweenRule(SolvedPuzzle puzzle)
 {
+    ruleType = L"between";
     centerRow = rndGen.genInt(PUZZLE_SIZE);
     row1 = rndGen.genInt(PUZZLE_SIZE);
     row2 = rndGen.genInt(PUZZLE_SIZE);
@@ -390,12 +468,9 @@ BetweenRule::BetweenRule(SolvedPuzzle puzzle)
     }
 }
 
-BetweenRule::BetweenRule(std::istream &stream)
+BetweenRule::BetweenRule(std::istream &stream):
+    HorizontalRule(stream, L"between")
 {
-    row1 = readInt(stream);
-    thing1 = readInt(stream);
-    row2 = readInt(stream);
-    thing2 = readInt(stream);
     centerRow = readInt(stream);
     centerThing = readInt(stream);
 }
@@ -483,23 +558,26 @@ std::wstring BetweenRule::getAsText()
         getThingName(row2, thing2);
 }
 
-void BetweenRule::draw(int x, int y, IconSet &iconSet, bool h)
+
+SDL_Surface* BetweenRule::getMiddleIcon(IconSet &iconSet, bool h)
 {
-    SDL_Surface *icon = iconSet.getLargeIcon(row1, thing1, h);
-    screen.draw(x, y, icon);
-    screen.draw(x + icon->w, y, iconSet.getLargeIcon(centerRow, centerThing, h));
-    screen.draw(x + icon->w*2, y, iconSet.getLargeIcon(row2, thing2, h));
+    return iconSet.getLargeIcon(centerRow, centerThing, h);
+}
+
+
+SDL_Surface* BetweenRule::getImage(IconSet &iconSet, bool h)
+{
+    SDL_Surface *s = HorizontalRule::getImage(iconSet, h);
+    
     SDL_Surface *arrow = iconSet.getBetweenArrow(h);
-    screen.draw(x + icon->w - (arrow->w - icon->w) / 2, y + 0, arrow);
+    blitDraw(s->h - (arrow->w - s->h) / 2, 0, arrow, s);
+    
+    return s;
 }
 
 void BetweenRule::save(std::ostream &stream)
 {
-    writeString(stream, L"between");
-    writeInt(stream, row1);
-    writeInt(stream, thing1);
-    writeInt(stream, row2);
-    writeInt(stream, thing2);
+    HorizontalRule::save(stream);
     writeInt(stream, centerRow);
     writeInt(stream, centerThing);
 }
@@ -532,8 +610,8 @@ Rule* genRule(SolvedPuzzle &puzzle)
 void saveRules(Rules &rules, std::ostream &stream)
 {
     writeInt(stream, rules.size());
-    for (Rules::iterator i = rules.begin(); i != rules.end(); i++)
-        (*i)->save(stream);
+    for (auto& rule : rules)
+        rule->save(stream);
 }
 
 

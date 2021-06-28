@@ -1,3 +1,24 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-08-03 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "puzzle.h"
 #include "main.h"
 #include "utils.h"
@@ -12,18 +33,15 @@
 #define FIELD_TILE_HEIGHT 48
 
 
-Puzzle::Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p):
-                        iconSet(is), solved(s)
+Puzzle::Puzzle(IconSet &is, SolvedPuzzle &s, Possibilities *p)
+    : possib(p), iconSet(is), valid(true), win(false), solved(s),
+        hCol(-1), hRow(-1), subHNo(-1), winCommand(nullptr), failCommand(nullptr)
 {
-    possib = p;
- 
     reset();
 }
 
 
-Puzzle::~Puzzle()
-{
-}
+Puzzle::~Puzzle() = default;
 
 void Puzzle::reset()
 {
@@ -44,28 +62,46 @@ void Puzzle::draw()
     
 void Puzzle::drawCell(int col, int row, bool addToUpdate)
 {
-    int posX = FIELD_OFFSET_X + col * (FIELD_TILE_WIDTH + FIELD_GAP_X);
-    int posY = FIELD_OFFSET_Y + row * (FIELD_TILE_HEIGHT + FIELD_GAP_Y);
+    const int posX = FIELD_OFFSET_X + col * (FIELD_TILE_WIDTH + FIELD_GAP_X);
+    const int posY = FIELD_OFFSET_Y + row * (FIELD_TILE_HEIGHT + FIELD_GAP_Y);
 
     if (possib->isDefined(col, row)) {
-        int element = possib->getDefined(col, row);
+        const int element = possib->getDefined(col, row);
         if (element > 0)
-            screen.draw(posX, posY, iconSet.getLargeIcon(row, element, 
-                        (hCol == col) && (hRow == row)));
+        {
+            screen.drawScaled(posX, posY, iconSet.getLargeIcon(row, element, (hCol == col) && (hRow == row)));
+        }
     } else {
-        screen.draw(posX, posY, iconSet.getEmptyFieldIcon());
-        int x = posX;
-        int y = posY + (FIELD_TILE_HEIGHT / 6);
+        SDL_Surface* emptyFieldIcon = iconSet.getEmptyFieldIcon();
+        SDL_Surface* newTile = scaleUp(emptyFieldIcon);
+        SDL_Rect src = { 0, 0, newTile->w / 3, newTile->h / 3 };
+        SDL_Rect dst = { 0, (FIELD_TILE_HEIGHT / 6), src.w, src.h };
         for (int i = 0; i < 6; i++) {
             if (possib->isPossible(col, row, i + 1))
-                screen.draw(x, y, iconSet.getSmallIcon(row, i + 1, 
-                            (hCol == col) && (hRow == row) && (i + 1 == subHNo)));
+            {
+                SDL_Surface *origIcon = iconSet.getLargeIcon(row, i + 1, (hCol == col) && (hRow == row) && (i + 1 == subHNo));
+                SDL_Surface *smallIcon = scaleTo(origIcon, src.w, src.h);
+                for (int w = 0; w < smallIcon->w; w++)
+                {
+                    setPixel(smallIcon, w, 0, 0, 0, 0);
+                    setPixel(smallIcon, w, smallIcon->h-1, 0, 0, 0);
+                }
+                for (int h = 0; h < smallIcon->h; h++)
+                {
+                    setPixel(smallIcon, 0, h, 0, 0, 0);
+                    setPixel(smallIcon, smallIcon->w-1, h, 0, 0, 0);
+                }
+                SDL_BlitSurface(smallIcon, &src, newTile, &dst);
+                SDL_FreeSurface(smallIcon);
+            }
             if (i == 2) {
-                x = posX;
-                y += (FIELD_TILE_HEIGHT / 3);
+                dst.x = 0;
+                dst.y += src.h;
             } else
-                x += (FIELD_TILE_WIDTH / 3);
+                dst.x += src.w;
         }
+        screen.draw(scaleUp(posX), scaleUp(posY), newTile);
+        SDL_FreeSurface(newTile);
     }
     if (addToUpdate)
         screen.addRegionToUpdate(posX, posY, FIELD_TILE_WIDTH, 
@@ -88,12 +124,6 @@ bool Puzzle::onMouseButtonDown(int button, int x, int y)
         return false;
     
     if (! possib->isDefined(col, row)) {
-        /*if (button == 3) {
-            for (int i = 1; i <= PUZZLE_SIZE; i++)
-                possib->makePossible(col, row, i);
-            drawCell(col, row);
-        }
-    } else {*/
         if (element == -1)
             return false;
         if (button == 1) {
@@ -112,7 +142,7 @@ bool Puzzle::onMouseButtonDown(int button, int x, int y)
         drawRow(row);
     }
 
-    bool valid = possib->isValid(solved);
+    const bool valid = possib->isValid(solved);
     if (! valid)
         onFail();
     else
@@ -145,8 +175,8 @@ bool Puzzle::getCellNo(int x, int y, int &col, int &row, int &subNo)
                 (FIELD_TILE_HEIGHT + FIELD_GAP_Y) * PUZZLE_SIZE))
         return false;
 
-    x = x - FIELD_OFFSET_X;
-    y = y - FIELD_OFFSET_Y;
+    x = scaleDown(x) - FIELD_OFFSET_X;
+    y = scaleDown(y) - FIELD_OFFSET_Y;
 
     col = x / (FIELD_TILE_WIDTH + FIELD_GAP_X);
     if (col * (FIELD_TILE_WIDTH + FIELD_GAP_X) + FIELD_TILE_WIDTH < x)

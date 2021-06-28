@@ -1,10 +1,32 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "topscores.h"
+
+#include "convert.h"
+#include "font.h"
+#include "messages.h"
 #include "storage.h"
 #include "utils.h"
-#include "font.h"
-#include "convert.h"
-#include "messages.h"
-
+#include "widgets.h"
 
 TopScores::TopScores()
 {
@@ -29,7 +51,7 @@ TopScores::~TopScores()
 
 int TopScores::add(const std::wstring &name, int score)
 {
-    if (score >= getMaxScore() || (scores.size() < 1)) {
+    if (score >= getMaxScore() || (scores.empty())) {
         if (! isFull()) {
             Entry e = { name, score };
             scores.push_back(e);
@@ -40,7 +62,7 @@ int TopScores::add(const std::wstring &name, int score)
     }
     
     int pos = 0;
-    for (ScoresList::iterator i = scores.begin(); i != scores.end(); i++) {
+    for (ScoresList::iterator i = scores.begin(); i != scores.end(); ++i) {
         Entry &e = *i;
         if (e.score > score) {
             Entry ne = { name, score };
@@ -67,8 +89,8 @@ void TopScores::save()
     Storage *storage = getStorage();
     int no = 0;
     
-    for (ScoresList::iterator i = scores.begin(); i != scores.end(); i++) {
-        Entry &e = *i;
+    for (auto& e : scores)
+    {
         storage->set(L"top_name_" + toString(no), e.name);
         storage->set(L"top_score_" + toString(no), e.score);
         no++;
@@ -85,55 +107,75 @@ TopScores::ScoresList& TopScores::getScores()
 
 int TopScores::getMaxScore()
 {
-    if (scores.size() < 1)
+    if (scores.empty())
         return -1;
     ScoresList::iterator i = scores.end();
-    i--;
+    --i;
     return (*i).score;
 }
 
 
 class ScoresWindow: public Window
 {
+    private:
+        Area area;
+        Font* entryFont;
+        Font* timeFont;
+    
     public:
         ScoresWindow(int x, int y, TopScores *scores, int highlight);
+        ~ScoresWindow();
+        void draw() override;
 };
 
 
 ScoresWindow::ScoresWindow(int x, int y, TopScores *scores, int highlight): 
                 Window(x, y, 320, 350, L"blue.bmp")
 {
-    Font titleFont(L"nova.ttf", 26);
-    Font entryFont(L"laudcn2.ttf", 14);
-    Font timeFont(L"luximb.ttf", 14);
+    entryFont = new Font(L"laudcn2.ttf", 14);
+    timeFont = new Font(L"luximb.ttf", 14);
     
-    std::wstring txt = msg(L"topScores");
-    int w = titleFont.getWidth(txt);
-    titleFont.draw(background, (320 - w) / 2, 15, 255,255,0, true, txt);
+    area.add(new ManagedLabel(L"nova.ttf", 26, left, top + 15, width, height,
+                                    Label::ALIGN_CENTER, Label::ALIGN_TOP,
+                                    255, 255, 0, msg(L"topScores")));
 
     TopScores::ScoresList &list = scores->getScores();
     int no = 1;
     int pos = 70;
-    for (TopScores::ScoresList::iterator i = list.begin(); 
-            i != list.end(); i++) 
+    for (auto& e : list)
     {
-        TopScores::Entry &e = *i;
         std::wstring s(toString(no) + L".");
-        int w = entryFont.getWidth(s);
         int c = ((no - 1) == highlight) ? 0 : 255;
-        entryFont.draw(background, 30 - w, pos, 255,255,c, true, s);
-        SDL_Rect rect = { 40, pos-20, 180, 40 };
-        SDL_SetClipRect(background, &rect);
-        entryFont.draw(background, 40, pos, 255,255,c, true, e.name);
-        SDL_SetClipRect(background, NULL);
+        area.add(new Label(entryFont, left, top + pos, 30, 0,
+                                    Label::ALIGN_RIGHT, Label::ALIGN_TOP,
+                                    255, 255, c, s));
+        
+        area.add(new Label(entryFont, left + 40, top + pos, width, 0,
+                                    Label::ALIGN_LEFT, Label::ALIGN_TOP,
+                                    255, 255, c, e.name));
+        
         s = secToStr(e.score);
-        w = timeFont.getWidth(s);
-        timeFont.draw(background, 305-w, pos, 255,255,c, true, s);
+        area.add(new Label(timeFont, left, top + pos, width - 20, 0,
+                                    Label::ALIGN_RIGHT, Label::ALIGN_TOP,
+                                    255, 255, c, s));
+        
         pos += 20;
         no++;
     }
 }
 
+ScoresWindow::~ScoresWindow()
+{
+    delete entryFont;
+    delete timeFont;
+}
+
+void ScoresWindow::draw()
+{
+    Window::draw();
+    
+    area.draw();
+}
 
 void showScoresWindow(Area *parentArea, TopScores *scores, int highlight)
 {

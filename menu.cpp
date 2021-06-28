@@ -1,39 +1,53 @@
-#include <vector>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-05-06 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "descr.h"
+#include "game.h"
 #include "main.h"
+#include "messages.h"
+#include "opensave.h"
+#include "options.h"
+#include "topscores.h"
 #include "utils.h"
 #include "widgets.h"
-#include "topscores.h"
-#include "opensave.h"
-#include "game.h"
-#include "descr.h"
-#include "options.h"
-#include "messages.h"
 
 
-
-class MenuBackground: public Widget
+class MenuBackground: public Area
 {
     public:
-        virtual void draw();
+        MenuBackground();
 };
 
 
-void MenuBackground::draw()
+MenuBackground::MenuBackground()
 {
-    SDL_Surface *title = loadImage(L"nova.bmp");
-    screen.draw(0, 0, title);
-    SDL_FreeSurface(title);
-    Font font(L"nova.ttf", 28);
+    add(new Picture(0, 0, L"nova.bmp"));
     std::wstring s(msg(L"einsteinFlowix"));
-    int width = font.getWidth(s);
-    font.draw((screen.getWidth() - width) / 2, 30, 255,255,255, true, s);
-    Font urlFont(L"luximb.ttf", 16);
+    add(new ManagedLabel(L"nova.ttf", 28, 0, 30, screen.getWidth(), 0,
+                            Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 255, s));
+    
     s = L"http://games.flowix.com";
-    width = urlFont.getWidth(s);
-    urlFont.draw((screen.getWidth() - width) / 2, 60, 255,255,0, true, s);
-    screen.addRegionToUpdate(0, 0, screen.getWidth(), screen.getHeight());
+    add(new ManagedLabel(L"luximb.ttf", 16, 0, 60, screen.getWidth(), 0,
+                            Label::ALIGN_CENTER, Label::ALIGN_TOP, 255, 255, 0, s));
 }
-
 
 
 class NewGameCommand: public Command
@@ -42,14 +56,14 @@ class NewGameCommand: public Command
         Area *area;
     
     public:
-        NewGameCommand(Area *a) { area = a; };
+        explicit NewGameCommand(Area *a) { area = a; }
 
-        virtual void doAction() {
+        void doAction() override {
             Game game;
             game.run();
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -59,9 +73,9 @@ class LoadGameCommand: public Command
         Area *area;
     
     public:
-        LoadGameCommand(Area *a) { area = a; };
+        explicit LoadGameCommand(Area *a) { area = a; }
 
-        virtual void doAction() {
+        void doAction() override {
             Game *game = loadGame(area);
             if (game) {
                 game->run();
@@ -69,7 +83,7 @@ class LoadGameCommand: public Command
             }
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -80,14 +94,14 @@ class TopScoresCommand: public Command
         Area *area;
     
     public:
-        TopScoresCommand(Area *a) { area = a; };
+        explicit TopScoresCommand(Area *a) { area = a; }
 
-        virtual void doAction() {
+        void doAction() override {
             TopScores scores;
             showScoresWindow(area, &scores);
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -97,13 +111,13 @@ class RulesCommand: public Command
         Area *area;
     
     public:
-        RulesCommand(Area *a) { area = a; };
+        explicit RulesCommand(Area *a) { area = a; }
 
-        virtual void doAction() {
+        void doAction() override {
             showDescription(area);
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -113,13 +127,13 @@ class OptionsCommand: public Command
         Area *area;
     
     public:
-        OptionsCommand(Area *a) { area = a; };
+        explicit OptionsCommand(Area *a) { area = a; }
 
-        virtual void doAction() {
+        void doAction() override {
             showOptionsWindow(area);
             area->updateMouse();
             area->draw();
-        };
+        }
 };
 
 
@@ -129,9 +143,9 @@ class AboutCommand: public Command
         Area *parentArea;
     
     public:
-        AboutCommand(Area *a) { parentArea = a; };
+        explicit AboutCommand(Area *a) { parentArea = a; }
 
-        virtual void doAction() {
+        void doAction() override {
             Area area;
             Font titleFont(L"nova.ttf", 26);
             Font font(L"laudcn2.ttf", 14);
@@ -157,12 +171,12 @@ class AboutCommand: public Command
 
             parentArea->updateMouse();
             parentArea->draw();
-        };
+        }
 };
 
 
 static Button* menuButton(int y, Font *font, const std::wstring &text, 
-        Command *cmd=NULL)
+        Command *cmd=nullptr)
 {
     return new Button(550, y, 220, 30, font, 0,240,240, 30,255,255, text, cmd);
 }

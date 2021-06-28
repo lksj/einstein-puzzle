@@ -1,11 +1,34 @@
-#include <wchar.h>
-#include <stdlib.h>
-#include <string.h>
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2018-02-10 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "unicode.h"
+
+#include "exceptions.h"
+
+#include <cstdlib>
+#include <cstring>
+#include <cwchar>
 #ifdef WIN32
 #include <windows.h>
 #endif
-#include "unicode.h"
-#include "exceptions.h"
 
 
 /// Returns length of wide character in utf-8
@@ -16,38 +39,38 @@
      ((Char) < 0x200000 ? 4 :          \
       ((Char) < 0x4000000 ? 5 : 6)))))
 
-#define UTF8_COMPUTE(Char, Mask, Len)					      \
-  if (Char < 128)							      \
-    {									      \
-      Len = 1;								      \
-      Mask = 0x7f;							      \
-    }									      \
-  else if ((Char & 0xe0) == 0xc0)					      \
-    {									      \
-      Len = 2;								      \
-      Mask = 0x1f;							      \
-    }									      \
-  else if ((Char & 0xf0) == 0xe0)					      \
-    {									      \
-      Len = 3;								      \
-      Mask = 0x0f;							      \
-    }									      \
-  else if ((Char & 0xf8) == 0xf0)					      \
-    {									      \
-      Len = 4;								      \
-      Mask = 0x07;							      \
-    }									      \
-  else if ((Char & 0xfc) == 0xf8)					      \
-    {									      \
-      Len = 5;								      \
-      Mask = 0x03;							      \
-    }									      \
-  else if ((Char & 0xfe) == 0xfc)					      \
-    {									      \
-      Len = 6;								      \
-      Mask = 0x01;							      \
-    }									      \
-  else									      \
+#define UTF8_COMPUTE(Char, Mask, Len) \
+  if (Char < 128) \
+    { \
+      Len = 1; \
+      Mask = 0x7f; \
+    } \
+  else if ((Char & 0xe0) == 0xc0) \
+    { \
+      Len = 2; \
+      Mask = 0x1f; \
+    } \
+  else if ((Char & 0xf0) == 0xe0) \
+    { \
+      Len = 3; \
+      Mask = 0x0f; \
+    } \
+  else if ((Char & 0xf8) == 0xf0) \
+    { \
+      Len = 4; \
+      Mask = 0x07; \
+    } \
+  else if ((Char & 0xfc) == 0xf8) \
+    { \
+      Len = 5; \
+      Mask = 0x03; \
+    } \
+  else if ((Char & 0xfe) == 0xfc) \
+    { \
+      Len = 6; \
+      Mask = 0x01; \
+    } \
+  else \
     Len = -1;
 
 
@@ -69,25 +92,24 @@ const char * const g_utf8_skip = utf8_skip_data;
 
 #define g_utf8_next_char(p) (char *)((p) + g_utf8_skip[*(unsigned char *)(p)])
 
-#define UTF8_GET(Result, Chars, Count, Mask, Len)			      \
-  (Result) = (Chars)[0] & (Mask);					      \
-  for ((Count) = 1; (Count) < (Len); ++(Count))				      \
-    {									      \
-      if (((Chars)[(Count)] & 0xc0) != 0x80)				      \
-	{								      \
-	  (Result) = -1;						      \
-	  break;							      \
-	}								      \
-      (Result) <<= 6;							      \
-      (Result) |= ((Chars)[(Count)] & 0x3f);				      \
+#define UTF8_GET(Result, Chars, Count, Mask, Len) \
+  (Result) = (Chars)[0] & (Mask); \
+  for ((Count) = 1; (Count) < (Len); ++(Count)) \
+    { \
+      if (((Chars)[(Count)] & 0xc0) != 0x80) \
+    { \
+      (Result) = -1; \
+      break; \
+    } \
+      (Result) <<= 6; \
+      (Result) |= ((Chars)[(Count)] & 0x3f); \
     }
 
 /* Like g_utf8_get_char, but take a maximum length
  * and return (wchar_t)-2 on incomplete trailing character
  */
 static inline wchar_t
-g_utf8_get_char_extended (const  char *p,
-			  size_t max_len)  
+g_utf8_get_char_extended (const  char *p, size_t max_len)  
 {
   unsigned int i, len;
   wchar_t wc = (unsigned char) *p;
@@ -130,13 +152,13 @@ g_utf8_get_char_extended (const  char *p,
       return (wchar_t)-1;
     }
   
-  if (max_len >= 0 && len > max_len)
+  if (len > max_len)
     {
       for (i = 1; i < max_len; i++)
-	{
-	  if ((((unsigned char *)p)[i] & 0xc0) != 0x80)
-	    return (wchar_t)-1;
-	}
+      {
+      if ((((unsigned char *)p)[i] & 0xc0) != 0x80)
+          return (wchar_t)-1;
+    }
       return (wchar_t)-2;
     }
 
@@ -145,12 +167,12 @@ g_utf8_get_char_extended (const  char *p,
       wchar_t ch = ((unsigned char *)p)[i];
       
       if ((ch & 0xc0) != 0x80)
-	{
-	  if (ch)
-	    return (wchar_t)-1;
-	  else
-	    return (wchar_t)-2;
-	}
+    {
+      if (ch)
+        return (wchar_t)-1;
+      else
+        return (wchar_t)-2;
+    }
 
       wc <<= 6;
       wc |= (ch & 0x3f);
@@ -195,15 +217,15 @@ g_utf8_get_char (const char *p)
  * @str: a UTF-8 encoded string
  * @len: the maximum length of @str to use. If @len < 0, then
  *       the string is nul-terminated.
- * @items_read: location to store number of bytes read, or %NULL.
- *              If %NULL, then %G_CONVERT_ERROR_PARTIAL_INPUT will be
+ * @items_read: location to store number of bytes read, or %nullptr.
+ *              If %nullptr, then %G_CONVERT_ERROR_PARTIAL_INPUT will be
  *              returned in case @str contains a trailing partial
  *              character. If an error occurs then the index of the
  *              invalid input is stored here.
- * @items_written: location to store number of characters written or %NULL.
+ * @items_written: location to store number of characters written or %nullptr.
  *                 The value here stored does not include the trailing 0
  *                 character. 
- * @error: location to store the error occuring, or %NULL to ignore
+ * @error: location to store the error occuring, or %nullptr to ignore
  *         errors. Any of the errors in #GConvertError other than
  *         %G_CONVERT_ERROR_NO_CONVERSION may occur.
  *
@@ -213,17 +235,17 @@ g_utf8_get_char (const char *p)
  * 
  * Return value: a pointer to a newly allocated UCS-4 string.
  *               This value must be freed with g_free(). If an
- *               error occurs, %NULL will be returned and
+ *               error occurs, %nullptr will be returned and
  *               @error set.
  **/
 wchar_t *
 g_utf8_to_ucs4 (const char *str,
-		long        len,             
-		long       *items_read,      
-		long       *items_written,   
-		wchar_t **error)
+                long        len,
+                long       *items_read,
+                long       *items_written,
+                wchar_t    **error)
 {
-  wchar_t *result = NULL;
+  wchar_t *result = nullptr;
   int n_chars, i;
   const char *in;
   
@@ -233,21 +255,21 @@ g_utf8_to_ucs4 (const char *str,
     {
       wchar_t wc = g_utf8_get_char_extended (in, str + len - in);
       if (wc & 0x80000000)
-	{
-	  if (wc == (wchar_t)-2)
-	    {
-	      if (items_read)
-		break;
-	      else
+    {
+      if (wc == (wchar_t)-2)
+        {
+          if (items_read)
+        break;
+          else
                 if (error)
-		  *error = L"Partial character sequence at end of input";
-	    }
-	  else
+          *error = L"Partial character sequence at end of input";
+        }
+      else
             if (error)
               *error = L"Invalid byte sequence in conversion input";
 
-	  goto err_out;
-	}
+      goto err_out;
+    }
 
       n_chars++;
 
@@ -278,7 +300,7 @@ g_utf8_to_ucs4 (const char *str,
  * g_unichar_to_utf8:
  * @c: a ISO10646 character code
  * @outbuf: output buffer, must have at least 6 bytes of space.
- *       If %NULL, the length will be computed and returned
+ *       If %nullptr, the length will be computed and returned
  *       and nothing will be written to @outbuf.
  * 
  * Converts a single character to UTF-8.
@@ -287,11 +309,10 @@ g_utf8_to_ucs4 (const char *str,
  **/
 int
 g_unichar_to_utf8 (wchar_t c,
-		   char   *outbuf)
+                   char   *outbuf)
 {
   unsigned int len = 0;    
   int first;
-  int i;
 
   if (c < 0x80)
     {
@@ -326,11 +347,11 @@ g_unichar_to_utf8 (wchar_t c,
 
   if (outbuf)
     {
-      for (i = len - 1; i > 0; --i)
-	{
-	  outbuf[i] = (c & 0x3f) | 0x80;
-	  c >>= 6;
-	}
+      for (int i = len - 1; i > 0; --i)
+    {
+      outbuf[i] = (c & 0x3f) | 0x80;
+      c >>= 6;
+    }
       outbuf[0] = c | first;
     }
 
@@ -342,11 +363,11 @@ g_unichar_to_utf8 (wchar_t c,
  * @str: a UCS-4 encoded string
  * @len: the maximum length of @str to use. If @len < 0, then
  *       the string is terminated with a 0 character.
- * @items_read: location to store number of characters read read, or %NULL.
- * @items_written: location to store number of bytes written or %NULL.
+ * @items_read: location to store number of characters read read, or %nullptr.
+ * @items_written: location to store number of bytes written or %nullptr.
  *                 The value here stored does not include the trailing 0
  *                 byte. 
- * @error: location to store the error occuring, or %NULL to ignore
+ * @error: location to store the error occuring, or %nullptr to ignore
  *         errors. Any of the errors in #GConvertError other than
  *         %G_CONVERT_ERROR_NO_CONVERSION may occur.
  *
@@ -355,18 +376,18 @@ g_unichar_to_utf8 (wchar_t c,
  * 
  * Return value: a pointer to a newly allocated UTF-8 string.
  *               This value must be freed with g_free(). If an
- *               error occurs, %NULL will be returned and
+ *               error occurs, %nullptr will be returned and
  *               @error set.
  **/
 char *
 g_ucs4_to_utf8 (const wchar_t *str,
-		long           len,              
-		long          *items_read,       
-		long          *items_written,    
-		wchar_t       **error)
+                long           len,
+                long          *items_read,
+                long          *items_written,
+                wchar_t       **error)
 {
   int result_length;
-  char *result = NULL;
+  char *result = nullptr;
   char *p;
   int i;
 
@@ -374,16 +395,16 @@ g_ucs4_to_utf8 (const wchar_t *str,
   for (i = 0; len < 0 || i < len ; i++)
     {
       if (!str[i])
-	break;
+    break;
 
       if ((unsigned)str[i] >= 0x80000000)
-	{
-	  if (items_read)
-	    *items_read = i;
+    {
+      if (items_read)
+        *items_read = i;
           if (error)
               *error = L"Character out of range for UTF-8";
-	  goto err_out;
-	}
+      goto err_out;
+    }
       
       result_length += UTF8_LENGTH (str[i]);
     }
@@ -410,7 +431,7 @@ g_ucs4_to_utf8 (const wchar_t *str,
 std::string toUtf8(const std::wstring &str)
 {
     long readed, writed;
-    wchar_t *errMsg = NULL;
+    wchar_t *errMsg = nullptr;
     
     char *res = g_ucs4_to_utf8(str.c_str(), str.length(), &readed,
             &writed, &errMsg);
@@ -430,7 +451,7 @@ std::string toUtf8(const std::wstring &str)
 std::wstring fromUtf8(const std::string &str)
 {
     long readed, writed;
-    wchar_t *errMsg = NULL;
+    wchar_t *errMsg = nullptr;
     
     wchar_t *res = g_utf8_to_ucs4(str.c_str(), str.length(), &readed,
             &writed, &errMsg);
@@ -461,7 +482,7 @@ std::string toUtf8(const std::wstring &str)
     int bufSize = (len + 1) * 6 + 1;
     char buf[bufSize];
     int res = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), len + 1,
-           buf, bufSize, NULL, NULL);
+           buf, bufSize, nullptr, nullptr);
 
     if (! res)
         throw Exception(L"Error converting UCS-2 to UTF-8");
@@ -493,25 +514,10 @@ std::string toOem(const std::wstring &str)
     int bufSize = (len + 1) * 6 + 1;
     char buf[bufSize];
     int res = WideCharToMultiByte(CP_OEMCP, 0, str.c_str(), len + 1,
-           buf, bufSize, NULL, NULL);
+           buf, bufSize, nullptr, nullptr);
 
     if (! res)
         throw Exception(L"Error converting UCS-2 to OEM");
-    return buf;
-}
-
-std::wstring fromOem(const std::string &str)
-{
-    if (! str.length())
-        return L"";
-    
-    int len = str.length();
-    wchar_t buf[len + 1];
-
-    int res = MultiByteToWideChar(CP_OEMCP, 0, str.c_str(), len + 1, 
-            buf, len + 1);
-    if (! res)
-        throw Exception(L"Error converting OEM to UCS-2");
     return buf;
 }
 
@@ -574,8 +580,8 @@ std::wstring fromMbcs(const std::string &str)
 std::ostream& operator << (std::ostream &stream, const std::wstring &str)
 {
 #ifdef WIN32
-    if ((stream == std::cout) || (stream == std::cerr) || 
-            (stream == std::clog))
+    if ((&stream == &std::cout) || (&stream == &std::cerr) || 
+            (&stream == &std::clog))
         stream << toOem(str);
     else
 #endif

@@ -1,10 +1,35 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2012-08-04 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "descr.h"
+
+#include "convert.h"
+#include "messages.h"
+#include "tokenizer.h"
+#include "utils.h"
+#include "widgets.h"
 
 #include <string>
 #include <list>
-#include <vector>
 #include <map>
-
 #include "widgets.h"
 #include "unicode.h"
 #include "messages.h"
@@ -12,14 +37,14 @@
 #include "utils.h"
 #include "tokenizer.h"
 #include "storage.h"
+#include "main.h"
 
-
-#define WIDTH		600
-#define HEIGHT		500
-#define CLIENT_WIDTH	570
-#define CLIENT_HEIGHT	390
-#define START_X		115
-#define START_Y		100
+#define WIDTH          600
+#define HEIGHT         500
+#define CLIENT_WIDTH   570
+#define CLIENT_HEIGHT  390
+#define START_X        115
+#define START_Y        100
 
 
 class TextPage
@@ -28,14 +53,14 @@ class TextPage
         std::vector<Widget*> widgets;
 
     public:
-        TextPage() { };
+        TextPage() = default;
         ~TextPage();
 
     public:
-        Widget* getWidget(int no) { return widgets[no]; };
-        int getWidgetsCount() const { return widgets.size(); };
-        void add(Widget *widget) { widgets.push_back(widget); };
-        bool isEmpty() const { return ! widgets.size(); };
+        Widget* getWidget(int no) { return widgets[no]; }
+        size_t getWidgetsCount() const { return widgets.size(); }
+        void add(Widget *widget) { widgets.push_back(widget); }
+        bool isEmpty() const { return widgets.empty(); }
 };
 
 
@@ -60,6 +85,7 @@ class TextParser
 
     public:
         TextPage* getPage(unsigned int no);
+        size_t getPageCount();
 
     private:
         void addLine(TextPage *page, std::wstring &line, int &curPosY, 
@@ -75,38 +101,37 @@ class CursorCommand;
 
 
 // Otobrazhaet pravila igry na ekran
-class Description
+class Description: public Area
 {
     private:
         typedef std::list<Widget *> WidgetsList;
         WidgetsList widgets;
 
-        CursorCommand *prevCmd;		// Sobytie na nazhatie knopki <PREV>
-        CursorCommand *nextCmd;		// Sobytie na nazhatie knopki <PREV>
+        Button *btnPrev;
+        Button *btnNext;
+        
+        //std::vector<RulesPage *> pages;   // Spisok stranits teksta
+        size_t currentPage;                 // Tekuschaja stranitsa dlja prosmotra
 
-        Area area;			// Mesto gde risovat'
-        //std::vector<RulesPage *> pages;	// Spisok stranits teksta
-        unsigned int currentPage;	// Tekuschaja stranitsa dlja prosmotra
+        Font *titleFont;                    // Shrift dlja risovanija zagolovka okna
+        Font *buttonFont;                   // Shrift dlja risovanija knopok v okne
+        Font *textFont;                     // Shrift dlja risovanija teksta
 
-        Font *titleFont;		// Shrift dlja risovanija zagolovka okna
-        Font *buttonFont;		// Shrift dlja risovanija knopok v okne
-        Font *textFont;			// Shrift dlja risovanija teksta
-
-        unsigned int textHeight;	// Vysota stroki teksta
+        unsigned int textHeight;            // Vysota stroki teksta
         TextParser *text;
         
     public:
-        Description(Area *parentArea);
+        explicit Description(Area *parentArea);
         ~Description();
 
     public:
         void run();
-        void updateInfo();	// Vyvodit informatsiju na stranitsu
-        TextPage *getPage(unsigned int no) { return text->getPage(no); };
+        void updateInfo();                  // Vyvodit informatsiju na stranitsu
+        TextPage *getPage(unsigned int no) { return text->getPage(no); }
 
     private:
-        void printPage();		// Vyvodit tekuschuju stranitsu pravil
-        void deleteWidgets();		// Udaljaet neispol'zuemye metki i kartinki iz oblasti vyvoda informatsii (Area)
+        void printPage();                   // Vyvodit tekuschuju stranitsu pravil
+        void deleteWidgets();               // Udaljaet neispol'zuemye metki i kartinki iz oblasti vyvoda informatsii (Area)
 };
 
 
@@ -114,16 +139,16 @@ class Description
 class CursorCommand: public Command
 {
     private:
-        int step;			// Cherez skol'ko stranits listat'
-        Description &description;	// Ukazatel' na ob"ekt Description
-        unsigned int *value;		// Ukazatel' na tekuschij nomer stranitsy
+        int step;                           // Cherez skol'ko stranits listat'
+        Description &description;           // Ukazatel' na ob"ekt Description
+        size_t *value;                      // Ukazatel' na tekuschij nomer stranitsy
 
     public:
-        CursorCommand(int step, Description &d, unsigned int *v);
-        virtual ~CursorCommand() { };
+        CursorCommand(int step, Description &d, size_t *v);
+        virtual ~CursorCommand() = default;
         
     public:
-        virtual void doAction();	// Obrabatyvaet sobytija
+        void doAction() override;           // Obrabatyvaet sobytija
 };
 
 
@@ -139,15 +164,18 @@ void showDescription(Area *parentArea)
 Description::Description(Area *parentArea)
 {
     currentPage = 0;
-    //area.add(parentArea, false);
+    add(parentArea, false);
     titleFont = new Font(L"nova.ttf", 26);
     buttonFont = new Font(L"laudcn2.ttf", 14);
     textFont = new Font(L"laudcn2.ttf", 16);
     textHeight = (int)(textFont->getHeight(L"A") * 1.0);
     text = new TextParser(msg(L"rulesText"), *textFont, START_X, START_Y, 
                 CLIENT_WIDTH, CLIENT_HEIGHT);
-    prevCmd = new CursorCommand(-1, *this, &currentPage);
-    nextCmd = new CursorCommand(1, *this, &currentPage);
+    
+    btnPrev = new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"),
+                                        new CursorCommand(-1, *this, &currentPage));
+    btnNext = new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), 
+                                        new CursorCommand(1, *this, &currentPage));
 }
 
 Description::~Description()
@@ -162,9 +190,8 @@ Description::~Description()
 
 void Description::deleteWidgets()
 {
-    for (WidgetsList::iterator i = widgets.begin(); 
-            i != widgets.end(); i++)
-        area.remove(*i);
+    for (auto& widget : widgets)
+        remove(widget);
     widgets.clear();
 }
 
@@ -173,20 +200,23 @@ void Description::updateInfo()
 {
     deleteWidgets();
     printPage();
-    area.draw();
+    
+    setVisible(btnPrev, (0 != currentPage));
+    setVisible(btnNext, (currentPage < (text->getPageCount() - 1)));
+    
+    draw();
 }
 
 void Description::run()
 {
-    area.add(new Window(100, 50, WIDTH, HEIGHT, L"blue.bmp"));
-    area.add(new Label(titleFont, 250, 60, 300, 40, Label::ALIGN_CENTER, Label::ALIGN_MIDDLE, 255, 255, 0, msg(L"rules")));
-    area.add(new Button(110, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"prev"), prevCmd));
-    area.add(new Button(200, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"next"), nextCmd));
-    ExitCommand exitCmd(area);
-    area.add(new Button(610, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"close"), &exitCmd));
-    area.add(new KeyAccel(SDLK_ESCAPE, &exitCmd));
+    add(new Window(100, 50, WIDTH, HEIGHT, L"blue.bmp"));
+    add(new Label(titleFont, 250, 60, 300, 40, Label::ALIGN_CENTER, Label::ALIGN_MIDDLE, 255, 255, 0, msg(L"rules")));
+    add(btnNext);
+    ExitCommand exitCmd(*this);
+    add(new Button(610, 515, 80, 25, buttonFont, 255, 255, 0, L"blue.bmp", msg(L"close"), &exitCmd));
+    add(new KeyAccel(SDLK_ESCAPE, &exitCmd));
     printPage();
-    area.run();
+    Area::run();
 }
 
 void Description::printPage()
@@ -194,17 +224,17 @@ void Description::printPage()
     TextPage *page = text->getPage(currentPage);
     if (! page)
         return;
-    int len = page->getWidgetsCount();
+    const int len = page->getWidgetsCount();
     for (int i = 0; i < len; i++) {
         Widget *w = page->getWidget(i);
         if (w) {
             widgets.push_back(w);
-            area.add(w);
+            add(w);
         }
     }
 }
 
-CursorCommand::CursorCommand(int s, Description &d, unsigned int *v):
+CursorCommand::CursorCommand(int s, Description &d, size_t *v):
                 description(d)
 {
     step = s;
@@ -215,7 +245,7 @@ void CursorCommand::doAction()
 {
     if ((! *value) && (0 > step))
         return;
-    unsigned int newPageNo = *value + step;
+    const unsigned int newPageNo = *value + step;
     TextPage *page = description.getPage(newPageNo);
     if (page) {
         *value = newPageNo;
@@ -226,9 +256,8 @@ void CursorCommand::doAction()
 
 TextPage::~TextPage()
 {
-    for (std::vector<Widget*>::iterator i = widgets.begin();
-            i != widgets.end(); i++)
-        delete *i;
+    for (auto& widget : widgets)
+        delete widget;
 }
 
 
@@ -241,17 +270,18 @@ TextParser::TextParser(const std::wstring &text, Font &font,
     offsetY = y;
     pageWidth = width;
     pageHeight = height;
+  
+    while (! tokenizer.isFinished())
+        parseNextPage();
 }
 
 
 TextParser::~TextParser()
 {
-    for (std::vector<TextPage*>::iterator i = pages.begin();
-            i != pages.end(); i++)
-        delete *i;
-    for (std::map<std::wstring, SDL_Surface*>::iterator i = images.begin();
-            i != images.end(); i++)
-        delete (*i).second;
+    for (auto& page : pages)
+        delete page;
+    for (auto& image : images)
+        delete image.second;
 }
 
 
@@ -272,7 +302,7 @@ void TextParser::addLine(TextPage *page, std::wstring &line, int &curPosY,
 
 bool TextParser::isImage(const std::wstring &name)
 {
-    int len = name.length();
+    const int len = name.length();
     return (3 < len) && (L'$' == name[0]) && (L'$' == name[len - 1]);
 }
 
@@ -316,7 +346,7 @@ void TextParser::parseNextPage()
                 addLine(page, line, curPosY, lineWidth);
                 SDL_Surface *image = getImage(keywordToImage(word));
                 if ((image->h + curPosY < pageHeight) || page->isEmpty()) {
-                    int x = offsetX + (pageWidth - image->w) / 2;
+                    const int x = offsetX + (pageWidth - image->w) / 2;
                     page->add(new Picture(x, offsetY + curPosY, image));
                     curPosY += image->h;
                 } else {
@@ -324,8 +354,8 @@ void TextParser::parseNextPage()
                     break;
                 }
             } else {
-                int width = font.getWidth(word);
-                if (lineWidth + width > pageWidth) {
+                const int width = font.getWidth(word);
+                if (lineWidth + width > scaleUp(pageWidth)) {
                     if (! lineWidth) {
                         line = word;
                         addLine(page, line, curPosY, lineWidth);
@@ -340,7 +370,7 @@ void TextParser::parseNextPage()
                     }
                 } else {
                     lineWidth += width;
-                    if (line.size()) {
+                    if (!line.empty()) {
                         line += L' ';
                         lineWidth += spaceWidth;
                     }
@@ -361,11 +391,13 @@ void TextParser::parseNextPage()
 
 TextPage* TextParser::getPage(unsigned int no)
 {
-    while ((! tokenizer.isFinished()) && (pages.size() <= no))
-        parseNextPage();
     if (pages.size() <= no)
-        return NULL;
+        return nullptr;
     else
         return pages[no];
 }
 
+size_t TextParser::getPageCount()
+{
+    return pages.size();
+}

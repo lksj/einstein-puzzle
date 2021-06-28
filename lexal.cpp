@@ -1,13 +1,32 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Modified 2018-02-11 by Jordan Evens <jordan.evens@gmail.com>
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "lexal.h"
+
 #include "convert.h"
 
-        
+
 Lexeme::Lexeme(Type t, const std::wstring &cont, int line, int pos)
+    :  line(line), pos(pos), type(t), content(cont)
 {
-    type = t;
-    content = cont;
-    this->line = line;
-    this->pos = pos;
 }
 
 std::wstring Lexeme::getPosStr() const
@@ -64,10 +83,10 @@ Lexeme Lexal::getNext()
     if (reader.isEof())
         return Lexeme(Lexeme::Eof, L"", line, pos);
 
-    int startLine = line;
-    int startPos = pos;
+    const int startLine = line;
+    const int startPos = pos;
 
-    wchar_t ch = reader.getNextChar();
+    const wchar_t ch = reader.getNextChar();
     pos++;
 
     if (isIdentStart(ch))
@@ -89,14 +108,15 @@ Lexeme Lexal::readString(int startLine, int startPos, wchar_t quote)
     bool closed = false;
     
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if ('\n' == ch) {
             line++;
             pos = 0;
+            str += ch;
         } else if ('\\' == ch) {
             if (! reader.isEof()) {
-                wchar_t nextCh = reader.getNextChar();
+                const wchar_t nextCh = reader.getNextChar();
                 if (isWhiteSpace(nextCh))
                     throw Exception(L"Invalid escape sequence at " +
                             posToStr(line, pos));
@@ -130,7 +150,7 @@ Lexeme Lexal::readNumber(int startLine, int startPos, wchar_t first)
     Lexeme::Type type = Lexeme::Integer;
     
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if (isDigit(ch))
             number += ch;
@@ -162,7 +182,7 @@ Lexeme Lexal::readIdent(int startLine, int startPos, wchar_t first)
     ident += first;
     
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         if (! isIdentCont(ch)) {
             reader.ungetChar(ch);
             break;
@@ -178,7 +198,7 @@ Lexeme Lexal::readIdent(int startLine, int startPos, wchar_t first)
 void Lexal::skipToLineEnd()
 {
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if ('\n' == ch) {
             pos = 0;
@@ -192,13 +212,13 @@ void Lexal::skipToLineEnd()
 void Lexal::skipMultilineComment(int startLine, int startPos)
 {
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if ('\n' == ch) {
             pos = 0;
             line++;
         } else if (('*' == ch) && (! reader.isEof())) {
-            wchar_t nextCh = reader.getNextChar();
+            const wchar_t nextCh = reader.getNextChar();
             if ('/' != nextCh)
                 reader.ungetChar(nextCh);
         }
@@ -211,7 +231,7 @@ void Lexal::skipMultilineComment(int startLine, int startPos)
 void Lexal::skipSpaces()
 {
     while (! reader.isEof()) {
-        wchar_t ch = reader.getNextChar();
+        const wchar_t ch = reader.getNextChar();
         pos++;
         if (! isWhiteSpace(ch)) {
             if ('#' == ch)
@@ -219,7 +239,7 @@ void Lexal::skipSpaces()
             else {
                 bool finish = false;
                 if (('/' == ch) && (! reader.isEof())) {
-                    wchar_t nextCh = reader.getNextChar();
+                    const wchar_t nextCh = reader.getNextChar();
                     pos++;
                     if ('/' == nextCh)
                         skipToLineEnd();

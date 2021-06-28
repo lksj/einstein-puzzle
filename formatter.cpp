@@ -1,6 +1,26 @@
+// This file is part of Einstein Puzzle
+
+// Einstein Puzzle
+// Copyright (C) 2003-2005  Flowix Games
+
+// Einstein Puzzle is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+
+// Einstein Puzzle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "formatter.h"
-#include "utils.h"
+
 #include "convert.h"
+#include "utils.h"
 
 
 #define ADD_ARG(t) \
@@ -13,11 +33,11 @@
 
 Formatter::Formatter(unsigned char *data, int offset)
 {
-    int cnt = readInt(data + offset);
+    const int cnt = readInt(data + offset);
     if (! cnt) {
         commandsCnt = argsCnt = 0;
-        commands = NULL;
-        args = NULL;
+        commands = nullptr;
+        args = nullptr;
     }
     
     offset += 4;
@@ -27,9 +47,9 @@ Formatter::Formatter(unsigned char *data, int offset)
     int maxArg = 0, argNo;
     
     for (int i = 0; i < cnt; i++) {
-        int type = data[offset];
+        const int type = data[offset];
         offset++;
-        int size = readInt(data + offset);
+        const int size = readInt(data + offset);
         offset += 4;
         switch (type) {
             case 1:
@@ -49,7 +69,7 @@ Formatter::Formatter(unsigned char *data, int offset)
 
     argsCnt = maxArg;
     if (! argsCnt)
-        args = NULL;
+        args = nullptr;
     else {
         args = new CmdType[argsCnt];
         memset(args, 0, sizeof(CmdType) * argsCnt);
@@ -58,7 +78,7 @@ Formatter::Formatter(unsigned char *data, int offset)
             if ((c.type == INT_ARG) || (c.type == STRING_ARG) ||
                     (c.type == FLOAT_ARG) || (c.type == DOUBLE_ARG))
             {
-                long no = (long)c.data;
+                const long no = (long)c.data;
                 args[no - 1] = c.type;
             }
         }
@@ -70,10 +90,8 @@ Formatter::~Formatter()
     for (int i = 0; i < commandsCnt; i++)
         if (TEXT_COMMAND == commands[i].type)
             delete (std::wstring*)(commands[i].data);
-    if (commands)
-        delete[] commands;
-    if (args)
-        delete[] args;
+    delete[] commands;
+    delete[] args;
 }
 
 std::wstring Formatter::getMessage() const
@@ -90,7 +108,7 @@ std::wstring Formatter::getMessage() const
 class ArgValue
 {
     public:
-        virtual ~ArgValue() { };
+        virtual ~ArgValue() = default;
         virtual std::wstring format(Formatter::Command *command) = 0;
 };
 
@@ -101,10 +119,10 @@ class TemplatedArgValue: public ArgValue
         T value;
     
     public:
-        TemplatedArgValue(const T &v) { value = v; };
-        virtual std::wstring format(Formatter::Command *command) { 
+        TemplatedArgValue(const T &v) { value = v; }
+        std::wstring format(Formatter::Command *command) override { 
             return toString(value);
-        };
+        }
 };
 
 class StrArgValue: public ArgValue
@@ -113,10 +131,10 @@ class StrArgValue: public ArgValue
         std::wstring value;
 
     public:
-        StrArgValue(const std::wstring &v): value(v) { };
-        virtual std::wstring format(Formatter::Command *command) { 
+        StrArgValue(const std::wstring &v): value(v) { }
+        std::wstring format(Formatter::Command *command) override {
             return value;
-        };
+        }
 };
 
 
@@ -178,9 +196,8 @@ std::wstring Formatter::format(va_list ap) const
  
     std::wstring s = format(argValues);
 
-    for (std::vector<ArgValue*>::iterator i = argValues.begin();
-            i != argValues.end(); i++)
-        delete *i;
+    for (auto& argValue : argValues)
+        delete argValue;
     
     return s;
 }
